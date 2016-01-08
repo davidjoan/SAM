@@ -7,4 +7,8 @@
 
     <string name="drawer_open">Abrir</string>
     <string name="drawer_close">Cerrar</string>
+    <string name="title_activity_welcome">SAM</string>
+    <string name="text_logo">SAM</string>
+    <string name="loading_app">Iniciando Aplicación</string>
+    <string name="login_success">Datos Cargados Correctamente</string>
 </resources>

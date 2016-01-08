@@ -5,15 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="192dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
-    android:background="?attr/colorPrimaryDark"
+    android:background="?attr/colorPrimary"
     android:padding="16dp"
     android:gravity="bottom">
 
     <ImageButton
         android:id="@+id/avatar"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/avatar"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/fa_user"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -33,7 +33,7 @@
             android:id="@+id/userName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="David Tataje"
+            android:text="Usuario Demo"
             android:textColor="#fff"
             android:textSize="16sp"
             android:textStyle="bold" />
