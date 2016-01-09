@@ -11,4 +11,5 @@
     <string name="text_logo">SAM</string>
     <string name="loading_app">Iniciando Aplicación</string>
     <string name="login_success">Datos Cargados Correctamente</string>
+    <string name="title_activity_maps">Mapa</string>
 </resources>

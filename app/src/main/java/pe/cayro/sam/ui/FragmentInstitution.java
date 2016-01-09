@@ -1,15 +1,22 @@
 package pe.cayro.sam.ui;
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -47,9 +54,6 @@ public class FragmentInstitution extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
     }
 
     @Override
@@ -67,8 +71,6 @@ public class FragmentInstitution extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new InstitutionListAdapter(institutionList, R.layout.institution_item);
         mRecyclerView.setAdapter(mAdapter);
-
-
 
         return view;
     }
@@ -111,7 +113,8 @@ public class FragmentInstitution extends Fragment {
             return items.size();
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
+        public class ViewHolder extends RecyclerView.ViewHolder
+                implements View.OnClickListener {
 
             public ImageView image;
             public TextView name;
@@ -123,6 +126,12 @@ public class FragmentInstitution extends Fragment {
                 name = (TextView) itemView.findViewById(R.id.institution_name);
                 address = (TextView) itemView.findViewById(R.id.institution_address);
             }
+
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "onClick DEMO");
+
+            }
         }
     }
 
@@ -130,6 +139,34 @@ public class FragmentInstitution extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         realm.close();
+    }
+
+    @SuppressLint("ValidFragment")
+    public class LoginDialogFragment extends DialogFragment {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the Builder class for convenient dialog construction
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            // Get the layout inflater
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            //builder.setMessage("")
+            builder.setTitle("Iniciar Sesión");
+            builder.setView(inflater.inflate(R.layout.dialog_signin, null))
+
+                    .setPositiveButton("Ingresar", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                }
+                            })
+                            .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                        }
+                    });
+            // Create the AlertDialog object and return it
+            return builder.create();
+        }
     }
 
 
