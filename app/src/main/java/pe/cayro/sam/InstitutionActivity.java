@@ -2,15 +2,50 @@ package pe.cayro.sam;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import io.realm.Realm;
+import pe.cayro.sam.model.Institution;
+import pe.cayro.sam.model.Tracking;
+
 public class InstitutionActivity extends AppCompatActivity {
+
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+
+    Realm realm;
+    String trackingCode;
+
+    Tracking tracking;
+    Institution institution;
+    String institutionName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_institution);
+
+        trackingCode = getIntent().getStringExtra("tracking_code");
+        institutionName = getIntent().getStringExtra("institution_name");
+
+        ButterKnife.bind(this);
+
+        realm = Realm.getInstance(getApplicationContext());
+
+        tracking = realm.where(Tracking.class).equalTo("code", trackingCode).findFirst();
+
+        //institution = realm.where(Institution.class).equalTo("id",tracking.getInstitutionId()).findFirst();
+
+        toolbar.setTitle(institutionName);
+        toolbar.setSubtitle(trackingCode);
+
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

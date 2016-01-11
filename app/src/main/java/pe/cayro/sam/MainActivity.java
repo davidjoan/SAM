@@ -19,6 +19,7 @@ import android.view.View;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import pe.cayro.sam.ui.FragmentInstitution;
+import pe.cayro.sam.ui.FragmentTracking;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -113,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                     fragment = FragmentInstitution.newInstance();
                     break;
                 case R.id.nav_second_fragment:
-                    fragment = FragmentInstitution.newInstance();
+                    fragment = FragmentTracking.newInstance();
                     break;
                 case R.id.nav_third_fragment:
                     fragment = FragmentInstitution.newInstance();

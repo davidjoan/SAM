@@ -11,7 +11,7 @@ import io.realm.annotations.PrimaryKey;
 public class Tracking extends RealmObject {
 
     @PrimaryKey
-    private int id;
+    private String uuid;
     private int institutionId;
     private int userId;
     private String code;
@@ -20,12 +20,14 @@ public class Tracking extends RealmObject {
     private double latitude;
     private double longitude;
 
-    public int getId() {
-        return id;
+    private Institution institution;
+
+    public String getUuid() {
+        return uuid;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public int getInstitutionId() {
@@ -82,5 +84,13 @@ public class Tracking extends RealmObject {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public Institution getInstitution() {
+        return institution;
+    }
+
+    public void setInstitution(Institution institution) {
+        this.institution = institution;
     }
 }

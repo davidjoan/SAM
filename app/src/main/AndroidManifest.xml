@@ -53,6 +53,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pe.cayro.sam.MainActivity" />
         </activity>
+
+        <activity
+            android:name=".InstitutionMapActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="pe.cayro.sam.MainActivity" />
+        </activity>
+
+
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"

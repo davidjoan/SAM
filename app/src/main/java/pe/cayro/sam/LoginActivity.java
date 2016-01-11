@@ -20,6 +20,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
 import java.util.Date;
+import java.util.UUID;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -58,6 +59,9 @@ public class LoginActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        buildGoogleApiClient();
+
         institutionName = getIntent().getStringExtra("institution_name");
 
         ButterKnife.bind(this);
@@ -78,33 +82,42 @@ public class LoginActivity extends AppCompatActivity implements
             @Override
             public void onClick(View view) {
 
-                if(!atentionCodeEditText.getText().equals("")){
+                if(atentionCodeEditText.getText().length() > 0){
 
-                    int nextID = (int) (realm.where(Tracking.class).max("id").intValue() + 1);
+                    //int nextID = (int) (realm.where(Tracking.class).max("id").intValue() + 1);
+
+                    Toast.makeText(LoginActivity.this, atentionCodeEditText.getText().toString(), Toast.LENGTH_SHORT).show();
 
                     realm.beginTransaction();
                     Tracking tracking = new Tracking();
-                    tracking.setId(nextID);
+                    tracking.setUuid(UUID.randomUUID().toString());
                     tracking.setCode(atentionCodeEditText.getText().toString());
                     tracking.setType("login");
                     tracking.setInstitutionId(institution.getId());
                     tracking.setCreatedAt(new Date());
-                    tracking.setUserId(1);
+                    tracking.setUserId(1); //TODO: add real user ID
+                    tracking.setInstitution(institution);
+
                     if(mLastLocation != null){
                         tracking.setLatitude(mLastLocation.getLatitude());
                         tracking.setLongitude(mLastLocation.getLongitude());
                     }
 
+                    realm.copyToRealm(tracking);
+
                     realm.commitTransaction();
 
                     Intent intent = new Intent(LoginActivity.this, InstitutionActivity.class);
                     intent.putExtra("tracking_code", tracking.getCode());
+                    intent.putExtra("institution_name", institutionName);
+
+
                     LoginActivity.this.startActivity(intent);
                     finish();
 
                 }else {
 
-                    Toast.makeText(LoginActivity.this, "Ingrese el Número de Atención", Toast.LENGTH_SHORT).show();
+                     Toast.makeText(LoginActivity.this, "Ingrese el Número de Atención", Toast.LENGTH_SHORT).show();
 
                 }
 
