@@ -2,6 +2,7 @@ package pe.cayro.sam.ui;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -19,12 +20,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import pe.cayro.sam.LoginActivity;
 import pe.cayro.sam.R;
 import pe.cayro.sam.model.Institution;
 
@@ -114,7 +117,7 @@ public class FragmentInstitution extends Fragment {
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder
-                implements View.OnClickListener {
+                implements RecyclerView.OnClickListener {
 
             public ImageView image;
             public TextView name;
@@ -125,11 +128,24 @@ public class FragmentInstitution extends Fragment {
               //  image = (ImageView) itemView.findViewById(R.id.institution_name);
                 name = (TextView) itemView.findViewById(R.id.institution_name);
                 address = (TextView) itemView.findViewById(R.id.institution_address);
+
+                itemView.setOnClickListener(this);
             }
+
 
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick DEMO");
+
+
+               // Toast.makeText(getActivity(), "Click "+name,
+                //        Toast.LENGTH_SHORT).show();
+
+                    Log.d(TAG, "onClick DEMO");
+                    Context context = itemView.getContext();
+
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    intent.putExtra("institution_name", name.getText());
+                    context.startActivity(intent);
 
             }
         }

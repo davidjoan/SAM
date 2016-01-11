@@ -12,4 +12,6 @@
     <string name="loading_app">Iniciando Aplicación</string>
     <string name="login_success">Datos Cargados Correctamente</string>
     <string name="title_activity_maps">Mapa</string>
+    <string name="title_activity_login">Inicio de Sesión</string>
+    <string name="title_activity_institution">Institución</string>
 </resources>

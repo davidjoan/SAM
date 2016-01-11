@@ -11,6 +11,7 @@
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the 'MyLocation' functionality. 
     -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
@@ -51,6 +52,22 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pe.cayro.sam.MainActivity" />
+        </activity>
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="pe.cayro.sam.MainActivity" />
+        </activity>
+        <activity
+            android:name=".InstitutionActivity"
+            android:label="@string/title_activity_institution"
+            android:parentActivityName=".LoginActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="pe.cayro.sam.LoginActivity" />
         </activity>
     </application>
 

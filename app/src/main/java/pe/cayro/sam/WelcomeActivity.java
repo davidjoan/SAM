@@ -160,13 +160,7 @@ public class WelcomeActivity extends AppCompatActivity {
             }
         }
 
-
-
-
             //Log.i(TAG, imei);
-
-
-
 
             return result;
         }
