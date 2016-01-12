@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_first_fragment"
+            android:icon="@drawable/fa_medical"
+            android:title="Entrega Muestra Médica" />
+
+        <item
+            android:id="@+id/nav_second_fragment"
+            android:icon="@drawable/fa_user_md"
+            android:title="Médicos" />
+
+        <item
+            android:id="@+id/nav_third_fragment"
+            android:icon="@drawable/fa_user_tie"
+            android:title="Pacientes" />
+
+        <item
+            android:id="@+id/nav_fourth_fragment"
+            android:icon="@drawable/fa_calendar"
+            android:title="Asistencia" />
+        <item
+            android:id="@+id/nav_five_fragment"
+            android:icon="@drawable/fa_document"
+            android:title="Consultas" />
+
+
+    </group>
+</menu>

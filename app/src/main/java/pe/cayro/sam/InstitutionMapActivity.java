@@ -59,6 +59,7 @@ public class InstitutionMapActivity extends AppCompatActivity implements OnMapRe
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         mMap = googleMap;
 
         mMap.setMyLocationEnabled(true);
@@ -68,7 +69,11 @@ public class InstitutionMapActivity extends AppCompatActivity implements OnMapRe
 
         LatLng sydney = new LatLng(tracking.getLatitude(), tracking.getLongitude());
 
-        mMap.addMarker(new MarkerOptions().position(sydney).title(tracking.getInstitution().getName()));
+        LatLng institutionLatLng = new LatLng(tracking.getInstitution().getLatitude(), tracking.getInstitution().getLongitude());
+
+        mMap.addMarker(new MarkerOptions().position(sydney).title("Usuario"));
+
+        mMap.addMarker(new MarkerOptions().position(institutionLatLng).title(tracking.getInstitution().getName()));
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(sydney).zoom(12).build();

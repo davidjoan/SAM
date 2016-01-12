@@ -65,7 +65,7 @@ public class FragmentInstitution extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.fragment_institution,container,false);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("App SAM");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("SAM");
 
         ButterKnife.bind(this, view);
 

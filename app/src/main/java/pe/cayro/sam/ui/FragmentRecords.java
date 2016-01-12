@@ -1,15 +1,10 @@
 package pe.cayro.sam.ui;
 
-import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,42 +14,35 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
-import io.realm.RealmResults;
-import io.realm.Sort;
-import pe.cayro.sam.InstitutionMapActivity;
 import pe.cayro.sam.LoginActivity;
 import pe.cayro.sam.R;
-import pe.cayro.sam.model.Tracking;
-import pe.cayro.sam.model.Tracking;
+import pe.cayro.sam.model.Institution;
 
 /**
  * Created by David on 8/01/16.
  */
-public class FragmentTracking extends Fragment {
-    private static String TAG = FragmentTracking.class.getSimpleName();
+public class FragmentRecords extends Fragment {
+    private static String TAG = FragmentRecords.class.getSimpleName();
 
     @Bind(R.id.institution_recycler_view)
     protected RecyclerView mRecyclerView;
 
     Realm realm;
-    List<Tracking> trackingList;
-    private TrackingListAdapter mAdapter;
+    List<Institution> institutionList;
+    private InstitutionListAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
 
-    public static FragmentTracking newInstance() {
+
+    public static FragmentRecords newInstance() {
         Bundle args = new Bundle();
 
-        FragmentTracking fragment = new FragmentTracking();
+        FragmentRecords fragment = new FragmentRecords();
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,38 +57,34 @@ public class FragmentTracking extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.fragment_institution,container,false);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Asistencia");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Registro de Entrega MM");
 
         ButterKnife.bind(this, view);
 
         realm = Realm.getInstance(getActivity().getApplicationContext());
 
-        trackingList = realm.where(Tracking.class).findAll();
-
-        Log.d(TAG, "Cantidad de Tracking: "+String.valueOf(trackingList.size()));
-
-        //trackingList.sort("createdAt", Sort.ASCENDING);
+        institutionList = realm.where(Institution.class).findAll();
 
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new TrackingListAdapter(trackingList, R.layout.tracking_item);
+        mAdapter = new InstitutionListAdapter(institutionList, R.layout.institution_item);
         mRecyclerView.setAdapter(mAdapter);
 
         return view;
     }
 
-    public class TrackingListAdapter extends RecyclerView.
-            Adapter<TrackingListAdapter.ViewHolder> {
+    public class InstitutionListAdapter extends RecyclerView.
+            Adapter<InstitutionListAdapter.ViewHolder> {
 
-        private List<Tracking> items;
+        private List<Institution> items;
         private int itemLayout;
 
-        public TrackingListAdapter(List<Tracking> items, int itemLayout) {
+        public InstitutionListAdapter(List<Institution> items, int itemLayout) {
             this.items = items;
             this.itemLayout = itemLayout;
         }
 
-        public void setData(List<Tracking> items) {
+        public void setData(List<Institution> items) {
             this.items = items;
         }
 
@@ -114,24 +98,11 @@ public class FragmentTracking extends Fragment {
 
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, int position) {
-            Tracking item = items.get(position);
+            Institution item = items.get(position);
 
-
-            viewHolder.name.setText(item.getInstitution().getName());
-            viewHolder.uuid = item.getUuid();
-
-
-            String typeString = "";
-            String dateFormat = "";
-
-            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm");
-            dateFormat = formatter.format(item.getCreatedAt());
-
-            if(item.getType().equals("login")){
-                typeString = "Inicio Sesión el ";
-            }
-            viewHolder.address.setText(typeString+dateFormat);
-
+            viewHolder.name.setText(item.getName());
+            viewHolder.address.setText(item.getAddress());
+            //viewHolder.image.setImageResource(item.getIcon());
             viewHolder.itemView.setTag(item);
         }
 
@@ -146,12 +117,12 @@ public class FragmentTracking extends Fragment {
             public ImageView image;
             public TextView name;
             public TextView address;
-            public String uuid;
 
             public ViewHolder(View itemView) {
                 super(itemView);
-                name    = (TextView) itemView.findViewById(R.id.institution_name);
-                address = (TextView) itemView.findViewById(R.id.tracking_name);
+              //  image = (ImageView) itemView.findViewById(R.id.institution_name);
+                name = (TextView) itemView.findViewById(R.id.institution_name);
+                address = (TextView) itemView.findViewById(R.id.institution_address);
 
                 itemView.setOnClickListener(this);
             }
@@ -160,13 +131,17 @@ public class FragmentTracking extends Fragment {
             @Override
             public void onClick(View view) {
 
-                Log.d(TAG, "onClick DEMO");
-                Context context = itemView.getContext();
-                Intent intent = new Intent(getActivity(), InstitutionMapActivity.class);
-                intent.putExtra("tracking_uuid", uuid);
 
-                Toast.makeText(getActivity(), uuid, Toast.LENGTH_SHORT).show();
-                context.startActivity(intent);
+               // Toast.makeText(getActivity(), "Click "+name,
+                //        Toast.LENGTH_SHORT).show();
+
+                    Log.d(TAG, "onClick DEMO");
+                    Context context = itemView.getContext();
+
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    intent.putExtra("institution_name", name.getText());
+                    context.startActivity(intent);
+
             }
         }
     }

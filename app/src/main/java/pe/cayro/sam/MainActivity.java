@@ -1,5 +1,6 @@
 package pe.cayro.sam;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -8,10 +9,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         final ActionBar ab = getSupportActionBar();
         ab.setHomeAsUpIndicator(R.drawable.ic_drawer);
         ab.setDisplayHomeAsUpEnabled(true);
+
         drawerToggle = setupDrawerToggle();
         mDrawer.setDrawerListener(drawerToggle);
 
@@ -124,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.nav_five_fragment:
                     fragment = FragmentInstitution.newInstance();
+                    doExit();
                     break;
 
                 default:
@@ -155,5 +160,37 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Exit the app if user select yes.
+     */
+    private void doExit() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        alertDialog.setNegativeButton("No", null);
+        alertDialog.setMessage("¿Desea Salir?");
+        alertDialog.setTitle(getString(R.string.app_name));
+        alertDialog.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        doExit();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if(keyCode == KeyEvent.KEYCODE_BACK) {
+            doExit();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

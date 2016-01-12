@@ -15,4 +15,10 @@ public class Constants {
     public static final String YES = "yes";
     public static final String NO = "no";
     public static final String EMPTY = "";
+    public static final String API_PRODUCT = "/products";
+    public static final String API_DOCTOR = "/doctors";
+    public static final String API_SPECIALTY = "/specialties";
+    public static final String API_ATTENTION_TYPE = "/attention_types";
+
+    //public static final String API_SPECIALTY = "/specialties";
 }

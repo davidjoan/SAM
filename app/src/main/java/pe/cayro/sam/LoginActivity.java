@@ -27,6 +27,7 @@ import butterknife.ButterKnife;
 import io.realm.Realm;
 import pe.cayro.sam.model.Institution;
 import pe.cayro.sam.model.Tracking;
+import pe.cayro.sam.model.User;
 
 public class LoginActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
@@ -49,6 +50,7 @@ public class LoginActivity extends AppCompatActivity implements
 
 
     Institution institution;
+    User user;
 
     protected GoogleApiClient mGoogleApiClient;
     protected Location mLastLocation;
@@ -69,6 +71,8 @@ public class LoginActivity extends AppCompatActivity implements
         realm = Realm.getInstance(getApplicationContext());
 
         institution = realm.where(Institution.class).equalTo("name",institutionName).findFirst();
+
+        user = realm.where(User.class).findFirst();
 
         toolbar.setTitle("Iniciar Sesión");
 
@@ -95,7 +99,7 @@ public class LoginActivity extends AppCompatActivity implements
                     tracking.setType("login");
                     tracking.setInstitutionId(institution.getId());
                     tracking.setCreatedAt(new Date());
-                    tracking.setUserId(1); //TODO: add real user ID
+                    tracking.setUserId(user.getId()); //TODO: add real user ID
                     tracking.setInstitution(institution);
 
                     if(mLastLocation != null){

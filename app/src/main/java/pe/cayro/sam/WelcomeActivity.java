@@ -21,7 +21,12 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import pe.cayro.sam.api.RestClient;
+import pe.cayro.sam.model.AttentionType;
+import pe.cayro.sam.model.Doctor;
 import pe.cayro.sam.model.Institution;
+import pe.cayro.sam.model.Product;
+import pe.cayro.sam.model.Specialty;
+import pe.cayro.sam.model.User;
 import util.Constants;
 
 public class WelcomeActivity extends AppCompatActivity {
@@ -66,7 +71,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 } else {
                     progress.setCancelable(false);
                     progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                    progress.setMax(14);
+                    progress.setMax(7);
                     progress.setMessage("Sincronizando");
                     progress.show();
                     new LoginAsyncTask(getApplicationContext()).execute("");
@@ -128,25 +133,50 @@ public class WelcomeActivity extends AppCompatActivity {
                     getSystemService(Context.TELEPHONY_SERVICE);
 
             //Log.i(TAG, telephonyManager.getDeviceId());
-            //this.publishProgress("Obteniendo IMEI");
+            this.publishProgress("Obteniendo IMEI");
 
             //// TODO: 17/07/15
             //// Replace for implement in production enable the following line code
-            //// String imei = telephonyManager.getDeviceId();
-            //String imei = Constants.IMEI_TEST;
+            // String imei = telephonyManager.getDeviceId();
+            String imei = "98876876876876876";
 
             Realm realm = Realm.getInstance(getApplicationContext());
 
-            this.publishProgress("Cargando Instituciones");
+
 
             try{
 
                 realm.beginTransaction();
                 realm.clear(Institution.class);
+                realm.clear(Doctor.class);
+                realm.clear(AttentionType.class);
+                realm.clear(User.class);
+                realm.clear(Specialty.class);
+                realm.clear(Product.class);
 
+                this.publishProgress("Cargando Usuario");
+                User user = RestClient.get().getUserByImei(imei);
+                realm.copyToRealmOrUpdate(user);
+
+                this.publishProgress("Cargando Instituciones");
                 List<Institution> institutions = RestClient.get().getListInstitutions();
-
                 realm.copyToRealmOrUpdate(institutions);
+
+                this.publishProgress("Cargando Doctores");
+                List<Doctor> doctors = RestClient.get().getListDoctors();
+                realm.copyToRealmOrUpdate(doctors);
+
+                this.publishProgress("Cargando Tipo Atenciones");
+                List<AttentionType> attentionTypes = RestClient.get().getAttentionTypes();
+                realm.copyToRealmOrUpdate(attentionTypes);
+
+                this.publishProgress("Cargando Especialidades");
+                List<Specialty> specialties = RestClient.get().getListSpecialties();
+                realm.copyToRealmOrUpdate(specialties);
+
+                this.publishProgress("Cargando Productos");
+                List<Product> products = RestClient.get().getListProducts();
+                realm.copyToRealmOrUpdate(products);
 
                 realm.commitTransaction();
 

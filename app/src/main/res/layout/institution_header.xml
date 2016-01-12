@@ -13,7 +13,7 @@
         android:id="@+id/avatar"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/fa_user"
+        android:src="@drawable/fa_hospital_o"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -30,30 +30,22 @@
         android:layout_toEndOf="@+id/avatar">
 
         <TextView
-            android:id="@+id/userName"
+            android:id="@+id/institution_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Usuario Demo"
+            android:text="Hospital X"
             android:textColor="#fff"
             android:textSize="16sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/desc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginTop="4dp"
-            android:text="Ver Perfil"
-            android:textColor="#fff"
-            android:textSize="12sp" />
+
 
         <TextView
-            android:id="@+id/campaign"
+            android:id="@+id/tracking_code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="201508"
+            android:text="676455"
             android:textColor="#fff"
             android:textSize="12sp" />
     </LinearLayout>

@@ -1,15 +1,10 @@
 package pe.cayro.sam.ui;
 
-import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,27 +16,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
-import io.realm.RealmResults;
-import io.realm.Sort;
 import pe.cayro.sam.InstitutionMapActivity;
-import pe.cayro.sam.LoginActivity;
 import pe.cayro.sam.R;
-import pe.cayro.sam.model.Tracking;
 import pe.cayro.sam.model.Tracking;
 
 /**
  * Created by David on 8/01/16.
  */
-public class FragmentTracking extends Fragment {
-    private static String TAG = FragmentTracking.class.getSimpleName();
+public class FragmentDoctor extends Fragment {
+    private static String TAG = FragmentDoctor.class.getSimpleName();
 
     @Bind(R.id.institution_recycler_view)
     protected RecyclerView mRecyclerView;
@@ -51,10 +40,10 @@ public class FragmentTracking extends Fragment {
     private TrackingListAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
 
-    public static FragmentTracking newInstance() {
+    public static FragmentDoctor newInstance() {
         Bundle args = new Bundle();
 
-        FragmentTracking fragment = new FragmentTracking();
+        FragmentDoctor fragment = new FragmentDoctor();
         fragment.setArguments(args);
         return fragment;
     }
