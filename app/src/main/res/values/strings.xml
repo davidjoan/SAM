@@ -14,4 +14,12 @@
     <string name="title_activity_maps">Mapa</string>
     <string name="title_activity_login">Inicio de Sesión</string>
     <string name="title_activity_institution">Institución</string>
+    <string name="title_activity_new_record">Nuevo Registro MM</string>
+
+
+    <string-array name="attention_type_array">
+        <item>Inicio de Tratamiento</item>
+        <item>Fin de Tratamiento</item>
+        <item>Uso Propio</item>
+    </string-array>
 </resources>

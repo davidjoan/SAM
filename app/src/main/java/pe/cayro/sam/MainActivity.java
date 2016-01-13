@@ -3,6 +3,7 @@ package pe.cayro.sam;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,12 +16,16 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.realm.Realm;
+import pe.cayro.sam.model.User;
 import pe.cayro.sam.ui.FragmentInstitution;
 import pe.cayro.sam.ui.FragmentTracking;
 
@@ -28,19 +33,32 @@ public class MainActivity extends AppCompatActivity {
 
     private static String TAG = MainActivity.class.getSimpleName();
 
-    @Bind(R.id.drawer_layout)
+    @Bind(R.id.drawer_layout_main)
     protected DrawerLayout mDrawer;
+
     @Bind(R.id.toolbar)
     protected Toolbar toolbar;
-    @Bind(R.id.nvView)
+
+    @Bind(R.id.nvViewMain)
     protected NavigationView nvDrawer;
 
+    TextView userName;
+
+    TextView userCode;
+
     private ActionBarDrawerToggle drawerToggle;
+
     FragmentManager fragmentManager;
+
+    User user;
+
+    Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
@@ -51,29 +69,42 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
+        realm = Realm.getDefaultInstance();
+
+        user = realm.where(User.class).findFirst();
+
+
+
+
         final ActionBar ab = getSupportActionBar();
+
         ab.setHomeAsUpIndicator(R.drawable.ic_drawer);
+
         ab.setDisplayHomeAsUpEnabled(true);
 
         drawerToggle = setupDrawerToggle();
+
         mDrawer.setDrawerListener(drawerToggle);
 
         fragmentManager = getSupportFragmentManager();
+
         fragmentManager.beginTransaction().replace(R.id.flContent,
                 FragmentInstitution.newInstance()).commit();
 
-        // Highlight the selected item, update the title, and close the drawer
         setupDrawerContent(nvDrawer);
+
         nvDrawer.getMenu().getItem(0).setChecked(true);
 
 
+        //View header = findViewById(R.id.nvViewMain);
 
 
+        View header = nvDrawer.inflateHeaderView(R.layout.nav_header);
 
-
-
-
-
+        userName = (TextView) header.findViewById(R.id.NavUserName);
+        userName.setText(user.getName());
+        userCode = (TextView) header.findViewById(R.id.NavUserCode);
+        userCode.setText(user.getCode());
 
     }
 
@@ -137,10 +168,9 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
+
         // Insert the fragment by replacing any existing fragment
         fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
-
-
     }
 
     @Override

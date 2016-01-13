@@ -3,12 +3,14 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_first_fragment"
-            android:icon="@drawable/fa_time"
-            android:title="Iniciar Refrigerio" />
+            android:icon="@drawable/fa_hospital_o"
+            android:title="Instituciones" />
+
         <item
             android:id="@+id/nav_second_fragment"
             android:icon="@drawable/fa_calendar"
             android:title="Asistencia" />
+
         <item
             android:id="@+id/nav_third_fragment"
             android:icon="@drawable/fa_document"

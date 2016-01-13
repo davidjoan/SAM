@@ -30,7 +30,7 @@
         android:layout_toEndOf="@+id/avatar">
 
         <TextView
-            android:id="@+id/userName"
+            android:id="@+id/NavUserName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Usuario Demo"
@@ -39,17 +39,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/desc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginTop="4dp"
-            android:text="Ver Perfil"
-            android:textColor="#fff"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/campaign"
+            android:id="@+id/NavUserCode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"

@@ -4,7 +4,7 @@
         <item
             android:id="@+id/nav_first_fragment"
             android:icon="@drawable/fa_medical"
-            android:title="Entrega Muestra Médica" />
+            android:title="Muestra Médica" />
 
         <item
             android:id="@+id/nav_second_fragment"

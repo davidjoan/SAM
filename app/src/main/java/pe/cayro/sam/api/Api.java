@@ -35,7 +35,4 @@ public interface Api {
     @GET("/users/{imei}")
     User getUserByImei(@Path("imei") String imei);
 
-
-
-
 }

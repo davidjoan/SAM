@@ -14,13 +14,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import pe.cayro.sam.model.Institution;
 import pe.cayro.sam.model.Tracking;
+import pe.cayro.sam.ui.FragmentDoctor;
 import pe.cayro.sam.ui.FragmentInstitution;
+import pe.cayro.sam.ui.FragmentRecords;
 import pe.cayro.sam.ui.FragmentTracking;
 
 public class InstitutionActivity extends AppCompatActivity {
@@ -31,12 +34,14 @@ public class InstitutionActivity extends AppCompatActivity {
     Toolbar toolbar;
 
     Realm realm;
+
     String trackingCode;
 
     Tracking tracking;
-    Institution institution;
-    String institutionName;
 
+    Institution institution;
+
+    String institutionName;
 
     @Bind(R.id.drawer_layout)
     protected DrawerLayout mDrawer;
@@ -53,36 +58,47 @@ public class InstitutionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_institution);
 
         trackingCode = getIntent().getStringExtra("tracking_code");
+
         institutionName = getIntent().getStringExtra("institution_name");
 
         ButterKnife.bind(this);
 
-        realm = Realm.getInstance(getApplicationContext());
+        realm = Realm.getDefaultInstance();
 
         tracking = realm.where(Tracking.class).equalTo("code", trackingCode).findFirst();
 
-        //institution = realm.where(Institution.class).equalTo("id",tracking.getInstitutionId()).findFirst();
+        institution = realm.where(Institution.class).equalTo("id",tracking.getInstitutionId()).findFirst();
 
         toolbar.setTitle(institutionName);
+
         toolbar.setSubtitle(trackingCode);
 
         setSupportActionBar(toolbar);
 
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         final ActionBar ab = getSupportActionBar();
+
         ab.setHomeAsUpIndicator(R.drawable.ic_drawer);
+
         ab.setDisplayHomeAsUpEnabled(true);
 
         drawerToggle = setupDrawerToggle();
+
         mDrawer.setDrawerListener(drawerToggle);
 
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContent,
-                FragmentInstitution.newInstance()).commit();
+                FragmentRecords.newInstance(tracking.getUuid())).commit();
 
         // Highlight the selected item, update the title, and close the drawer
         setupDrawerContent(nvDrawer);
         nvDrawer.getMenu().getItem(0).setChecked(true);
+
+        View header = nvDrawer.inflateHeaderView(R.layout.institution_header);
+
+        TextView institutionNameTextView = (TextView) header.findViewById(R.id.institution_name);
+        institutionNameTextView.setText(institution.getName());
+        TextView institutionCodeTextView = (TextView) header.findViewById(R.id.tracking_code);
+        institutionCodeTextView.setText("Cod: "+tracking.getCode());
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
@@ -123,10 +139,10 @@ public class InstitutionActivity extends AppCompatActivity {
         try {
             switch(menuItem.getItemId()) {
                 case R.id.nav_first_fragment:
-                    fragment = FragmentInstitution.newInstance();
+                    fragment = FragmentRecords.newInstance(tracking.getUuid());
                     break;
                 case R.id.nav_second_fragment:
-                    fragment = FragmentInstitution.newInstance();
+                    fragment = FragmentDoctor.newInstance();
                     break;
                 case R.id.nav_third_fragment:
                     fragment = FragmentInstitution.newInstance();
@@ -139,32 +155,24 @@ public class InstitutionActivity extends AppCompatActivity {
                     break;
 
                 default:
-                    fragment = FragmentInstitution.newInstance();
+                    fragment = FragmentRecords.newInstance(tracking.getUuid());
             }
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
-        // Insert the fragment by replacing any existing fragment
         fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
-
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_institution, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }

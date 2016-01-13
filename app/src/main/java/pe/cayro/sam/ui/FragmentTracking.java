@@ -73,7 +73,7 @@ public class FragmentTracking extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        realm = Realm.getInstance(getActivity().getApplicationContext());
+        realm = Realm.getDefaultInstance();
 
         trackingList = realm.where(Tracking.class).findAll();
 

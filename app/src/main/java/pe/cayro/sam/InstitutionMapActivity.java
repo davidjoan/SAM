@@ -40,7 +40,7 @@ public class InstitutionMapActivity extends AppCompatActivity implements OnMapRe
 
         ButterKnife.bind(this);
 
-        realm = Realm.getInstance(getApplicationContext());
+        realm = Realm.getDefaultInstance();
 
         trackingUuid = getIntent().getStringExtra("tracking_uuid");
 

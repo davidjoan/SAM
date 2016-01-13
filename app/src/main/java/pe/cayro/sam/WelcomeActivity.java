@@ -14,7 +14,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.Spinner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -40,7 +42,6 @@ public class WelcomeActivity extends AppCompatActivity {
     ImageView logo;
     private Handler handler;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +54,6 @@ public class WelcomeActivity extends AppCompatActivity {
         Snackbar.make(logo, R.string.loading_app, Snackbar.LENGTH_LONG)
                 .setAction(Constants.ACTION, null)
                 .show();
-
 
         handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -78,10 +78,6 @@ public class WelcomeActivity extends AppCompatActivity {
                 }
             }
         }, SPLASH_DURATION);
-
-
-
-
     }
 
     @Override
@@ -89,7 +85,6 @@ public class WelcomeActivity extends AppCompatActivity {
         mIsBackButtonPressed = true;
         super.onBackPressed();
     }
-
 
     public class LoginAsyncTask extends AsyncTask<String, String, Integer> {
 
@@ -140,19 +135,18 @@ public class WelcomeActivity extends AppCompatActivity {
             // String imei = telephonyManager.getDeviceId();
             String imei = "98876876876876876";
 
-            Realm realm = Realm.getInstance(getApplicationContext());
-
-
+            Realm realm = Realm.getDefaultInstance();
 
             try{
 
                 realm.beginTransaction();
                 realm.clear(Institution.class);
-                realm.clear(Doctor.class);
+
                 realm.clear(AttentionType.class);
                 realm.clear(User.class);
                 realm.clear(Specialty.class);
                 realm.clear(Product.class);
+                realm.clear(Doctor.class);
 
                 this.publishProgress("Cargando Usuario");
                 User user = RestClient.get().getUserByImei(imei);
@@ -162,10 +156,6 @@ public class WelcomeActivity extends AppCompatActivity {
                 List<Institution> institutions = RestClient.get().getListInstitutions();
                 realm.copyToRealmOrUpdate(institutions);
 
-                this.publishProgress("Cargando Doctores");
-                List<Doctor> doctors = RestClient.get().getListDoctors();
-                realm.copyToRealmOrUpdate(doctors);
-
                 this.publishProgress("Cargando Tipo Atenciones");
                 List<AttentionType> attentionTypes = RestClient.get().getAttentionTypes();
                 realm.copyToRealmOrUpdate(attentionTypes);
@@ -173,6 +163,22 @@ public class WelcomeActivity extends AppCompatActivity {
                 this.publishProgress("Cargando Especialidades");
                 List<Specialty> specialties = RestClient.get().getListSpecialties();
                 realm.copyToRealmOrUpdate(specialties);
+
+                this.publishProgress("Cargando Doctores");
+                List<Doctor> doctors = RestClient.get().getListDoctors();
+                //realm.copyToRealmOrUpdate(doctors);
+
+                realm.commitTransaction();
+                realm.beginTransaction();
+
+                List<Doctor> doctorsTemp = new ArrayList<Doctor>();
+                for(Doctor temp : doctors){
+                    Specialty tempEsp = realm.where(Specialty.class).equalTo("id",temp.getSpecialtyId()).findFirst();
+                    temp.setSpecialty(tempEsp);
+                    doctorsTemp.add(temp);
+                }
+
+                realm.copyToRealmOrUpdate(doctorsTemp);
 
                 this.publishProgress("Cargando Productos");
                 List<Product> products = RestClient.get().getListProducts();
@@ -182,7 +188,6 @@ public class WelcomeActivity extends AppCompatActivity {
 
                 editor.putString(Constants.CYCLE_LOADED, Constants.YES);
                 editor.apply();
-
 
             } finally {
             if (realm != null) {

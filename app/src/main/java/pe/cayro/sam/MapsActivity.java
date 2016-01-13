@@ -68,7 +68,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.getUiSettings().setZoomControlsEnabled(true);
 
 
-        Realm realm = Realm.getInstance(getApplicationContext());
+        Realm realm = Realm.getDefaultInstance();
 
         RealmResults<Institution> institutionList = realm.where(Institution.class).findAll();
         institutionList.sort("latitude", Sort.DESCENDING);

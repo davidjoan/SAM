@@ -20,5 +20,15 @@ public class Constants {
     public static final String API_SPECIALTY = "/specialties";
     public static final String API_ATTENTION_TYPE = "/attention_types";
 
+
+    public static final String FORMAT_TIME = "HH:mm";
+    public static final String FORMAT_DATE = "dd-MM-yyyy";
+    public static final String FORMAT_DATETIME = "dd-MM-yyyy HH:mm";
+    public static final String FORMAT_DATETIME_WS = "yyyy-MM-dd HH:mm:ss";
+    public static final String FORMAT_DATE_WS = "yyyy-MM-dd";
+    public static final String FORMAT_DATE_SLASH = "dd/MM/yyyy";
+
+    public static final String DATEPICKER_TAG = "datepicker";
+
     //public static final String API_SPECIALTY = "/specialties";
 }

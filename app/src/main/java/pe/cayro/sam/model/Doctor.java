@@ -1,5 +1,7 @@
 package pe.cayro.sam.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -12,9 +14,12 @@ public class Doctor extends RealmObject {
     private int id;
     private String code;
     private String name;
+
+    @SerializedName("specialty_id")
     private int specialtyId;
     private String score;
     private boolean active;
+
     private Specialty specialty;
 
     public int getId() {

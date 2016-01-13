@@ -69,7 +69,8 @@ public class FragmentInstitution extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        realm = Realm.getInstance(getActivity().getApplicationContext());
+        realm = Realm.getDefaultInstance();
+        realm = Realm.getDefaultInstance();
 
         institutionList = realm.where(Institution.class).findAll();
 

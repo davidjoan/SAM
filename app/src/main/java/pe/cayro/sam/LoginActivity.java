@@ -25,6 +25,7 @@ import java.util.UUID;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import pe.cayro.sam.model.Doctor;
 import pe.cayro.sam.model.Institution;
 import pe.cayro.sam.model.Tracking;
 import pe.cayro.sam.model.User;
@@ -69,6 +70,8 @@ public class LoginActivity extends AppCompatActivity implements
         ButterKnife.bind(this);
 
         realm = Realm.getInstance(getApplicationContext());
+
+
 
         institution = realm.where(Institution.class).equalTo("name",institutionName).findFirst();
 
