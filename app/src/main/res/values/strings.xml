@@ -22,4 +22,5 @@
         <item>Fin de Tratamiento</item>
         <item>Uso Propio</item>
     </string-array>
+    <string name="title_activity_new_patient">Nuevo Paciente</string>
 </resources>

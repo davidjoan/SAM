@@ -1,0 +1,7 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context="pe.cayro.sam.MainActivity">
+    <item android:id="@+id/action_patient_new" android:title="Nuevo Paciente"
+        android:icon="@drawable/fa_add_user"
+        android:orderInCategory="100" app:showAsAction="always" />
+</menu>

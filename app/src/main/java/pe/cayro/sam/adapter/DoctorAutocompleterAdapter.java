@@ -84,8 +84,9 @@ public class DoctorAutocompleterAdapter extends ArrayAdapter<Integer> implements
 
                 Realm  realm = Realm.getDefaultInstance();
 
-                RealmResults<Doctor> realmResults = realm.where(Doctor.class).contains("name",constraint.toString()).findAll();
-                //realmResults.
+                RealmResults<Doctor> realmResults = realm.where(Doctor.class).contains("name",
+                        constraint.toString()).findAll();
+
                 for(Doctor doctor : realmResults){
                     data.add(Integer.valueOf(doctor.getId()));
                 }
@@ -97,8 +98,7 @@ public class DoctorAutocompleterAdapter extends ArrayAdapter<Integer> implements
             }
 
             @Override
-            protected void publishResults(CharSequence constraint,
-                                          FilterResults results) {
+            protected void publishResults(CharSequence constraint, FilterResults results) {
                 if (results != null && results.count > 0) {
                     clear();
                     addAll((ArrayList<Integer>) results.values);

@@ -11,7 +11,7 @@ import io.realm.annotations.PrimaryKey;
 public class Patient extends RealmObject {
 
     @PrimaryKey
-    private int id;
+    private String uuid;
     private int userId;
     private String code;
     private String name;
@@ -23,12 +23,12 @@ public class Patient extends RealmObject {
 
     private User user;
 
-    public int getId() {
-        return id;
+    public String getUuid() {
+        return uuid;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getCode() {

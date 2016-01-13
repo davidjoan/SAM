@@ -23,6 +23,7 @@ import pe.cayro.sam.model.Institution;
 import pe.cayro.sam.model.Tracking;
 import pe.cayro.sam.ui.FragmentDoctor;
 import pe.cayro.sam.ui.FragmentInstitution;
+import pe.cayro.sam.ui.FragmentPatient;
 import pe.cayro.sam.ui.FragmentRecords;
 import pe.cayro.sam.ui.FragmentTracking;
 
@@ -145,7 +146,7 @@ public class InstitutionActivity extends AppCompatActivity {
                     fragment = FragmentDoctor.newInstance();
                     break;
                 case R.id.nav_third_fragment:
-                    fragment = FragmentInstitution.newInstance();
+                    fragment = FragmentPatient.newInstance();
                     break;
                 case R.id.nav_fourth_fragment:
                     fragment = FragmentTracking.newInstance();
