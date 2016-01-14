@@ -1,6 +1,5 @@
 package pe.cayro.sam.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -24,11 +22,11 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
-import pe.cayro.sam.LoginActivity;
 import pe.cayro.sam.NewRecordActivity;
 import pe.cayro.sam.R;
 import pe.cayro.sam.model.Record;
 import pe.cayro.sam.model.Tracking;
+import util.Constants;
 
 /**
  * Created by David on 8/01/16.
@@ -40,20 +38,18 @@ public class FragmentRecords extends Fragment {
 
     @Bind(R.id.record_recycler_view)
     protected RecyclerView mRecyclerView;
-    String trackingUuid;
 
-    Realm realm;
-    List<Record> recordList;
+    protected String trackingUuid;
+    protected Realm realm;
+    protected List<Record> recordList;
     private RecordListAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
-    Tracking tracking;
-
+    protected Tracking tracking;
 
     public static FragmentRecords newInstance(String uuid) {
         Bundle args = new Bundle();
-
         FragmentRecords fragment = new FragmentRecords();
-        args.putString("uuid", uuid);
+        args.putString(Constants.UUID, uuid);
         fragment.setArguments(args);
         return fragment;
     }
@@ -61,8 +57,8 @@ public class FragmentRecords extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        trackingUuid = getArguments().getString("uuid");
+        trackingUuid = getArguments().getString(Constants.UUID);
+        Log.i(TAG, trackingUuid);
     }
 
     @Override
@@ -70,14 +66,14 @@ public class FragmentRecords extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.fragment_record,container,false);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Registro de Entrega");
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle("Muestra Médica");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.record_title);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(R.string.medical_sample);
 
         ButterKnife.bind(this, view);
 
         realm = Realm.getDefaultInstance();
 
-        tracking = realm.where(Tracking.class).equalTo("uuid", trackingUuid).findFirst();
+        tracking = realm.where(Tracking.class).equalTo(Constants.UUID, trackingUuid).findFirst();
 
         recordList = realm.where(Record.class).findAll();
 
@@ -85,9 +81,7 @@ public class FragmentRecords extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new RecordListAdapter(recordList, R.layout.record_item);
         mRecyclerView.setAdapter(mAdapter);
-
         setHasOptionsMenu(true);
-
         return view;
     }
 
@@ -103,10 +97,9 @@ public class FragmentRecords extends Fragment {
         switch (item.getItemId()){
             case R.id.action_new_record:
                 Intent intent = new Intent(getActivity(), NewRecordActivity.class);
-                intent.putExtra("tracking_uuid",tracking.getUuid());
+                intent.putExtra(Constants.TRACKING_UUID,tracking.getUuid());
                 startActivityForResult(intent, ADD_RECORD_REQUEST);
                 break;
-
         }
         return super.onOptionsItemSelected(item);
     }
@@ -138,13 +131,11 @@ public class FragmentRecords extends Fragment {
         public void onBindViewHolder(ViewHolder viewHolder, int position) {
             Record item = items.get(position);
 
-            viewHolder.doctor.setText("Dr(a). "+item.getDoctor().getName());
+            viewHolder.doctor.setText(Constants.DOCTOR_ABR+item.getDoctor().getName());
             viewHolder.patient.setText(item.getPatient().getName());
             viewHolder.attentionType.setText(item.getAttentionType().getName());
-
             String dateFormat = "";
-
-            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+            SimpleDateFormat formatter = new SimpleDateFormat(Constants.FORMAT_DATETIME_SLASH);
             dateFormat = formatter.format(item.getRecordDate());
 
             viewHolder.date.setText(dateFormat);
@@ -159,7 +150,6 @@ public class FragmentRecords extends Fragment {
         public class ViewHolder extends RecyclerView.ViewHolder
                 implements RecyclerView.OnClickListener {
 
-            public ImageView image;
             public TextView doctor;
             public TextView patient;
             public TextView attentionType;
@@ -167,27 +157,16 @@ public class FragmentRecords extends Fragment {
 
             public ViewHolder(View itemView) {
                 super(itemView);
-              //  image = (ImageView) itemView.findViewById(R.id.record_name);
                 doctor = (TextView) itemView.findViewById(R.id.record_doctor);
                 patient = (TextView) itemView.findViewById(R.id.record_patient);
                 attentionType = (TextView) itemView.findViewById(R.id.record_attention_type);
                 date = (TextView) itemView.findViewById(R.id.record_date);
-
                 itemView.setOnClickListener(this);
             }
 
-
             @Override
             public void onClick(View view) {
-
-               // Toast.makeText(getActivity(), "Click "+name,
-               // Toast.LENGTH_SHORT).show();
-               // Log.d(TAG, "onClick DEMO");
-               // Context context = itemView.getContext();
-
-                    //Intent intent = new Intent(getActivity(), LoginActivity.class);
-                    //intent.putExtra("record_name", doctor.getText());
-                    //context.startActivity(intent);
+                /* TODO: Implement Intent to edit the record information */
             }
         }
     }

@@ -42,17 +42,13 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.nvViewMain)
     protected NavigationView nvDrawer;
 
-    TextView userName;
-
-    TextView userCode;
-
+    private TextView userName;
+    private TextView userCode;
     private ActionBarDrawerToggle drawerToggle;
 
-    FragmentManager fragmentManager;
-
     User user;
-
     Realm realm;
+    FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,17 +60,11 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         toolbar.setTitle(getString(R.string.app_name));
-
         toolbar.setLogoDescription(getResources().getString(R.string.app_name));
-
         setSupportActionBar(toolbar);
 
         realm = Realm.getDefaultInstance();
-
         user = realm.where(User.class).findFirst();
-
-
-
 
         final ActionBar ab = getSupportActionBar();
 
@@ -95,17 +85,12 @@ public class MainActivity extends AppCompatActivity {
 
         nvDrawer.getMenu().getItem(0).setChecked(true);
 
-
-        //View header = findViewById(R.id.nvViewMain);
-
-
         View header = nvDrawer.inflateHeaderView(R.layout.nav_header);
 
         userName = (TextView) header.findViewById(R.id.NavUserName);
         userName.setText(user.getName());
         userCode = (TextView) header.findViewById(R.id.NavUserCode);
         userCode.setText(user.getCode());
-
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {

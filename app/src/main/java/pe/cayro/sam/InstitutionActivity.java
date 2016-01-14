@@ -26,6 +26,7 @@ import pe.cayro.sam.ui.FragmentInstitution;
 import pe.cayro.sam.ui.FragmentPatient;
 import pe.cayro.sam.ui.FragmentRecords;
 import pe.cayro.sam.ui.FragmentTracking;
+import util.Constants;
 
 public class InstitutionActivity extends AppCompatActivity {
 
@@ -58,17 +59,18 @@ public class InstitutionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_institution);
 
-        trackingCode = getIntent().getStringExtra("tracking_code");
+        trackingCode = getIntent().getStringExtra(Constants.TRACKING_CODE);
 
-        institutionName = getIntent().getStringExtra("institution_name");
+        institutionName = getIntent().getStringExtra(Constants.INSTITUTION_NAME);
 
         ButterKnife.bind(this);
 
         realm = Realm.getDefaultInstance();
 
-        tracking = realm.where(Tracking.class).equalTo("code", trackingCode).findFirst();
+        tracking = realm.where(Tracking.class).equalTo(Constants.CODE, trackingCode).findFirst();
 
-        institution = realm.where(Institution.class).equalTo("id",tracking.getInstitutionId()).findFirst();
+        institution = realm.where(Institution.class)
+                .equalTo(Constants.ID, tracking.getInstitutionId()).findFirst();
 
         toolbar.setTitle(institutionName);
 
@@ -90,7 +92,7 @@ public class InstitutionActivity extends AppCompatActivity {
         fragmentManager.beginTransaction().replace(R.id.flContent,
                 FragmentRecords.newInstance(tracking.getUuid())).commit();
 
-        // Highlight the selected item, update the title, and close the drawer
+        /* Highlight the selected item, update the title, and close the drawer */
         setupDrawerContent(nvDrawer);
         nvDrawer.getMenu().getItem(0).setChecked(true);
 
@@ -99,14 +101,14 @@ public class InstitutionActivity extends AppCompatActivity {
         TextView institutionNameTextView = (TextView) header.findViewById(R.id.institution_name);
         institutionNameTextView.setText(institution.getName());
         TextView institutionCodeTextView = (TextView) header.findViewById(R.id.tracking_code);
-        institutionCodeTextView.setText("Cod: "+tracking.getCode());
+        institutionCodeTextView.setText(Constants.CODE_FIELD+tracking.getCode());
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
         return new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open,  R.string.drawer_close){
             @Override
             public void onDrawerClosed(View view) {
-                // your refresh code can be called from here
+
             }
         };
     }
@@ -116,8 +118,6 @@ public class InstitutionActivity extends AppCompatActivity {
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(final MenuItem menuItem) {
-
-                        // Highlight the selected item, update the title, and close the drawer
                         mDrawer.closeDrawers();
                         menuItem.setChecked(true);
                         setTitle(menuItem.getTitle());

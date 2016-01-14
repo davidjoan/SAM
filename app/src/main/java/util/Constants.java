@@ -7,28 +7,53 @@ public class Constants {
 
     public static final String PREFERENCES_SAM = "preferences_sam";
 
-    public static final String API_INSTITUTION = "/institutions";
     public static final String URL = "http://private-950cc-sam38.apiary-mock.com/";
-    public static final String ACTION = "Action";
+    public static final String CMP_PHOTO_SERVER = "http://200.48.13.46/cmp/fotos/";
+    public static final String DATEPICKER_TAG = "datepicker";
+    public static final String DOT_JPG = ".jpg";
 
-    public static final String CYCLE_LOADED = "cycle_loaded";
-    public static final String YES = "yes";
-    public static final String NO = "no";
-    public static final String EMPTY = "";
-    public static final String API_PRODUCT = "/products";
     public static final String API_DOCTOR = "/doctors";
+    public static final String API_PRODUCT = "/products";
     public static final String API_SPECIALTY = "/specialties";
+    public static final String API_INSTITUTION = "/institutions";
     public static final String API_ATTENTION_TYPE = "/attention_types";
 
+    public static final String CMP_FIELD = "cmp: ";
+    public static final String DNI_FIELD = "Dni: ";
+    public static final String CODE_FIELD = "Cod: ";
+    public static final String QTY_FIELD = "Cantidad: ";
+    public static final String SPECIALTY_FIELD ="Esp: ";
+    public static final String PHONE_FIELD = "Teléfono: ";
+
+    public static final String ID = "id";
+    public static final String YES = "yes";
+    public static final String UUID = "uuid";
+    public static final String IMEI = "imei";
+    public static final String CODE = "code";
+    public static final String NAME = "name";
+    public static final String LOGIN = "login";
+    public static final String ACTION = "Action";
+
+    public static final String DOCTORS = "Médicos";
+    public static final String CYCLE_LOADED = "cycle_loaded";
+    public static final String SPECIALTY_ID = "specialty_id";
+    public static final String TRACKING_UUID = "tracking_uuid";
+    public static final String TRACKING_CODE = "tracking_code";
+    public static final String INSTITUTION_NAME = "institution_name";
+
+    public static final String ELLIPSIS = "...";
+    public static final String DOCTOR_ABR = "Dr(a). ";
+    public static final String SINCRONIZATION = "Sincronizando";
+    public static final String OBTAINING_IMEI = "Obteniendo IMEI";
+
+    public static final String FORMAT_DATE = "dd-MM-yyyy";
+    public static final String FORMAT_DATE_SLASH = "dd/MM/yyyy";
+    public static final String FORMAT_DATETIME_SLASH = "dd/MM/yyyy hh:mm";
 
     public static final String FORMAT_TIME = "HH:mm";
-    public static final String FORMAT_DATE = "dd-MM-yyyy";
     public static final String FORMAT_DATETIME = "dd-MM-yyyy HH:mm";
     public static final String FORMAT_DATETIME_WS = "yyyy-MM-dd HH:mm:ss";
     public static final String FORMAT_DATE_WS = "yyyy-MM-dd";
-    public static final String FORMAT_DATE_SLASH = "dd/MM/yyyy";
-
-    public static final String DATEPICKER_TAG = "datepicker";
-
-    //public static final String API_SPECIALTY = "/specialties";
+    public static final String NO = "no";
+    public static final String EMPTY = "";
 }

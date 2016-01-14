@@ -46,7 +46,6 @@ public class RestClient {
                         return false;
                     }
                 }).create();
-                        //.registerTypeAdapter(Date.class, new DateTypeAdapter())
 
         RestAdapter.Builder builder = new RestAdapter.Builder()
                 .setEndpoint(Constants.URL)

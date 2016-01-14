@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import util.Constants;
 
 /**
  * Created by David on 7/01/16.
@@ -11,23 +12,22 @@ import io.realm.annotations.PrimaryKey;
 public class Doctor extends RealmObject {
 
     @PrimaryKey
-    private int id;
+    private String uuid;
     private String code;
     private String name;
-
-    @SerializedName("specialty_id")
+    @SerializedName(Constants.SPECIALTY_ID)
     private int specialtyId;
     private String score;
     private boolean active;
 
     private Specialty specialty;
 
-    public int getId() {
-        return id;
+    public String getUuid() {
+        return uuid;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getCode() {

@@ -15,10 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -26,9 +23,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import pe.cayro.sam.NewPatientActivity;
-import pe.cayro.sam.NewRecordActivity;
 import pe.cayro.sam.R;
 import pe.cayro.sam.model.Patient;
+import util.Constants;
 
 /**
  * Created by David on 8/01/16.
@@ -64,7 +61,7 @@ public class FragmentPatient extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.fragment_patient,container,false);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Pacientes");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.patients);
 
         ButterKnife.bind(this, view);
 
@@ -72,9 +69,10 @@ public class FragmentPatient extends Fragment {
 
         patientList = realm.where(Patient.class).findAll();
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle("Cantidad: "+String.valueOf(patientList.size()));
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(Constants.QTY_FIELD+
+                String.valueOf(patientList.size()));
 
-        Log.d(TAG, "Cantidad de Patientes: "+String.valueOf(patientList.size()));
+        Log.d(TAG, Constants.QTY_FIELD+String.valueOf(patientList.size()));
 
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -134,10 +132,9 @@ public class FragmentPatient extends Fragment {
             Patient item = items.get(position);
 
             viewHolder.name.setText(item.getName());
-            viewHolder.code.setText("Dni:  "+item.getCode());
-            viewHolder.address.setText("Teléfono: "+item.getPhone());
+            viewHolder.code.setText(Constants.DNI_FIELD+item.getCode());
+            viewHolder.address.setText(Constants.PHONE_FIELD+item.getPhone());
             viewHolder.id = item.getUuid();
-
             viewHolder.itemView.setTag(item);
         }
 
@@ -148,7 +145,6 @@ public class FragmentPatient extends Fragment {
 
         public class ViewHolder extends RecyclerView.ViewHolder
                 implements RecyclerView.OnClickListener {
-
 
             public TextView name;
             public TextView address;
@@ -166,14 +162,7 @@ public class FragmentPatient extends Fragment {
 
             @Override
             public void onClick(View view) {
-
-                Log.d(TAG, "onClick DEMO");
-                //Context context = itemView.getContext();
-                //Intent intent = new Intent(getActivity(), PatientMapActivity.class);
-                //intent.putExtra("patient_uuid", uuid);
-
-                //Toast.makeText(getActivity(), uuid, Toast.LENGTH_SHORT).show();
-                //context.startActivity(intent);
+                /* TODO: Implement Intent to edit the patient information */
             }
         }
     }
@@ -192,7 +181,8 @@ public class FragmentPatient extends Fragment {
                 mAdapter.setData(patientList);
                 mAdapter.notifyDataSetChanged();
 
-                ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle("Cantidad: " + String.valueOf(patientList.size()));
+                ((AppCompatActivity) getActivity()).getSupportActionBar().
+                        setSubtitle(Constants.QTY_FIELD+String.valueOf(patientList.size()));
 
             }
         }

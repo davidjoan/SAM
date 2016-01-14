@@ -16,6 +16,4 @@ public class SamApplication extends Application {
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this).build();
         Realm.setDefaultConfiguration(realmConfiguration);
     }
-
-
 }

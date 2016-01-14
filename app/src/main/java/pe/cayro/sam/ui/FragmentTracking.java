@@ -1,15 +1,10 @@
 package pe.cayro.sam.ui;
 
-import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,34 +16,30 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
-import io.realm.RealmResults;
-import io.realm.Sort;
 import pe.cayro.sam.InstitutionMapActivity;
-import pe.cayro.sam.LoginActivity;
 import pe.cayro.sam.R;
 import pe.cayro.sam.model.Tracking;
-import pe.cayro.sam.model.Tracking;
+import util.Constants;
 
 /**
  * Created by David on 8/01/16.
  */
 public class FragmentTracking extends Fragment {
+
     private static String TAG = FragmentTracking.class.getSimpleName();
 
     @Bind(R.id.institution_recycler_view)
     protected RecyclerView mRecyclerView;
 
-    Realm realm;
-    List<Tracking> trackingList;
-    private TrackingListAdapter mAdapter;
+    protected Realm realm;
+    protected List<Tracking> trackingList;
+    protected TrackingListAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
 
     public static FragmentTracking newInstance() {
@@ -69,7 +60,7 @@ public class FragmentTracking extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.fragment_institution,container,false);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Asistencia");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.assistance);
 
         ButterKnife.bind(this, view);
 
@@ -77,9 +68,7 @@ public class FragmentTracking extends Fragment {
 
         trackingList = realm.where(Tracking.class).findAll();
 
-        Log.d(TAG, "Cantidad de Tracking: "+String.valueOf(trackingList.size()));
-
-        //trackingList.sort("createdAt", Sort.ASCENDING);
+        Log.d(TAG, Constants.QTY_FIELD+String.valueOf(trackingList.size()));
 
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -120,7 +109,6 @@ public class FragmentTracking extends Fragment {
             viewHolder.name.setText(item.getInstitution().getName());
             viewHolder.uuid = item.getUuid();
 
-
             String typeString = "";
             String dateFormat = "";
 
@@ -131,7 +119,6 @@ public class FragmentTracking extends Fragment {
                 typeString = "Inicio Sesión el ";
             }
             viewHolder.address.setText(typeString+dateFormat);
-
             viewHolder.itemView.setTag(item);
         }
 
@@ -156,15 +143,11 @@ public class FragmentTracking extends Fragment {
                 itemView.setOnClickListener(this);
             }
 
-
             @Override
             public void onClick(View view) {
-
-                Log.d(TAG, "onClick DEMO");
                 Context context = itemView.getContext();
                 Intent intent = new Intent(getActivity(), InstitutionMapActivity.class);
-                intent.putExtra("tracking_uuid", uuid);
-
+                intent.putExtra(Constants.TRACKING_UUID, uuid);
                 Toast.makeText(getActivity(), uuid, Toast.LENGTH_SHORT).show();
                 context.startActivity(intent);
             }

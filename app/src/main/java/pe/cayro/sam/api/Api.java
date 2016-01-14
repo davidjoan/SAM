@@ -33,6 +33,6 @@ public interface Api {
     List<AttentionType> getAttentionTypes();
 
     @GET("/users/{imei}")
-    User getUserByImei(@Path("imei") String imei);
+    User getUserByImei(@Path(Constants.IMEI) String imei);
 
 }

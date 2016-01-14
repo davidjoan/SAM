@@ -13,8 +13,8 @@ public class Record extends RealmObject {
     @PrimaryKey
     private String uuid;
     private int userId;
-    private int patientId;
-    private int doctorId;
+    private String patientUuid;
+    private String doctorUuid;
     private int institutionId;
     private String code;
     private int attentionTypeId;
@@ -46,20 +46,20 @@ public class Record extends RealmObject {
         this.userId = userId;
     }
 
-    public int getPatientId() {
-        return patientId;
+    public String getPatientUuid() {
+        return patientUuid;
     }
 
-    public void setPatientId(int patientId) {
-        this.patientId = patientId;
+    public void setPatientUuid(String patientUuid) {
+        this.patientUuid = patientUuid;
     }
 
-    public int getDoctorId() {
-        return doctorId;
+    public String getDoctorUuid() {
+        return doctorUuid;
     }
 
-    public void setDoctorId(int doctorId) {
-        this.doctorId = doctorId;
+    public void setDoctorUuid(String doctorUuid) {
+        this.doctorUuid = doctorUuid;
     }
 
     public int getInstitutionId() {

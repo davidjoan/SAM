@@ -25,7 +25,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import pe.cayro.sam.adapter.DoctorAutocompleterAdapter;
+import pe.cayro.sam.adapter.PatientAutocompleterAdapter;
 import pe.cayro.sam.model.Doctor;
+import pe.cayro.sam.model.Patient;
 import pe.cayro.sam.model.Record;
 import pe.cayro.sam.model.Tracking;
 import util.Constants;
@@ -51,6 +53,9 @@ public class NewRecordActivity extends AppCompatActivity
     @Bind(R.id.record_doctor_autocompleter)
     protected AppCompatAutoCompleteTextView recordDoctor;
 
+    @Bind(R.id.record_patient_autocompleter)
+    protected AppCompatAutoCompleteTextView recordPatient;
+
     String trackingUuid;
 
     Realm realm;
@@ -62,10 +67,16 @@ public class NewRecordActivity extends AppCompatActivity
     private Calendar start;
 
     private SimpleDateFormat format;
+
     private SimpleDateFormat sdf;
 
-    protected DoctorAutocompleterAdapter adapterAuto;
+    protected DoctorAutocompleterAdapter adapterDoctor;
+
+    protected PatientAutocompleterAdapter adapterPatient;
+
     private Doctor doctor;
+
+    private Patient patient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,11 +92,12 @@ public class NewRecordActivity extends AppCompatActivity
 
         realm = Realm.getDefaultInstance();
 
-        trackingUuid = getIntent().getStringExtra("tracking_uuid");
+        trackingUuid = getIntent().getStringExtra(Constants.TRACKING_UUID);
 
-        tracking = realm.where(Tracking.class).equalTo("uuid", trackingUuid).findFirst();
+        tracking = realm.where(Tracking.class).equalTo(Constants.UUID, trackingUuid).findFirst();
 
         toolbar.setTitle("Nuevo Registro de MM");
+
         toolbar.setSubtitle(tracking.getInstitution().getName());
 
         setSupportActionBar(toolbar);
@@ -129,9 +141,28 @@ public class NewRecordActivity extends AppCompatActivity
             }
         }
 
-        adapterAuto = new DoctorAutocompleterAdapter(this, R.layout.doctor_autocomplete_item);
-        recordDoctor.setAdapter(adapterAuto);
-        recordDoctor.setOnItemClickListener(this);
+        adapterDoctor = new DoctorAutocompleterAdapter(this, R.layout.doctor_autocomplete_item);
+        recordDoctor.setAdapter(adapterDoctor);
+        recordDoctor.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String temp =  adapterDoctor.getItem(position);
+
+                doctor = realm.where(Doctor.class).equalTo("uuid", temp).findFirst();
+                recordDoctor.setText(doctor.getName());
+            }
+        });
+
+        adapterPatient = new PatientAutocompleterAdapter(this, R.layout.patient_autocomplete_item);
+        recordPatient.setAdapter(adapterPatient);
+        recordPatient.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String temp = adapterPatient.getItem(position);
+                patient = realm.where(Patient.class).equalTo("uuid", temp).findFirst();
+                recordPatient.setText(patient.getName());
+            }
+        });
     }
 
     @Override
@@ -143,9 +174,6 @@ public class NewRecordActivity extends AppCompatActivity
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Integer temp = ((Integer) adapterAuto.getItem(position));
 
-        doctor = realm.where(Doctor.class).equalTo("id",temp.intValue()).findFirst();
-        recordDoctor.setText(doctor.getName());
     }
 }

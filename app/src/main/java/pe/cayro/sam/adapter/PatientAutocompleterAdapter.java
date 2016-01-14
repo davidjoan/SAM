@@ -11,29 +11,26 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
 import pe.cayro.sam.R;
-import pe.cayro.sam.model.Doctor;
+import pe.cayro.sam.model.Patient;
 import util.Constants;
 
 /**
  * Created by David on 12/01/16.
  */
-public class DoctorAutocompleterAdapter extends ArrayAdapter<String> implements Filterable {
+public class PatientAutocompleterAdapter extends ArrayAdapter<String> implements Filterable {
 
-    private static String TAG = DoctorAutocompleterAdapter.class.getSimpleName();
+    private static String TAG = PatientAutocompleterAdapter.class.getSimpleName();
 
-    public DoctorAutocompleterAdapter(Context context, int textViewResourceId) {
+    public PatientAutocompleterAdapter(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
     }
 
     private class ViewHolder {
-        ImageView image;
         TextView name;
         TextView code;
     }
@@ -41,38 +38,32 @@ public class DoctorAutocompleterAdapter extends ArrayAdapter<String> implements 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         String uuid = getItem(position);
-        Log.d(TAG, uuid);
 
-        /* TODO: Check if exist another way to load a information of doctor using Realm. */
+        Log.i(TAG, uuid);
+
         Realm realm = Realm.getDefaultInstance();
-        Doctor doctor = realm.where(Doctor.class).equalTo(Constants.UUID, uuid).findFirst();
-        realm.close();
+        /* TODO: Check if exist another way to load a information of patient using Realm. */
+        Patient patient = realm.where(Patient.class).equalTo(Constants.UUID, uuid).findFirst();
 
         ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.doctor_autocomplete_item, parent, false);
-            viewHolder.image = (ImageView) convertView.findViewById(R.id.doctor_image);
-            viewHolder.name = (TextView) convertView.findViewById(R.id.doctor_name);
-            viewHolder.code = (TextView) convertView.findViewById(R.id.doctor_code);
+            convertView = inflater.inflate(R.layout.patient_autocomplete_item, parent, false);
+            viewHolder.name = (TextView) convertView.findViewById(R.id.patient_name);
+            viewHolder.code = (TextView) convertView.findViewById(R.id.patient_code);
 
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.name.setText((doctor.getName().length() > 25) ?
-                doctor.getName().substring(0, 25) + Constants.ELLIPSIS : doctor.getName());
+        viewHolder.name.setText((patient.getName().length() > 25)?
+                patient.getName().substring(0, 25)+Constants.ELLIPSIS:
+                patient.getName());
+        viewHolder.code.setText(Constants.DNI_FIELD + patient.getCode());
 
-        viewHolder.code.setText(Constants.CMP_FIELD+ doctor.getCode());
-
-        Picasso.with(getContext()).
-                load(new StringBuilder().append(Constants.CMP_PHOTO_SERVER).
-                        append(String.format("%05d", Integer.parseInt(doctor.getCode()))).
-                        append(Constants.DOT_JPG).toString()).
-                error(R.drawable.avatar).
-                into(viewHolder.image);
+        realm.close();
 
         return convertView;
     }
@@ -84,16 +75,15 @@ public class DoctorAutocompleterAdapter extends ArrayAdapter<String> implements 
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 ArrayList<String> data = new ArrayList<String>();
-
                 FilterResults filterResults = new FilterResults();
 
                 Realm  realm = Realm.getDefaultInstance();
 
-                RealmResults<Doctor> realmResults = realm.where(Doctor.class).
+                RealmResults<Patient> realmResults = realm.where(Patient.class).
                         contains(Constants.NAME, constraint.toString()).findAll();
 
-                for(Doctor doctor : realmResults){
-                    data.add(doctor.getUuid());
+                for(Patient patient : realmResults){
+                    data.add(patient.getUuid());
                 }
 
                 filterResults.values = data;

@@ -25,10 +25,12 @@ import java.util.UUID;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import io.realm.internal.TableOrView;
 import pe.cayro.sam.model.Doctor;
 import pe.cayro.sam.model.Institution;
 import pe.cayro.sam.model.Tracking;
 import pe.cayro.sam.model.User;
+import util.Constants;
 
 public class LoginActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
@@ -47,16 +49,13 @@ public class LoginActivity extends AppCompatActivity implements
     TextView institutionTextView;
 
     @Bind(R.id.editTextAtentionCode)
-    EditText atentionCodeEditText;
+    EditText attentionCodeEditText;
 
-
-    Institution institution;
-    User user;
-
+    protected Institution institution;
+    protected User user;
     protected GoogleApiClient mGoogleApiClient;
     protected Location mLastLocation;
-
-    Realm realm;
+    protected Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,19 +64,18 @@ public class LoginActivity extends AppCompatActivity implements
 
         buildGoogleApiClient();
 
-        institutionName = getIntent().getStringExtra("institution_name");
+        institutionName = getIntent().getStringExtra(Constants.INSTITUTION_NAME);
 
         ButterKnife.bind(this);
 
         realm = Realm.getInstance(getApplicationContext());
 
-
-
-        institution = realm.where(Institution.class).equalTo("name",institutionName).findFirst();
+        institution = realm.where(Institution.class)
+                .equalTo(Constants.NAME,institutionName).findFirst();
 
         user = realm.where(User.class).findFirst();
 
-        toolbar.setTitle("Iniciar Sesión");
+        toolbar.setTitle(R.string.login);
 
         setSupportActionBar(toolbar);
 
@@ -89,20 +87,19 @@ public class LoginActivity extends AppCompatActivity implements
             @Override
             public void onClick(View view) {
 
-                if(atentionCodeEditText.getText().length() > 0){
+                if(attentionCodeEditText.getText().length() > 0){
 
-                    //int nextID = (int) (realm.where(Tracking.class).max("id").intValue() + 1);
-
-                    Toast.makeText(LoginActivity.this, atentionCodeEditText.getText().toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this,
+                            attentionCodeEditText.getText().toString(), Toast.LENGTH_SHORT).show();
 
                     realm.beginTransaction();
                     Tracking tracking = new Tracking();
                     tracking.setUuid(UUID.randomUUID().toString());
-                    tracking.setCode(atentionCodeEditText.getText().toString());
-                    tracking.setType("login");
+                    tracking.setCode(attentionCodeEditText.getText().toString());
+                    tracking.setType(Constants.LOGIN);
                     tracking.setInstitutionId(institution.getId());
                     tracking.setCreatedAt(new Date());
-                    tracking.setUserId(user.getId()); //TODO: add real user ID
+                    tracking.setUserId(user.getId());
                     tracking.setInstitution(institution);
 
                     if(mLastLocation != null){
@@ -115,8 +112,8 @@ public class LoginActivity extends AppCompatActivity implements
                     realm.commitTransaction();
 
                     Intent intent = new Intent(LoginActivity.this, InstitutionActivity.class);
-                    intent.putExtra("tracking_code", tracking.getCode());
-                    intent.putExtra("institution_name", institutionName);
+                    intent.putExtra(Constants.TRACKING_CODE, tracking.getCode());
+                    intent.putExtra(Constants.INSTITUTION_NAME, institutionName);
 
 
                     LoginActivity.this.startActivity(intent);
@@ -124,10 +121,10 @@ public class LoginActivity extends AppCompatActivity implements
 
                 }else {
 
-                     Toast.makeText(LoginActivity.this, "Ingrese el Número de Atención", Toast.LENGTH_SHORT).show();
 
+                     Toast.makeText(LoginActivity.this, R.string.validation_tracking_code,
+                             Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
     }
@@ -162,7 +159,6 @@ public class LoginActivity extends AppCompatActivity implements
 
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (mLastLocation != null) {
-
             Log.i(TAG, "latitude:" + String.valueOf(mLastLocation.getLatitude()));
             Log.i(TAG, "longitude" + String.valueOf(mLastLocation.getLongitude()));
         } else {

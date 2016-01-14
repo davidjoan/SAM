@@ -63,7 +63,7 @@ public class FragmentDoctor extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.fragment_doctor,container,false);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Médicos");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(Constants.DOCTORS);
 
         ButterKnife.bind(this, view);
 
@@ -71,9 +71,10 @@ public class FragmentDoctor extends Fragment {
 
         doctorList = realm.where(Doctor.class).findAll();
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle("Cantidad: "+String.valueOf(doctorList.size()));
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(Constants.QTY_FIELD+
+                String.valueOf(doctorList.size()));
 
-        Log.d(TAG, "Cantidad de Doctores: "+String.valueOf(doctorList.size()));
+        Log.d(TAG, Constants.QTY_FIELD+String.valueOf(doctorList.size()));
 
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -119,17 +120,17 @@ public class FragmentDoctor extends Fragment {
         public void onBindViewHolder(ViewHolder viewHolder, int position) {
             Doctor item = items.get(position);
 
-            //Specialty temp = Realm.getDefaultInstance().where(Specialty.class).equalTo("id", item.getSpecialtyId()).findFirst();
-
             viewHolder.name.setText(item.getName());
-            viewHolder.code.setText("CMP:  "+item.getCode());
-            viewHolder.specialty.setText("Esp: "+item.getSpecialty().getName());
-            viewHolder.id = item.getId();
+            viewHolder.code.setText(Constants.CMP_FIELD+item.getCode());
+            viewHolder.specialty.setText(Constants.SPECIALTY_FIELD+item.getSpecialty().getName());
+            viewHolder.uuid = item.getUuid();
 
             Picasso.with(getContext()).
-                    load("http://200.48.13.46/cmp/fotos/"+ String.format("%05d", Integer.parseInt(item.getCode()))+".jpg").
-                    error(R.drawable.fa_user_md).
-                    into(viewHolder.image);
+                    load(new StringBuilder().append(Constants.CMP_PHOTO_SERVER)
+                            .append(String.format("%05d", Integer.parseInt(item.getCode())))
+                            .append(Constants.DOT_JPG).toString()).
+                            error(R.drawable.avatar).
+                            into(viewHolder.image);
 
             viewHolder.itemView.setTag(item);
         }
@@ -141,12 +142,11 @@ public class FragmentDoctor extends Fragment {
 
         public class ViewHolder extends RecyclerView.ViewHolder
                 implements RecyclerView.OnClickListener {
-
             public ImageView image;
             public TextView name;
             public TextView specialty;
             public TextView code;
-            public int id;
+            public String uuid;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -158,17 +158,9 @@ public class FragmentDoctor extends Fragment {
                 itemView.setOnClickListener(this);
             }
 
-
             @Override
             public void onClick(View view) {
-
-                Log.d(TAG, "onClick DEMO");
-                //Context context = itemView.getContext();
-                //Intent intent = new Intent(getActivity(), DoctorMapActivity.class);
-                //intent.putExtra("doctor_uuid", uuid);
-
-                //Toast.makeText(getActivity(), uuid, Toast.LENGTH_SHORT).show();
-                //context.startActivity(intent);
+                /* TODO: Implement Intent to edit the doctor information */
             }
         }
     }

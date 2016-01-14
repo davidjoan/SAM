@@ -19,6 +19,7 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 import pe.cayro.sam.model.Institution;
 import pe.cayro.sam.model.Tracking;
+import util.Constants;
 
 public class InstitutionMapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -42,9 +43,9 @@ public class InstitutionMapActivity extends AppCompatActivity implements OnMapRe
 
         realm = Realm.getDefaultInstance();
 
-        trackingUuid = getIntent().getStringExtra("tracking_uuid");
+        trackingUuid = getIntent().getStringExtra(Constants.TRACKING_UUID);
 
-        tracking = realm.where(Tracking.class).equalTo("uuid", trackingUuid).findFirst();
+        tracking = realm.where(Tracking.class).equalTo(Constants.UUID, trackingUuid).findFirst();
 
         toolbar.setTitle(tracking.getInstitution().getName());
         toolbar.setSubtitle(tracking.getInstitution().getAddress());
@@ -59,9 +60,7 @@ public class InstitutionMapActivity extends AppCompatActivity implements OnMapRe
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
         mMap = googleMap;
-
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setScrollGesturesEnabled(true);
         mMap.getUiSettings().setRotateGesturesEnabled(true);
@@ -69,16 +68,17 @@ public class InstitutionMapActivity extends AppCompatActivity implements OnMapRe
 
         LatLng sydney = new LatLng(tracking.getLatitude(), tracking.getLongitude());
 
-        LatLng institutionLatLng = new LatLng(tracking.getInstitution().getLatitude(), tracking.getInstitution().getLongitude());
+        LatLng institutionLatLng = new LatLng(tracking.getInstitution().getLatitude(),
+                tracking.getInstitution().getLongitude());
 
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Usuario"));
+        mMap.addMarker(new MarkerOptions().position(sydney).title(getString(R.string.user)));
 
-        mMap.addMarker(new MarkerOptions().position(institutionLatLng).title(tracking.getInstitution().getName()));
+        mMap.addMarker(new MarkerOptions()
+                .position(institutionLatLng)
+                .title(tracking.getInstitution().getName()));
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(sydney).zoom(12).build();
-                mMap.animateCamera(CameraUpdateFactory
-                        .newCameraPosition(cameraPosition));
-
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 }

@@ -61,7 +61,7 @@ public class NewPatientActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        toolbar.setTitle("Nuevo Paciente");
+        toolbar.setTitle(R.string.title_activity_new_patient);
 
         realm = Realm.getDefaultInstance();
 

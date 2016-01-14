@@ -36,7 +36,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         ButterKnife.bind(this);
 
-        toolbar.setTitle("Mapa");
+        toolbar.setTitle(R.string.title_activity_map);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -87,9 +87,5 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         .newCameraPosition(cameraPosition));
 
         }
-
-
-        // Add a marker in Sydney and move the camera
-
     }
 }

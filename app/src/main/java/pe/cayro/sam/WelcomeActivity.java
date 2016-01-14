@@ -72,7 +72,7 @@ public class WelcomeActivity extends AppCompatActivity {
                     progress.setCancelable(false);
                     progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                     progress.setMax(7);
-                    progress.setMessage("Sincronizando");
+                    progress.setMessage(Constants.SINCRONIZATION);
                     progress.show();
                     new LoginAsyncTask(getApplicationContext()).execute("");
                 }
@@ -128,7 +128,7 @@ public class WelcomeActivity extends AppCompatActivity {
                     getSystemService(Context.TELEPHONY_SERVICE);
 
             //Log.i(TAG, telephonyManager.getDeviceId());
-            this.publishProgress("Obteniendo IMEI");
+            this.publishProgress(Constants.OBTAINING_IMEI);
 
             //// TODO: 17/07/15
             //// Replace for implement in production enable the following line code
@@ -173,7 +173,8 @@ public class WelcomeActivity extends AppCompatActivity {
 
                 List<Doctor> doctorsTemp = new ArrayList<Doctor>();
                 for(Doctor temp : doctors){
-                    Specialty tempEsp = realm.where(Specialty.class).equalTo("id",temp.getSpecialtyId()).findFirst();
+                    Specialty tempEsp = realm.where(Specialty.class).equalTo(Constants.ID,
+                            temp.getSpecialtyId()).findFirst();
                     temp.setSpecialty(tempEsp);
                     doctorsTemp.add(temp);
                 }
@@ -190,13 +191,10 @@ public class WelcomeActivity extends AppCompatActivity {
                 editor.apply();
 
             } finally {
-            if (realm != null) {
-                realm.close();
+                if (realm != null) {
+                    realm.close();
+                }
             }
-        }
-
-            //Log.i(TAG, imei);
-
             return result;
         }
 
