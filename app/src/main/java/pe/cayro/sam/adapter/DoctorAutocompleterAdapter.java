@@ -54,16 +54,16 @@ public class DoctorAutocompleterAdapter extends ArrayAdapter<String> implements 
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.doctor_autocomplete_item, parent, false);
             viewHolder.image = (ImageView) convertView.findViewById(R.id.doctor_image);
-            viewHolder.name = (TextView) convertView.findViewById(R.id.doctor_name);
-            viewHolder.code = (TextView) convertView.findViewById(R.id.doctor_code);
+            viewHolder.name  = (TextView)  convertView.findViewById(R.id.doctor_name);
+            viewHolder.code  = (TextView)  convertView.findViewById(R.id.doctor_code);
 
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.name.setText((doctor.getName().length() > 25) ?
-                doctor.getName().substring(0, 25) + Constants.ELLIPSIS : doctor.getName());
+        viewHolder.name.setText((doctor.getName().length() > 30) ?
+                doctor.getName().substring(0, 30) + Constants.ELLIPSIS : doctor.getName());
 
         viewHolder.code.setText(Constants.CMP_FIELD+ doctor.getCode());
 
@@ -89,8 +89,23 @@ public class DoctorAutocompleterAdapter extends ArrayAdapter<String> implements 
 
                 Realm  realm = Realm.getDefaultInstance();
 
-                RealmResults<Doctor> realmResults = realm.where(Doctor.class).
-                        contains(Constants.NAME, constraint.toString()).findAll();
+                RealmResults<Doctor> realmResults = realm.where(Doctor.class).beginGroup().
+                        contains(Constants.NAME, constraint.toString().toUpperCase()).or().
+                        contains(Constants.CODE, constraint.toString().toUpperCase()).
+                        endGroup().findAll();
+
+
+                /*
+                * RealmResults<Record> result = realm.where(Record.class).beginGroup()
+                                .contains("doctor.name", data)
+                                .or()
+                                .contains("patient.name", data)
+                                .or()
+                                .contains("doctor.code", data)
+                                .or()
+                                .contains("patient.code", data)
+                                .endGroup().findAll();
+                * */
 
                 for(Doctor doctor : realmResults){
                     data.add(doctor.getUuid());

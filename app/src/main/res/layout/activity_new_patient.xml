@@ -1,6 +1,4 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -56,7 +54,7 @@
                 android:layout_height="match_parent"
                 android:id="@+id/patient_name"
                 android:hint="@string/patient_name_field"
-                android:inputType="textPersonName"
+                android:inputType="textCapCharacters"
                 />
         </android.support.design.widget.TextInputLayout>
 
@@ -82,7 +80,7 @@
                 android:layout_height="match_parent"
                 android:id="@+id/patient_address"
                 android:hint="@string/patient_address_field"
-                android:inputType="textShortMessage"
+                android:inputType="textCapCharacters"
                 />
         </android.support.design.widget.TextInputLayout>
 
@@ -108,7 +106,7 @@
                 android:layout_height="match_parent"
                 android:id="@+id/patient_location"
                 android:hint="@string/patient_location_field"
-                android:inputType="textShortMessage"/>
+                android:inputType="textCapCharacters"/>
         </android.support.design.widget.TextInputLayout>
 
     </LinearLayout>

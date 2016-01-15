@@ -73,4 +73,16 @@
     <string name="new_doctor">Nuevo Médico</string>
     <string name="map">Mapa</string>
     <string name="new_patient">Nuevo Paciente</string>
+    <string name="close_institutions">Cerrar Institución</string>
+    <string name="search_record">Buscar Registro</string>
+    <string name="title_activity_add_record_detail">Agregar Muestra Médica</string>
+    <string name="voucher"># Comprobante</string>
+    <string name="record_serial">Serie</string>
+    <string name="record_ruc">R.U.C.</string>
+    <string name="finish_treatment">Fin de Tratamiento</string>
+    <string name="qty">Cantidad</string>
+    <string name="qty_calculated">C. Calculada</string>
+    <string name="add">Agregar</string>
+    <string name="record_whitout_patient">Registro sin Paciente</string>
+    <string name="cancel">Cancelar</string>
 </resources>

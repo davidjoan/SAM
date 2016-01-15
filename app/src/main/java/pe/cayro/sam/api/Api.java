@@ -2,6 +2,7 @@ package pe.cayro.sam.api;
 
 import java.util.List;
 
+import pe.cayro.sam.model.Agent;
 import pe.cayro.sam.model.AttentionType;
 import pe.cayro.sam.model.Doctor;
 import pe.cayro.sam.model.Institution;
@@ -34,5 +35,8 @@ public interface Api {
 
     @GET("/users/{imei}")
     User getUserByImei(@Path(Constants.IMEI) String imei);
+
+    @GET(Constants.API_AGENT)
+    List<Agent> getAgents();
 
 }

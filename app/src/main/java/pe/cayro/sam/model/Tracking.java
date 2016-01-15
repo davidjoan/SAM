@@ -14,7 +14,7 @@ public class Tracking extends RealmObject {
     private String uuid;
     private int institutionId;
     private int userId;
-    private String code;
+    private int code;
     private String type;
     private Date createdAt;
     private double latitude;
@@ -46,11 +46,11 @@ public class Tracking extends RealmObject {
         this.userId = userId;
     }
 
-    public String getCode() {
+    public int getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(int code) {
         this.code = code;
     }
 

@@ -2,12 +2,10 @@ package pe.cayro.sam;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -60,7 +58,7 @@ public class NewPatientActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         patientSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,6 +104,8 @@ public class NewPatientActivity extends AppCompatActivity {
                                 Toast.LENGTH_SHORT).show();
 
                         Intent data = new Intent();
+
+                        data.putExtra(Constants.UUID, patient.getUuid());
 
                         if (getParent() == null) {
                             setResult(Activity.RESULT_OK, data);

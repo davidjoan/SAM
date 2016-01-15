@@ -15,24 +15,18 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
-import io.realm.RealmResults;
-import io.realm.Sort;
-import pe.cayro.sam.model.Institution;
 import pe.cayro.sam.model.Tracking;
 import util.Constants;
 
 public class InstitutionMapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     @Bind(R.id.toolbar)
-    Toolbar toolbar;
+    protected Toolbar toolbar;
 
+    private Realm realm;
     private GoogleMap mMap;
-
-    String trackingUuid;
-
-    Realm realm;
-
-    Tracking tracking;
+    private Tracking tracking;
+    private String trackingUuid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -58,8 +57,8 @@ public class PatientAutocompleterAdapter extends ArrayAdapter<String> implements
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.name.setText((patient.getName().length() > 25)?
-                patient.getName().substring(0, 25)+Constants.ELLIPSIS:
+        viewHolder.name.setText((patient.getName().length() > 30)?
+                patient.getName().substring(0, 30)+Constants.ELLIPSIS:
                 patient.getName());
         viewHolder.code.setText(Constants.DNI_FIELD + patient.getCode());
 
@@ -79,8 +78,10 @@ public class PatientAutocompleterAdapter extends ArrayAdapter<String> implements
 
                 Realm  realm = Realm.getDefaultInstance();
 
-                RealmResults<Patient> realmResults = realm.where(Patient.class).
-                        contains(Constants.NAME, constraint.toString()).findAll();
+                RealmResults<Patient> realmResults = realm.where(Patient.class).beginGroup().
+                        contains(Constants.NAME, constraint.toString().toUpperCase()).or().
+                        contains(Constants.CODE, constraint.toString().toUpperCase()).
+                        endGroup().findAll();
 
                 for(Patient patient : realmResults){
                     data.add(patient.getUuid());

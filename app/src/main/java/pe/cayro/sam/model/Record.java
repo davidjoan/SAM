@@ -2,6 +2,7 @@ package pe.cayro.sam.model;
 
 import java.util.Date;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -16,19 +17,27 @@ public class Record extends RealmObject {
     private String patientUuid;
     private String doctorUuid;
     private int institutionId;
-    private String code;
+    private int agentId;
+    private int code;
     private int attentionTypeId;
     private Date recordDate;
     private String voucher;
     private String ruc;
     private Date saleDate;
     private String serial;
+    private int institutionOriginId;
+    private Date createdAt;
+    private Date updatedAt;
 
     private User user;
     private Patient patient;
     private Doctor doctor;
     private AttentionType attentionType;
     private Institution institution;
+    private Agent agent;
+    private Institution institutionOrigin;
+
+    private RealmList<RecordDetail> recordDetails;
 
     public String getUuid() {
         return uuid;
@@ -70,11 +79,11 @@ public class Record extends RealmObject {
         this.institutionId = institutionId;
     }
 
-    public String getCode() {
+    public int getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(int code) {
         this.code = code;
     }
 
@@ -164,5 +173,61 @@ public class Record extends RealmObject {
 
     public void setInstitution(Institution institution) {
         this.institution = institution;
+    }
+
+    public int getAgentId() {
+        return agentId;
+    }
+
+    public void setAgentId(int agentId) {
+        this.agentId = agentId;
+    }
+
+    public Agent getAgent() {
+        return agent;
+    }
+
+    public void setAgent(Agent agent) {
+        this.agent = agent;
+    }
+
+    public int getInstitutionOriginId() {
+        return institutionOriginId;
+    }
+
+    public void setInstitutionOriginId(int institutionOriginId) {
+        this.institutionOriginId = institutionOriginId;
+    }
+
+    public Institution getInstitutionOrigin() {
+        return institutionOrigin;
+    }
+
+    public void setInstitutionOrigin(Institution institutionOrigin) {
+        this.institutionOrigin = institutionOrigin;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public RealmList<RecordDetail> getRecordDetails() {
+        return recordDetails;
+    }
+
+    public void setRecordDetails(RealmList<RecordDetail> recordDetails) {
+        this.recordDetails = recordDetails;
     }
 }

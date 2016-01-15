@@ -5,16 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.telephony.TelephonyManager;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.Spinner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +19,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import pe.cayro.sam.api.RestClient;
+import pe.cayro.sam.model.Agent;
 import pe.cayro.sam.model.AttentionType;
 import pe.cayro.sam.model.Doctor;
 import pe.cayro.sam.model.Institution;
@@ -34,13 +31,14 @@ import util.Constants;
 public class WelcomeActivity extends AppCompatActivity {
 
     private static String TAG = WelcomeActivity.class.getSimpleName();
-
     private static final int SPLASH_DURATION = 1500;
-    private boolean mIsBackButtonPressed;
-    private ProgressDialog progress;
+
     @Bind(R.id.logo_sam)
-    ImageView logo;
+    protected ImageView logo;
+
     private Handler handler;
+    private ProgressDialog progress;
+    private boolean mIsBackButtonPressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +69,10 @@ public class WelcomeActivity extends AppCompatActivity {
                 } else {
                     progress.setCancelable(false);
                     progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                    progress.setMax(7);
+                    progress.setMax(8);
                     progress.setMessage(Constants.SINCRONIZATION);
                     progress.show();
-                    new LoginAsyncTask(getApplicationContext()).execute("");
+                    new LoginAsyncTask(getApplicationContext()).execute(Constants.EMPTY);
                 }
             }
         }, SPLASH_DURATION);
@@ -127,12 +125,15 @@ public class WelcomeActivity extends AppCompatActivity {
             TelephonyManager telephonyManager = (TelephonyManager) context.
                     getSystemService(Context.TELEPHONY_SERVICE);
 
-            //Log.i(TAG, telephonyManager.getDeviceId());
+
             this.publishProgress(Constants.OBTAINING_IMEI);
 
-            //// TODO: 17/07/15
-            //// Replace for implement in production enable the following line code
-            // String imei = telephonyManager.getDeviceId();
+            /*
+            TODO: 17/07/15
+            Replace for implement in production enable the following lines of code
+            Log.i(TAG, telephonyManager.getDeviceId());
+            String imei = telephonyManager.getDeviceId();
+            */
             String imei = Constants.IMEI_TEST;
 
             Realm realm = Realm.getDefaultInstance();
@@ -147,6 +148,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 realm.clear(Specialty.class);
                 realm.clear(Product.class);
                 realm.clear(Doctor.class);
+                realm.clear(Agent.class);
 
                 this.publishProgress(Constants.LOADING_USERS);
                 User user = RestClient.get().getUserByImei(imei);
@@ -183,6 +185,10 @@ public class WelcomeActivity extends AppCompatActivity {
                 this.publishProgress(Constants.LOADING_PRODUCTS);
                 List<Product> products = RestClient.get().getListProducts();
                 realm.copyToRealmOrUpdate(products);
+
+                this.publishProgress(Constants.LOADING_AGENTS);
+                List<Agent> agents = RestClient.get().getAgents();
+                realm.copyToRealmOrUpdate(agents);
                 realm.commitTransaction();
 
                 editor.putString(Constants.CYCLE_LOADED, Constants.YES);

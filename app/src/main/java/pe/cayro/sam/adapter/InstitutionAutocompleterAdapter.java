@@ -14,16 +14,16 @@ import java.util.ArrayList;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import pe.cayro.sam.R;
-import pe.cayro.sam.model.Specialty;
+import pe.cayro.sam.model.Institution;
 import util.Constants;
 
 /**
  * Created by David on 12/01/16.
  */
-public class SpecialtyAutocompleterAdapter extends ArrayAdapter<Integer> implements Filterable {
-    private static String TAG = SpecialtyAutocompleterAdapter.class.getSimpleName();
+public class InstitutionAutocompleterAdapter extends ArrayAdapter<Integer> implements Filterable {
+    private static String TAG = InstitutionAutocompleterAdapter.class.getSimpleName();
 
-    public SpecialtyAutocompleterAdapter(Context context, int textViewResourceId) {
+    public InstitutionAutocompleterAdapter(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
     }
 
@@ -36,24 +36,24 @@ public class SpecialtyAutocompleterAdapter extends ArrayAdapter<Integer> impleme
         Integer id = getItem(position);
 
         Realm realm = Realm.getDefaultInstance();
-        Specialty specialty = realm.where(Specialty.class).equalTo(Constants.ID, id).findFirst();
+        Institution institution = realm.where(Institution.class).equalTo(Constants.ID, id).findFirst();
         realm.close();
 
         ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.specialty_autocomplete_item, parent, false);
-            viewHolder.name = (TextView) convertView.findViewById(R.id.specialty_name);
+            convertView = inflater.inflate(R.layout.institution_autocomplete_item, parent, false);
+            viewHolder.name = (TextView) convertView.findViewById(R.id.institution_name);
 
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.name.setText((specialty.getName().length() > 30) ?
-                specialty.getName().substring(0, 30) + Constants.ELLIPSIS :
-                specialty.getName());
+        viewHolder.name.setText((institution.getName().length() > 30) ?
+                institution.getName().substring(0, 30) + Constants.ELLIPSIS :
+                institution.getName());
         return convertView;
     }
 
@@ -68,11 +68,11 @@ public class SpecialtyAutocompleterAdapter extends ArrayAdapter<Integer> impleme
 
                 Realm  realm = Realm.getDefaultInstance();
 
-                RealmResults<Specialty> realmResults = realm.where(Specialty.class).
-                        contains(Constants.NAME, constraint.toString().toUpperCase()).findAll();
+                RealmResults<Institution> realmResults = realm.where(Institution.class).
+                        contains(Constants.NAME, constraint.toString()).findAll();
 
-                for(Specialty specialty : realmResults){
-                    data.add(Integer.valueOf(specialty.getId()));
+                for(Institution institution : realmResults){
+                    data.add(Integer.valueOf(institution.getId()));
                 }
 
                 filterResults.values = data;

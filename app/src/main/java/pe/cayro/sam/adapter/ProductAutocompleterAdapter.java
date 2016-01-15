@@ -14,21 +14,22 @@ import java.util.ArrayList;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import pe.cayro.sam.R;
-import pe.cayro.sam.model.Specialty;
+import pe.cayro.sam.model.Product;
 import util.Constants;
 
 /**
  * Created by David on 12/01/16.
  */
-public class SpecialtyAutocompleterAdapter extends ArrayAdapter<Integer> implements Filterable {
-    private static String TAG = SpecialtyAutocompleterAdapter.class.getSimpleName();
+public class ProductAutocompleterAdapter extends ArrayAdapter<Integer> implements Filterable {
+    private static String TAG = ProductAutocompleterAdapter.class.getSimpleName();
 
-    public SpecialtyAutocompleterAdapter(Context context, int textViewResourceId) {
+    public ProductAutocompleterAdapter(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
     }
 
     private class ViewHolder {
         TextView name;
+        TextView code;
     }
 
     @Override
@@ -36,24 +37,27 @@ public class SpecialtyAutocompleterAdapter extends ArrayAdapter<Integer> impleme
         Integer id = getItem(position);
 
         Realm realm = Realm.getDefaultInstance();
-        Specialty specialty = realm.where(Specialty.class).equalTo(Constants.ID, id).findFirst();
+        Product product = realm.where(Product.class).equalTo(Constants.ID, id).findFirst();
         realm.close();
 
         ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.specialty_autocomplete_item, parent, false);
-            viewHolder.name = (TextView) convertView.findViewById(R.id.specialty_name);
+            convertView = inflater.inflate(R.layout.product_autocomplete_item, parent, false);
+            viewHolder.name = (TextView) convertView.findViewById(R.id.product_name);
+            viewHolder.code = (TextView) convertView.findViewById(R.id.product_code);
 
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.name.setText((specialty.getName().length() > 30) ?
-                specialty.getName().substring(0, 30) + Constants.ELLIPSIS :
-                specialty.getName());
+        /*viewHolder.name.setText((product.getName().length() > 25) ?
+                product.getName().substring(0, 25) + Constants.ELLIPSIS :
+                product.getName());*/
+        viewHolder.name.setText(product.getName());
+        viewHolder.code.setText(product.getCode());
         return convertView;
     }
 
@@ -68,11 +72,11 @@ public class SpecialtyAutocompleterAdapter extends ArrayAdapter<Integer> impleme
 
                 Realm  realm = Realm.getDefaultInstance();
 
-                RealmResults<Specialty> realmResults = realm.where(Specialty.class).
+                RealmResults<Product> realmResults = realm.where(Product.class).
                         contains(Constants.NAME, constraint.toString().toUpperCase()).findAll();
 
-                for(Specialty specialty : realmResults){
-                    data.add(Integer.valueOf(specialty.getId()));
+                for(Product product : realmResults){
+                    data.add(Integer.valueOf(product.getId()));
                 }
 
                 filterResults.values = data;

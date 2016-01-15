@@ -1,20 +1,23 @@
 package pe.cayro.sam;
 
-import android.support.v7.app.AppCompatActivity;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
-import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Spinner;
-
-import com.fourmob.datetimepicker.date.DatePickerDialog;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -24,59 +27,65 @@ import java.util.UUID;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import io.realm.RealmResults;
 import pe.cayro.sam.adapter.DoctorAutocompleterAdapter;
 import pe.cayro.sam.adapter.PatientAutocompleterAdapter;
+import pe.cayro.sam.model.AttentionType;
 import pe.cayro.sam.model.Doctor;
 import pe.cayro.sam.model.Patient;
 import pe.cayro.sam.model.Record;
 import pe.cayro.sam.model.Tracking;
+import pe.cayro.sam.model.User;
 import util.Constants;
 
-public class NewRecordActivity extends AppCompatActivity
-        implements DatePickerDialog.OnDateSetListener,  AdapterView.OnItemClickListener{
+public class NewRecordActivity extends AppCompatActivity {
+
+    private static String TAG = NewRecordActivity.class.getSimpleName();
+
+    static final int ADD_DOCTOR_REQUEST = 1;
+    static final int ADD_PATIENT_REQUEST = 2;
+    static final int ADD_MEDICAL_SAMPLE_REQUEST = 3;
+
 
     @Bind(R.id.toolbar)
     protected Toolbar toolbar;
-
     @Bind(R.id.record_attention_type_spinner)
     protected Spinner spinner;
 
+    @Bind(R.id.record_ruc)
+    protected EditText recordRuc;
+    @Bind(R.id.record_serial)
+    protected EditText recordSerial;
+    @Bind(R.id.record_voucher)
+    protected EditText recordVoucher;
+    @Bind(R.id.record_cancel_button)
+    protected Button recordCancel;
+
     @Bind(R.id.record_code)
     protected EditText recordCode;
-
     @Bind(R.id.record_date)
     protected EditText editTextDate;
-
-    @Bind(R.id.record_date_button)
-    protected ImageButton imageButtonDate;
-
+    @Bind(R.id.record_sale_date)
+    protected EditText editTextSaleDate;
     @Bind(R.id.record_doctor_autocompleter)
     protected AppCompatAutoCompleteTextView recordDoctor;
-
     @Bind(R.id.record_patient_autocompleter)
     protected AppCompatAutoCompleteTextView recordPatient;
 
-    String trackingUuid;
-
-    Realm realm;
-
-    Tracking tracking;
-
-    Record record;
-
-    private Calendar start;
-
-    private SimpleDateFormat format;
-
-    private SimpleDateFormat sdf;
-
-    protected DoctorAutocompleterAdapter adapterDoctor;
-
-    protected PatientAutocompleterAdapter adapterPatient;
-
+    private long code = 1;
+    private User user;
+    private Realm realm;
+    private Record record;
     private Doctor doctor;
-
+    private Calendar start;
     private Patient patient;
+    private Tracking tracking;
+    private String trackingUuid;
+    private SimpleDateFormat sdf;
+    private SimpleDateFormat format;
+    private AttentionType attentionType;
+    private DoctorAutocompleterAdapter adapterDoctor;
+    private PatientAutocompleterAdapter adapterPatient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,59 +101,101 @@ public class NewRecordActivity extends AppCompatActivity
 
         start = Calendar.getInstance();
         realm = Realm.getDefaultInstance();
+
         tracking = realm.where(Tracking.class).equalTo(Constants.UUID, trackingUuid).findFirst();
+
+        RealmResults<Record> results = realm.where(Record.class).findAll();
+        if(results.size() > 0 ){
+            code = results.max(Constants.CODE).longValue()+1;
+
+            if((long)tracking.getCode() > code){
+                code = (long)tracking.getCode();
+            }
+        }else{
+            code = (long)tracking.getCode();
+        }
 
         toolbar.setTitle(R.string.new_record);
         toolbar.setSubtitle(tracking.getInstitution().getName());
-
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        //Preparing Object
         record = new Record();
         record.setUuid(UUID.randomUUID().toString());
         record.setInstitutionId(tracking.getInstitutionId());
+        record.setRecordDate(new Date());
+        record.setSaleDate(new Date());
+        record.setCode((int) code);
+
+        attentionType = realm.where(AttentionType.class).equalTo(Constants.ID,
+                1).findFirst();
+
+        record.setAttentionTypeId(attentionType.getId());
+        record.setAttentionType(attentionType);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.attention_type_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        recordCode.setText(tracking.getCode());
-        editTextDate.setText(sdf.format(new Date()));
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-        final DatePickerDialog datePickerDialog = DatePickerDialog.
-                newInstance(this, start.get(Calendar.YEAR), start.get(Calendar.MONTH),
-                        start.get(Calendar.DAY_OF_MONTH), true);
+                Log.d(TAG, "Tipo de Atención: " + String.valueOf(i));
 
-        imageButtonDate.setOnClickListener(new View.OnClickListener() {
+                attentionType = realm.where(AttentionType.class).equalTo(Constants.ID,
+                        i + 1).findFirst();
+
+                record.setAttentionType(attentionType);
+                record.setAttentionTypeId(attentionType.getId());
+
+                switch (i) {
+                    case 0:
+                        findViewById(R.id.header_finish_treatment).setVisibility(View.GONE);
+                        findViewById(R.id.body_finish_treatment_1).setVisibility(View.GONE);
+                        findViewById(R.id.body_finish_treatment_2).setVisibility(View.GONE);
+                        findViewById(R.id.body_patient).setVisibility(View.VISIBLE);
+
+                        break;
+                    case 1:
+                        findViewById(R.id.header_finish_treatment).setVisibility(View.VISIBLE);
+                        findViewById(R.id.body_finish_treatment_1).setVisibility(View.VISIBLE);
+                        findViewById(R.id.body_finish_treatment_2).setVisibility(View.VISIBLE);
+                        findViewById(R.id.body_patient).setVisibility(View.VISIBLE);
+
+                        break;
+                    case 2:
+                        findViewById(R.id.header_finish_treatment).setVisibility(View.GONE);
+                        findViewById(R.id.body_finish_treatment_1).setVisibility(View.GONE);
+                        findViewById(R.id.body_finish_treatment_2).setVisibility(View.GONE);
+                        findViewById(R.id.body_patient).setVisibility(View.GONE);
+
+                        break;
+                }
+            }
 
             @Override
-            public void onClick(View v) {
-                datePickerDialog.setVibrate(true);
-                datePickerDialog.setYearRange(start.get(Calendar.YEAR),
-                        start.get(Calendar.YEAR) + 1);
-                datePickerDialog.setCloseOnSingleTapDay(false);
-                datePickerDialog.show(getSupportFragmentManager(), Constants.DATEPICKER_TAG);
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                Log.d(TAG, "Tipo de Atención: Nada Seleccionado");
             }
         });
 
-        if (savedInstanceState != null) {
-            DatePickerDialog dpd = (DatePickerDialog) getSupportFragmentManager().
-                    findFragmentByTag(Constants.DATEPICKER_TAG);
-            if (dpd != null) {
-                dpd.setOnDateSetListener(this);
-            }
-        }
+        recordCode.setText(String.valueOf(code));
+        editTextDate.setText(sdf.format(new Date()));
+        editTextSaleDate.setText(sdf.format(new Date()));
 
         adapterDoctor = new DoctorAutocompleterAdapter(this, R.layout.doctor_autocomplete_item);
         recordDoctor.setAdapter(adapterDoctor);
         recordDoctor.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String temp =  adapterDoctor.getItem(position);
 
+                String temp = adapterDoctor.getItem(position);
                 doctor = realm.where(Doctor.class).equalTo(Constants.UUID, temp).findFirst();
                 recordDoctor.setText(doctor.getName());
+                record.setDoctor(doctor);
+                record.setDoctorUuid(doctor.getUuid());
             }
         });
 
@@ -153,22 +204,248 @@ public class NewRecordActivity extends AppCompatActivity
         recordPatient.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 String temp = adapterPatient.getItem(position);
                 patient = realm.where(Patient.class).equalTo(Constants.UUID, temp).findFirst();
                 recordPatient.setText(patient.getName());
+                record.setPatient(patient);
+                record.setPatientUuid(patient.getUuid());
+            }
+        });
+
+        recordCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                if (getParent() == null) {
+                    setResult(Activity.RESULT_OK, intent);
+                } else {
+                    getParent().setResult(Activity.RESULT_OK, intent);
+                }
+
+                finish();
             }
         });
     }
 
-    @Override
-    public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
-        start.set(year, month, day);
-        String formatedDate = sdf.format(start.getTime());
-        editTextDate.setText(formatedDate);
+    public void showDatePickerDialog(View v) {
+        DialogFragment newFragment = new DatePickerFragment();
+        newFragment.show(getSupportFragmentManager(), Constants.DATEPICKER_TAG);
+    }
+    public void showSaleDatePickerDialog(View v) {
+        DialogFragment newFragment = new SaleDatePickerFragment();
+        newFragment.show(getSupportFragmentManager(), Constants.DATEPICKER_TAG);
+    }
+
+    @SuppressLint("ValidFragment")
+    public class DatePickerFragment extends DialogFragment
+            implements DatePickerDialog.OnDateSetListener
+    {
+        public DatePickerFragment() {
+            super();
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current date as the default date in the picker
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            Log.d(TAG, String.valueOf(year));
+            Log.d(TAG, String.valueOf(month));
+            Log.d(TAG, String.valueOf(day));
+
+            DatePickerDialog dialog = new DatePickerDialog(getActivity(), this, year, month, day);
+            DatePicker datePicker = dialog.getDatePicker();
+
+            long time = c.getTimeInMillis();
+            datePicker.setMaxDate(time+1000);
+
+            return dialog;
+        }
+
+        public void onDateSet(DatePicker view, int year, int month, int day) {
+            start.set(year, month, day);
+            String formatedDate = sdf.format(start.getTime());
+            editTextDate.setText(formatedDate);
+            record.setRecordDate(start.getTime());
+        }
+    }
+
+    @SuppressLint("ValidFragment")
+    public class SaleDatePickerFragment extends DialogFragment
+            implements DatePickerDialog.OnDateSetListener
+    {
+        public SaleDatePickerFragment() {
+            super();
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current date as the default date in the picker
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            Log.d(TAG, String.valueOf(year));
+            Log.d(TAG, String.valueOf(month));
+            Log.d(TAG, String.valueOf(day));
+
+            DatePickerDialog dialog = new DatePickerDialog(getActivity(), this, year, month, day);
+            DatePicker datePicker = dialog.getDatePicker();
+
+            long time = c.getTimeInMillis();
+            datePicker.setMaxDate(time+1000);
+
+            return dialog;
+        }
+
+        public void onDateSet(DatePicker view, int year, int month, int day) {
+            start.set(year, month, day);
+            String formatedDate = sdf.format(start.getTime());
+            editTextSaleDate.setText(formatedDate);
+            record.setSaleDate(start.getTime());
+        }
+    }
+
+    public void openNewDoctor(View v) {
+        Intent intent = new Intent(this, NewDoctorActivity.class);
+        startActivityForResult(intent, ADD_DOCTOR_REQUEST);
+    }
+    public void openNewPatient(View v) {
+        Intent intent = new Intent(this, NewPatientActivity.class);
+        startActivityForResult(intent, ADD_PATIENT_REQUEST) ;
+    }
+
+    public void nextButton(View v) {
+
+        int errors = 0;
+        if(recordCode.getText().length() == 0){
+            errors++;
+            recordCode.setError("El codigo no puede estar vacio");
+        }
+
+        switch (record.getAttentionTypeId()){
+            case 1:
+                if(recordDoctor.getText().length() == 0){
+                    errors++;
+                    recordDoctor.setError("El Médico no puede estar vacio");
+                }
+                if(recordPatient.getText().length() == 0){
+                    errors++;
+                    recordPatient.setError("El Paciente no puede estar vacio");
+                }
+                break;
+            case 2:
+                if(recordDoctor.getText().length() == 0){
+                    errors++;
+                    recordDoctor.setError("El Médico no puede estar vacio");
+                }
+                if(recordPatient.getText().length() == 0){
+                    errors++;
+                    recordPatient.setError("El Paciente no puede estar vacio");
+                }
+                if(recordSerial.getText().length() == 0){
+                    errors++;
+                    recordSerial.setError("La serie no puede estar vacia");
+                }
+                if(recordVoucher.getText().length() == 0){
+                    errors++;
+                    recordVoucher.setError("El # de Comprobante no puede estar vacio");
+                }
+
+                if(editTextSaleDate.getText().length() == 0){
+                    errors++;
+                    editTextSaleDate.setError("La fecha de venta no puede estar vacia");
+                }
+
+                if(recordRuc.getText().length() != 11){
+                    errors++;
+                    recordRuc.setError("El RUC debe tener 11 digitos");
+                }
+                break;
+            case 3:
+                if(recordDoctor.getText().length() == 0){
+                    errors++;
+                    recordDoctor.setError("El Médico no puede estar vacio");
+                }
+                break;
+        }
+
+        if(errors == 0){
+
+            user = realm.where(User.class).findFirst();
+
+            realm.beginTransaction();
+
+            record.setCode(Integer.valueOf(recordCode.getText().toString()));
+            record.setAttentionTypeId(attentionType.getId());
+            record.setAttentionType(attentionType);
+            record.setInstitutionId(tracking.getInstitutionId());
+            record.setInstitution(tracking.getInstitution());
+            record.setUserId(tracking.getUserId());
+            record.setUser(user);
+
+            record.setCreatedAt(new Date());
+            record.setUpdatedAt(new Date());
+
+            //Finish treatment
+            if(record.getAttentionTypeId() == 2){
+                record.setVoucher(recordVoucher.getText().toString());
+                record.setRuc(recordRuc.getText().toString());
+                record.setSerial(recordSerial.getText().toString());
+            }
+
+            realm.copyToRealm(record);
+
+            realm.commitTransaction();
+
+            Intent intent = new Intent(this, AddRecordDetailActivity.class);
+            intent.putExtra(Constants.UUID, record.getUuid());
+            intent.putExtra(Constants.CODE, record.getCode());
+            startActivityForResult(intent, ADD_MEDICAL_SAMPLE_REQUEST);
+        }
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ADD_PATIENT_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
 
+                String uuid = data.getStringExtra(Constants.UUID);
+
+                patient = realm.where(Patient.class).equalTo(Constants.UUID, uuid).findFirst();
+                recordPatient.setText(patient.getName());
+
+                record.setPatient(patient);
+                record.setPatientUuid(patient.getUuid());
+            }
+        }
+
+        if (requestCode == ADD_DOCTOR_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                String uuid = data.getStringExtra(Constants.UUID);
+                doctor = realm.where(Doctor.class).equalTo(Constants.UUID, uuid).findFirst();
+                recordDoctor.setText(doctor.getName());
+                record.setDoctor(doctor);
+                record.setDoctorUuid(doctor.getUuid());
+            }
+        }
+
+        if (requestCode == ADD_MEDICAL_SAMPLE_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                Intent intent = new Intent();
+                if (getParent() == null) {
+                    setResult(Activity.RESULT_OK, intent);
+                } else {
+                    getParent().setResult(Activity.RESULT_OK, intent);
+                }
+
+                finish();
+            }
+        }
     }
 }

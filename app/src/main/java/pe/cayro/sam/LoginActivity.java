@@ -2,13 +2,10 @@ package pe.cayro.sam;
 
 import android.content.Intent;
 import android.location.Location;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,9 +22,9 @@ import java.util.UUID;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
-import io.realm.internal.TableOrView;
-import pe.cayro.sam.model.Doctor;
+import io.realm.RealmResults;
 import pe.cayro.sam.model.Institution;
+import pe.cayro.sam.model.Record;
 import pe.cayro.sam.model.Tracking;
 import pe.cayro.sam.model.User;
 import util.Constants;
@@ -37,23 +34,21 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private static String TAG = LoginActivity.class.getSimpleName();
 
     @Bind(R.id.toolbar)
-    Toolbar toolbar;
+    protected Toolbar toolbar;
     String institutionName;
-
     @Bind(R.id.buttonLogin)
-    Button loginButton;
-
+    protected Button loginButton;
     @Bind(R.id.text_second)
-    TextView institutionTextView;
-
+    protected TextView institutionTextView;
     @Bind(R.id.editTextAtentionCode)
-    EditText attentionCodeEditText;
+    protected EditText attentionCodeEditText;
 
     protected Institution institution;
     protected User user;
     protected GoogleApiClient mGoogleApiClient;
     protected Location mLastLocation;
     protected Realm realm;
+    protected long max = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +67,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 .equalTo(Constants.NAME, institutionName).findFirst();
 
         user = realm.where(User.class).findFirst();
-
+        RealmResults<Record> results = realm.where(Record.class).findAll();
+        if(results.size() > 0 ){
+            max = results.max(Constants.CODE).longValue()+1;
+        }
         toolbar.setTitle(R.string.login);
 
         setSupportActionBar(toolbar);
@@ -80,20 +78,42 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         institutionTextView.setText(institutionName);
+        attentionCodeEditText.setText(String.valueOf(max));
+        attentionCodeEditText.setSelection(attentionCodeEditText.getText().length());
+
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if(attentionCodeEditText.getText().length() > 0){
+                int errors = 0;
 
-                    Toast.makeText(LoginActivity.this,
-                            attentionCodeEditText.getText().toString(), Toast.LENGTH_SHORT).show();
+                if(attentionCodeEditText.getText().length() == 0){
+                    errors++;
+                    attentionCodeEditText.setError("El código no puede ser vacío");
+                    Toast.makeText(LoginActivity.this, R.string.validation_tracking_code,
+                            Toast.LENGTH_SHORT).show();
+                }
+
+                if(attentionCodeEditText.getText().toString().equals("0")){
+                    errors++;
+                    attentionCodeEditText.setError("El código no puede ser 0");
+                }
+
+                RealmResults<Record> resultsQuery = realm.where(Record.class).equalTo("code",
+                        Integer.valueOf(attentionCodeEditText.getText().toString()).intValue()).findAll();
+
+                if(resultsQuery.size() > 0){
+                    errors++;
+                    attentionCodeEditText.setError("El código ya existe");
+                }
+
+                if(errors == 0){
 
                     realm.beginTransaction();
                     Tracking tracking = new Tracking();
                     tracking.setUuid(UUID.randomUUID().toString());
-                    tracking.setCode(attentionCodeEditText.getText().toString());
+                    tracking.setCode(Integer.valueOf(attentionCodeEditText.getText().toString()).intValue());
                     tracking.setType(Constants.LOGIN);
                     tracking.setInstitutionId(institution.getId());
                     tracking.setCreatedAt(new Date());
@@ -114,11 +134,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     LoginActivity.this.startActivity(intent);
                     finish();
 
-                }else {
-
-
-                     Toast.makeText(LoginActivity.this, R.string.validation_tracking_code,
-                             Toast.LENGTH_SHORT).show();
                 }
             }
         });

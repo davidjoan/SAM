@@ -1,5 +1,8 @@
 package pe.cayro.sam.ui;
 
+import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,6 +10,9 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,7 +20,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -22,9 +31,12 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import io.realm.RealmResults;
+import io.realm.Sort;
 import pe.cayro.sam.NewRecordActivity;
 import pe.cayro.sam.R;
 import pe.cayro.sam.model.Record;
+import pe.cayro.sam.model.RecordDetail;
 import pe.cayro.sam.model.Tracking;
 import util.Constants;
 
@@ -42,7 +54,7 @@ public class FragmentRecords extends Fragment {
     private Realm realm;
     private Tracking tracking;
     private String trackingUuid;
-    private List<Record> recordList;
+    RealmResults<Record> result;
     private RecordListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
@@ -66,9 +78,7 @@ public class FragmentRecords extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.fragment_record,container,false);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.record_title);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().
-                setSubtitle(R.string.medical_sample);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.medical_sample);
 
         ButterKnife.bind(this, view);
 
@@ -76,11 +86,17 @@ public class FragmentRecords extends Fragment {
 
         tracking = realm.where(Tracking.class).equalTo(Constants.UUID, trackingUuid).findFirst();
 
-        recordList = realm.where(Record.class).findAll();
+        result = realm.where(Record.class).
+                equalTo("institutionId", tracking.getInstitutionId()).findAll();
+
+        result.sort("recordDate", Sort.DESCENDING);
+
+        ((AppCompatActivity) getActivity()).getSupportActionBar().
+                setSubtitle(Constants.QTY_FIELD + String.valueOf(result.size()));
 
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new RecordListAdapter(recordList, R.layout.record_item);
+        mAdapter = new RecordListAdapter(result, R.layout.record_item);
         mRecyclerView.setAdapter(mAdapter);
         setHasOptionsMenu(true);
         return view;
@@ -91,6 +107,59 @@ public class FragmentRecords extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         //menu.clear();
         inflater.inflate(R.menu.menu_record, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchManager searchManager = (SearchManager) getActivity().
+                getSystemService(Context.SEARCH_SERVICE);
+
+        SearchView searchView = null;
+        if (searchItem != null) {
+            searchView = (SearchView) searchItem.getActionView();
+        }
+        if (searchView != null) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().
+                    getComponentName()));
+            searchView.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+            SearchView.OnQueryTextListener queryListener = new SearchView.OnQueryTextListener() {
+
+                @Override
+                public boolean onQueryTextChange(String data) {
+
+                    if (TextUtils.isEmpty(data)) {
+                        result = realm.where(Record.class).
+                                equalTo("institutionId",tracking.getInstitutionId()).findAll();
+                        result.sort("recordDate", Sort.DESCENDING);
+
+                        mAdapter.setData(result);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextSubmit(String data) {
+                    if (!TextUtils.isEmpty(data)) {
+                        result = realm.where(Record.class).
+                                equalTo("institutionId",tracking.getInstitutionId()).beginGroup()
+                                .contains("doctor.name", data.toUpperCase())
+                                .or()
+                                .contains("patient.name", data.toUpperCase())
+                                .or()
+                                .contains("doctor.code", data.toUpperCase())
+                                .or()
+                                .contains("patient.code", data.toUpperCase())
+                                .endGroup().findAll();
+
+                        result.sort("recordDate", Sort.DESCENDING);
+
+                        mAdapter.setData(result);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                    return false;
+                }
+            };
+            searchView.setOnQueryTextListener(queryListener);
+        }
     }
 
     @Override
@@ -133,13 +202,36 @@ public class FragmentRecords extends Fragment {
             Record item = items.get(position);
 
             viewHolder.doctor.setText(Constants.DOCTOR_ABR+item.getDoctor().getName());
-            viewHolder.patient.setText(item.getPatient().getName());
+
+            if(item.getAttentionTypeId() == 3){
+                viewHolder.patient.setText(R.string.record_whitout_patient);
+
+            }else{
+                viewHolder.patient.setText(Constants.PATIENT_ABR+item.getPatient().getName());
+            }
+
             viewHolder.attentionType.setText(item.getAttentionType().getName());
+            viewHolder.code.setText("#: "+String.valueOf(item.getCode()));
+
+            int sumMM = 0;
+            for (RecordDetail temp : item.getRecordDetails()) {
+                sumMM = sumMM+temp.getQty();
+
+            }
+
+            viewHolder.mm.setText("mm: "+String.valueOf(sumMM));
+
+            Picasso.with(getContext()).
+                    load(new StringBuilder().append(Constants.CMP_PHOTO_SERVER)
+                            .append(String.format("%05d",
+                                    Integer.parseInt(item.getDoctor().getCode())))
+                            .append(Constants.DOT_JPG).toString()).
+                    error(R.drawable.avatar).
+                    into(viewHolder.image);
 
             SimpleDateFormat formatter = new SimpleDateFormat(Constants.FORMAT_DATETIME_SLASH);
             String dateFormat = formatter.format(item.getRecordDate());
-            viewHolder.date.setText(dateFormat);
-
+            viewHolder.date.setText(Constants.DATE_FIELD+dateFormat);
             viewHolder.itemView.setTag(item);
         }
 
@@ -151,7 +243,10 @@ public class FragmentRecords extends Fragment {
         public class ViewHolder extends RecyclerView.ViewHolder
                 implements RecyclerView.OnClickListener {
 
+            public ImageView image;
             public TextView doctor;
+            public TextView code;
+            public TextView mm;
             public TextView patient;
             public TextView attentionType;
             public TextView date;
@@ -159,9 +254,12 @@ public class FragmentRecords extends Fragment {
             public ViewHolder(View itemView) {
                 super(itemView);
                 doctor = (TextView) itemView.findViewById(R.id.record_doctor);
+                code = (TextView) itemView.findViewById(R.id.record_code_final);
+                mm = (TextView) itemView.findViewById(R.id.record_qty_mm);
                 patient = (TextView) itemView.findViewById(R.id.record_patient);
                 attentionType = (TextView) itemView.findViewById(R.id.record_attention_type);
                 date = (TextView) itemView.findViewById(R.id.record_date);
+                image = (ImageView) itemView.findViewById(R.id.record_image);
                 itemView.setOnClickListener(this);
             }
 
@@ -176,5 +274,21 @@ public class FragmentRecords extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         realm.close();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ADD_RECORD_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                result = realm.where(Record.class).
+                        equalTo("institutionId", tracking.getInstitutionId()).findAll();
+                result.sort("recordDate", Sort.DESCENDING);
+                mAdapter.setData(result);
+                mAdapter.notifyDataSetChanged();
+
+                ((AppCompatActivity) getActivity()).getSupportActionBar().
+                        setSubtitle(Constants.QTY_FIELD+String.valueOf(result.size()));
+            }
+        }
     }
 }

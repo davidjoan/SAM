@@ -1,6 +1,5 @@
 package pe.cayro.sam;
 
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,8 +12,6 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
@@ -25,7 +22,9 @@ import pe.cayro.sam.model.Institution;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     @Bind(R.id.toolbar)
-    Toolbar toolbar;
+    protected Toolbar toolbar;
+
+    private GoogleMap mMap;
 
     private GoogleMap mMap;
 

@@ -10,7 +10,7 @@ public class RecordDetail extends RealmObject {
 
     @PrimaryKey
     private String uuid;
-    private String visitUuid;
+    private String recordUuid;
     private int productId;
     private int qty;
 
@@ -25,12 +25,12 @@ public class RecordDetail extends RealmObject {
         this.uuid = uuid;
     }
 
-    public String getVisitUuid() {
-        return visitUuid;
+    public String getRecordUuid() {
+        return recordUuid;
     }
 
-    public void setVisitUuid(String visitUuid) {
-        this.visitUuid = visitUuid;
+    public void setRecordUuid(String recordUuid) {
+        this.recordUuid = recordUuid;
     }
 
     public int getProductId() {

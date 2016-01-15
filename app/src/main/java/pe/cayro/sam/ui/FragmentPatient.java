@@ -1,6 +1,8 @@
 package pe.cayro.sam.ui;
 
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +10,9 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,6 +27,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import io.realm.RealmResults;
 import pe.cayro.sam.NewPatientActivity;
 import pe.cayro.sam.R;
 import pe.cayro.sam.model.Patient;
@@ -89,6 +95,49 @@ public class FragmentPatient extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         //menu.clear();
         inflater.inflate(R.menu.menu_patient, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchManager searchManager = (SearchManager) getActivity().
+                getSystemService(Context.SEARCH_SERVICE);
+
+        SearchView searchView = null;
+        if (searchItem != null) {
+            searchView = (SearchView) searchItem.getActionView();
+        }
+        if (searchView != null) {
+
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().
+                    getComponentName()));
+            searchView.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+            SearchView.OnQueryTextListener queryListener = new SearchView.OnQueryTextListener() {
+
+                @Override
+                public boolean onQueryTextChange(String data) {
+
+                    if (TextUtils.isEmpty(data)) {
+                        RealmResults<Patient> result = realm.where(Patient.class).findAll();
+                        mAdapter.setData(result);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextSubmit(String data) {
+                    if (!TextUtils.isEmpty(data)) {
+                        RealmResults<Patient> result = realm.where(Patient.class).beginGroup()
+                                .contains("name", data.toUpperCase())
+                                .or()
+                                .contains("code", data.toUpperCase())
+                                .endGroup().findAll();
+                        mAdapter.setData(result);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                    return false;
+                }
+            };
+            searchView.setOnQueryTextListener(queryListener);
+        }
     }
 
     @Override
@@ -182,8 +231,7 @@ public class FragmentPatient extends Fragment {
                 mAdapter.notifyDataSetChanged();
 
                 ((AppCompatActivity) getActivity()).getSupportActionBar().
-                        setSubtitle(Constants.QTY_FIELD+String.valueOf(patientList.size()));
-
+                        setSubtitle(Constants.QTY_FIELD + String.valueOf(patientList.size()));
             }
         }
     }

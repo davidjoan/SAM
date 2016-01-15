@@ -34,7 +34,7 @@ public class FragmentTracking extends Fragment {
     private static String TAG = FragmentTracking.class.getSimpleName();
 
     @Bind(R.id.institution_recycler_view)
-    private RecyclerView mRecyclerView;
+    protected RecyclerView mRecyclerView;
 
     private Realm realm;
     private List<Tracking> trackingList;
@@ -110,6 +110,8 @@ public class FragmentTracking extends Fragment {
 
             if(item.getType().equals(Constants.LOGIN)){
                 typeString = Constants.LOGIN_AT;
+            }else if(item.getType().equals(Constants.LOGOUT)){
+                typeString = Constants.LOGOUT_AT;
             }
             viewHolder.address.setText(typeString+dateFormat);
             viewHolder.itemView.setTag(item);
