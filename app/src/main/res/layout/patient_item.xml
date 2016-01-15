@@ -28,7 +28,7 @@
                 android:paddingTop="5dp"
                 android:textStyle="bold"
                 android:textSize="15sp"
-                android:text="TORRES SILVA LEANDRO" />
+                android:text="@string/patient_name_value" />
 
             <TextView
                 android:id="@+id/patient_code"
@@ -37,7 +37,7 @@
                 android:layout_below="@+id/patient_name"
                 android:paddingLeft="5dp"
                 android:textSize="10sp"
-                android:text="DNI: 3454466" />
+                android:text="@string/patient_dni_value" />
 
             <TextView
                 android:id="@+id/patient_address"
@@ -46,10 +46,8 @@
                 android:layout_below="@+id/patient_code"
                 android:paddingLeft="5dp"
                 android:textSize="10sp"
-                android:text="Teléfono: 986633180" />
+                android:text="@string/phone_field" />
 
-
-            
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>

@@ -24,10 +24,10 @@ import pe.cayro.sam.model.Institution;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
-
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+
+    private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -67,25 +66,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.getUiSettings().setRotateGesturesEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
 
-
         Realm realm = Realm.getDefaultInstance();
 
         RealmResults<Institution> institutionList = realm.where(Institution.class).findAll();
         institutionList.sort("latitude", Sort.DESCENDING);
 
-
         for (Institution institution: institutionList) {
-
-
             LatLng sydney = new LatLng(institution.getLatitude(), institution.getLongitude());
-
             mMap.addMarker(new MarkerOptions().position(sydney).title(institution.getName()));
-
             CameraPosition cameraPosition = new CameraPosition.Builder()
                         .target(sydney).zoom(12).build();
                 mMap.animateCamera(CameraUpdateFactory
                         .newCameraPosition(cameraPosition));
-
         }
     }
 }

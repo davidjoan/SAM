@@ -32,10 +32,8 @@ import pe.cayro.sam.model.Tracking;
 import pe.cayro.sam.model.User;
 import util.Constants;
 
-public class LoginActivity extends AppCompatActivity implements
-        GoogleApiClient.ConnectionCallbacks,
+public class LoginActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener{
-
     private static String TAG = LoginActivity.class.getSimpleName();
 
     @Bind(R.id.toolbar)
@@ -71,7 +69,7 @@ public class LoginActivity extends AppCompatActivity implements
         realm = Realm.getInstance(getApplicationContext());
 
         institution = realm.where(Institution.class)
-                .equalTo(Constants.NAME,institutionName).findFirst();
+                .equalTo(Constants.NAME, institutionName).findFirst();
 
         user = realm.where(User.class).findFirst();
 
@@ -108,14 +106,11 @@ public class LoginActivity extends AppCompatActivity implements
                     }
 
                     realm.copyToRealm(tracking);
-
                     realm.commitTransaction();
 
                     Intent intent = new Intent(LoginActivity.this, InstitutionActivity.class);
                     intent.putExtra(Constants.TRACKING_CODE, tracking.getCode());
                     intent.putExtra(Constants.INSTITUTION_NAME, institutionName);
-
-
                     LoginActivity.this.startActivity(intent);
                     finish();
 
@@ -159,21 +154,21 @@ public class LoginActivity extends AppCompatActivity implements
 
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (mLastLocation != null) {
-            Log.i(TAG, "latitude:" + String.valueOf(mLastLocation.getLatitude()));
-            Log.i(TAG, "longitude" + String.valueOf(mLastLocation.getLongitude()));
+            Log.i(TAG, Constants.LATITUDE + String.valueOf(mLastLocation.getLatitude()));
+            Log.i(TAG, Constants.LONGITUDE + String.valueOf(mLastLocation.getLongitude()));
         } else {
-            Log.i(TAG,"No esta activado el gps.");
+            Log.i(TAG,Constants.GPS_DISABLED);
         }
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        Log.i(TAG, "Connection suspended, code:" + String.valueOf(i));
+        Log.i(TAG, Constants.CONNECTION_SUSPENDED + String.valueOf(i));
         mGoogleApiClient.connect();
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
-        Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
+        Log.i(TAG, Constants.CONNECTION_FAILED + result.getErrorCode());
     }
 }

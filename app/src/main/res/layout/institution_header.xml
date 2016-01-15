@@ -33,7 +33,7 @@
             android:id="@+id/institution_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hospital X"
+            android:text="@string/institution_name_value"
             android:textColor="#fff"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -45,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="676455"
+            android:text="@string/tracking_code_value"
             android:textColor="#fff"
             android:textSize="12sp" />
     </LinearLayout>

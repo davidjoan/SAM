@@ -29,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/patient_code"
-                android:hint="DNI"
+                android:hint="@string/patient_code_field"
                 android:inputType="number"
                 />
         </android.support.design.widget.TextInputLayout>
@@ -55,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/patient_name"
-                android:hint="Nombres y Apellidos"
+                android:hint="@string/patient_name_field"
                 android:inputType="textPersonName"
                 />
         </android.support.design.widget.TextInputLayout>
@@ -81,7 +81,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/patient_address"
-                android:hint="Dirección * (opcional)"
+                android:hint="@string/patient_address_field"
                 android:inputType="textShortMessage"
                 />
         </android.support.design.widget.TextInputLayout>
@@ -107,7 +107,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/patient_location"
-                android:hint="Distrito * (opcional)"
+                android:hint="@string/patient_location_field"
                 android:inputType="textShortMessage"/>
         </android.support.design.widget.TextInputLayout>
 
@@ -157,7 +157,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/patient_mail"
-                android:hint="Correo Electrónico * (opcional)"
+                android:hint="@string/patient_mail_field"
                 android:inputType="textEmailAddress"/>
         </android.support.design.widget.TextInputLayout>
 
@@ -166,7 +166,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Guardar"
+        android:text="@string/save"
         android:onClick="savePatient"
         android:id="@+id/patient_save"
         android:layout_gravity="center_horizontal" />

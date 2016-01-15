@@ -39,12 +39,12 @@ public class FragmentRecords extends Fragment {
     @Bind(R.id.record_recycler_view)
     protected RecyclerView mRecyclerView;
 
-    protected String trackingUuid;
-    protected Realm realm;
-    protected List<Record> recordList;
+    private Realm realm;
+    private Tracking tracking;
+    private String trackingUuid;
+    private List<Record> recordList;
     private RecordListAdapter mAdapter;
-    protected RecyclerView.LayoutManager mLayoutManager;
-    protected Tracking tracking;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     public static FragmentRecords newInstance(String uuid) {
         Bundle args = new Bundle();
@@ -67,7 +67,8 @@ public class FragmentRecords extends Fragment {
         View view =inflater.inflate(R.layout.fragment_record,container,false);
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.record_title);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(R.string.medical_sample);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().
+                setSubtitle(R.string.medical_sample);
 
         ButterKnife.bind(this, view);
 
@@ -88,7 +89,7 @@ public class FragmentRecords extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
+        //menu.clear();
         inflater.inflate(R.menu.menu_record, menu);
     }
 
@@ -134,11 +135,11 @@ public class FragmentRecords extends Fragment {
             viewHolder.doctor.setText(Constants.DOCTOR_ABR+item.getDoctor().getName());
             viewHolder.patient.setText(item.getPatient().getName());
             viewHolder.attentionType.setText(item.getAttentionType().getName());
-            String dateFormat = "";
-            SimpleDateFormat formatter = new SimpleDateFormat(Constants.FORMAT_DATETIME_SLASH);
-            dateFormat = formatter.format(item.getRecordDate());
 
+            SimpleDateFormat formatter = new SimpleDateFormat(Constants.FORMAT_DATETIME_SLASH);
+            String dateFormat = formatter.format(item.getRecordDate());
             viewHolder.date.setText(dateFormat);
+
             viewHolder.itemView.setTag(item);
         }
 

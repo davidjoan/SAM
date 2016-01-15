@@ -23,10 +23,10 @@ import util.Constants;
 
 public class InstitutionMapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
-
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+
+    private GoogleMap mMap;
 
     String trackingUuid;
 

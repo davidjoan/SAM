@@ -37,7 +37,7 @@
                 android:paddingTop="5dp"
                 android:textStyle="bold"
                 android:textSize="15sp"
-                android:text="HOSPITAL REBAGLIATI"
+                android:text="@string/institution_name_value"
                 android:layout_toRightOf="@+id/tracking_image" />
 
             <TextView
@@ -47,9 +47,8 @@
                 android:layout_below="@+id/institution_name"
                 android:paddingLeft="5dp"
                 android:textSize="10sp"
-                android:text="Inicio Sesión: 12/12/2015 14:00"
+                android:text="@string/tracking_description_value"
                 android:layout_toRightOf="@+id/tracking_image" />
-
 
         </RelativeLayout>
 

@@ -133,7 +133,7 @@ public class WelcomeActivity extends AppCompatActivity {
             //// TODO: 17/07/15
             //// Replace for implement in production enable the following line code
             // String imei = telephonyManager.getDeviceId();
-            String imei = "98876876876876876";
+            String imei = Constants.IMEI_TEST;
 
             Realm realm = Realm.getDefaultInstance();
 
@@ -148,25 +148,24 @@ public class WelcomeActivity extends AppCompatActivity {
                 realm.clear(Product.class);
                 realm.clear(Doctor.class);
 
-                this.publishProgress("Cargando Usuario");
+                this.publishProgress(Constants.LOADING_USERS);
                 User user = RestClient.get().getUserByImei(imei);
                 realm.copyToRealmOrUpdate(user);
 
-                this.publishProgress("Cargando Instituciones");
+                this.publishProgress(Constants.LOADING_INSTITUTIONS);
                 List<Institution> institutions = RestClient.get().getListInstitutions();
                 realm.copyToRealmOrUpdate(institutions);
 
-                this.publishProgress("Cargando Tipo Atenciones");
+                this.publishProgress(Constants.LOADING_ATTENTION_TYPES);
                 List<AttentionType> attentionTypes = RestClient.get().getAttentionTypes();
                 realm.copyToRealmOrUpdate(attentionTypes);
 
-                this.publishProgress("Cargando Especialidades");
+                this.publishProgress(Constants.LOADING_SPECIALTIES);
                 List<Specialty> specialties = RestClient.get().getListSpecialties();
                 realm.copyToRealmOrUpdate(specialties);
 
-                this.publishProgress("Cargando Doctores");
+                this.publishProgress(Constants.LOADING_DOCTORS);
                 List<Doctor> doctors = RestClient.get().getListDoctors();
-                //realm.copyToRealmOrUpdate(doctors);
 
                 realm.commitTransaction();
                 realm.beginTransaction();
@@ -181,10 +180,9 @@ public class WelcomeActivity extends AppCompatActivity {
 
                 realm.copyToRealmOrUpdate(doctorsTemp);
 
-                this.publishProgress("Cargando Productos");
+                this.publishProgress(Constants.LOADING_PRODUCTS);
                 List<Product> products = RestClient.get().getListProducts();
                 realm.copyToRealmOrUpdate(products);
-
                 realm.commitTransaction();
 
                 editor.putString(Constants.CYCLE_LOADED, Constants.YES);

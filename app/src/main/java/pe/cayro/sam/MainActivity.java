@@ -28,27 +28,24 @@ import io.realm.Realm;
 import pe.cayro.sam.model.User;
 import pe.cayro.sam.ui.FragmentInstitution;
 import pe.cayro.sam.ui.FragmentTracking;
+import util.Constants;
 
 public class MainActivity extends AppCompatActivity {
-
     private static String TAG = MainActivity.class.getSimpleName();
-
-    @Bind(R.id.drawer_layout_main)
-    protected DrawerLayout mDrawer;
 
     @Bind(R.id.toolbar)
     protected Toolbar toolbar;
-
+    @Bind(R.id.drawer_layout_main)
+    protected DrawerLayout mDrawer;
     @Bind(R.id.nvViewMain)
     protected NavigationView nvDrawer;
 
+    private User user;
+    private Realm realm;
     private TextView userName;
     private TextView userCode;
+    private FragmentManager fragmentManager;
     private ActionBarDrawerToggle drawerToggle;
-
-    User user;
-    Realm realm;
-    FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,26 +64,20 @@ public class MainActivity extends AppCompatActivity {
         user = realm.where(User.class).findFirst();
 
         final ActionBar ab = getSupportActionBar();
-
         ab.setHomeAsUpIndicator(R.drawable.ic_drawer);
-
         ab.setDisplayHomeAsUpEnabled(true);
 
         drawerToggle = setupDrawerToggle();
-
         mDrawer.setDrawerListener(drawerToggle);
 
         fragmentManager = getSupportFragmentManager();
-
         fragmentManager.beginTransaction().replace(R.id.flContent,
                 FragmentInstitution.newInstance()).commit();
 
         setupDrawerContent(nvDrawer);
-
         nvDrawer.getMenu().getItem(0).setChecked(true);
 
         View header = nvDrawer.inflateHeaderView(R.layout.nav_header);
-
         userName = (TextView) header.findViewById(R.id.NavUserName);
         userName.setText(user.getName());
         userCode = (TextView) header.findViewById(R.id.NavUserCode);
@@ -107,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(final MenuItem menuItem) {
-
                         // Highlight the selected item, update the title, and close the drawer
                         mDrawer.closeDrawers();
                         menuItem.setChecked(true);
@@ -173,7 +163,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, MapsActivity.class);
             startActivity(intent);
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -182,15 +171,15 @@ public class MainActivity extends AppCompatActivity {
      */
     private void doExit() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-        alertDialog.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton(Constants.SI, new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 finish();
             }
         });
-        alertDialog.setNegativeButton("No", null);
-        alertDialog.setMessage("¿Desea Salir?");
+        alertDialog.setNegativeButton(Constants.NO, null);
+        alertDialog.setMessage(Constants.EXIT);
         alertDialog.setTitle(getString(R.string.app_name));
         alertDialog.show();
     }

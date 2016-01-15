@@ -17,7 +17,7 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
 
-    <TextView android:text="Desea Iniciar Sesión en "
+    <TextView android:text="@string/login_wish"
         android:id="@+id/text_first"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
         android:gravity="center"
         android:layout_marginTop="20dp" />
 
-    <TextView android:text="Institución X"
+    <TextView android:text="@string/institution"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/text_first"
@@ -37,7 +37,7 @@
         android:layout_marginRight="20dp"
         android:id="@+id/text_second" />
 
-    <TextView android:text="Verifique y/o edite el número del correlativo de atención siguiente."
+    <TextView android:text="@string/login_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/text_second"
@@ -48,14 +48,12 @@
         android:layout_marginRight="20dp"
         android:id="@+id/text_three" />
 
-
-
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="number"
         android:ems="7"
-        android:hint="Número Atención"
+        android:hint="@string/number_attention"
         android:id="@+id/editTextAtentionCode"
         android:gravity="center"
         android:layout_below="@+id/text_three"
@@ -65,10 +63,9 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ingresar"
+        android:text="@string/log_in"
         android:id="@+id/buttonLogin"
         android:layout_below="@+id/editTextAtentionCode"
         android:layout_centerHorizontal="true" />
-
 
 </RelativeLayout>

@@ -29,30 +29,22 @@ import pe.cayro.sam.ui.FragmentTracking;
 import util.Constants;
 
 public class InstitutionActivity extends AppCompatActivity {
-
     private static String TAG = InstitutionActivity.class.getSimpleName();
 
     @Bind(R.id.toolbar)
-    Toolbar toolbar;
-
-    Realm realm;
-
-    String trackingCode;
-
-    Tracking tracking;
-
-    Institution institution;
-
-    String institutionName;
-
+    protected Toolbar toolbar;
     @Bind(R.id.drawer_layout)
     protected DrawerLayout mDrawer;
-
     @Bind(R.id.nvView)
     protected NavigationView nvDrawer;
 
+    private Realm realm;
+    private Tracking tracking;
+    private String trackingCode;
+    private String institutionName;
+    private Institution institution;
+    private FragmentManager fragmentManager;
     private ActionBarDrawerToggle drawerToggle;
-    FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,39 +52,32 @@ public class InstitutionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_institution);
 
         trackingCode = getIntent().getStringExtra(Constants.TRACKING_CODE);
-
         institutionName = getIntent().getStringExtra(Constants.INSTITUTION_NAME);
 
         ButterKnife.bind(this);
 
         realm = Realm.getDefaultInstance();
-
         tracking = realm.where(Tracking.class).equalTo(Constants.CODE, trackingCode).findFirst();
 
         institution = realm.where(Institution.class)
                 .equalTo(Constants.ID, tracking.getInstitutionId()).findFirst();
 
         toolbar.setTitle(institutionName);
-
         toolbar.setSubtitle(trackingCode);
 
         setSupportActionBar(toolbar);
 
         final ActionBar ab = getSupportActionBar();
-
         ab.setHomeAsUpIndicator(R.drawable.ic_drawer);
-
         ab.setDisplayHomeAsUpEnabled(true);
 
         drawerToggle = setupDrawerToggle();
-
         mDrawer.setDrawerListener(drawerToggle);
 
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContent,
                 FragmentRecords.newInstance(tracking.getUuid())).commit();
 
-        /* Highlight the selected item, update the title, and close the drawer */
         setupDrawerContent(nvDrawer);
         nvDrawer.getMenu().getItem(0).setChecked(true);
 
@@ -108,7 +93,6 @@ public class InstitutionActivity extends AppCompatActivity {
         return new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open,  R.string.drawer_close){
             @Override
             public void onDrawerClosed(View view) {
-
             }
         };
     }

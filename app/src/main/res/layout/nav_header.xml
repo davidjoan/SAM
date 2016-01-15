@@ -13,7 +13,7 @@
         android:id="@+id/avatar"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/fa_user"
+        android:src="@drawable/avatar"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -33,7 +33,7 @@
             android:id="@+id/NavUserName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Usuario Demo"
+            android:text="@string/user"
             android:textColor="#fff"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="201508"
+            android:text="@string/code"
             android:textColor="#fff"
             android:textSize="12sp" />
     </LinearLayout>

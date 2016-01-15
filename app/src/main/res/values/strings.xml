@@ -18,12 +18,12 @@
     <string name="patients">Pacientes</string>
     <string name="title_activity_new_record">Nuevo Registro MM</string>
 
-
     <string-array name="attention_type_array">
         <item>Inicio de Tratamiento</item>
         <item>Fin de Tratamiento</item>
         <item>Uso Propio</item>
     </string-array>
+
     <string name="title_activity_new_patient">Nuevo Paciente</string>
     <string name="title_activity_new_doctor">Nuevo Médico</string>
     <string name="record_title">Registro de Entrega</string>
@@ -33,4 +33,44 @@
     <string name="login">Iniciar Sesión</string>
     <string name="validation_tracking_code">Ingrese el Número de Atención</string>
     <string name="title_activity_map">Mapa</string>
+    <string name="new_record">Nuevo Registro de MM</string>
+    <string name="institution">Institución</string>
+    <string name="login_message">Verifique y/o edite el número del correlativo de atención siguiente.</string>
+    <string name="number_attention">Número Atención</string>
+    <string name="log_in">Ingresar</string>
+    <string name="login_wish">Desea Iniciar Sesión en</string>
+    <string name="save">Guardar</string>
+    <string name="email_field">Correo Electrónico * (opcional)</string>
+    <string name="phone_field">Teléfono</string>
+    <string name="location_field">Distrito * (opcional)</string>
+    <string name="specialty_field">Especialidad</string>
+    <string name="patient_code_field">Dni</string>
+    <string name="patient_name_field">Nombres y Apellidos</string>
+    <string name="patient_address_field">Dirección * (opcional)</string>
+    <string name="patient_location_field">Distrito * (opcional)</string>
+    <string name="patient_mail_field">Correo Electrónico * (opcional)</string>
+    <string name="record_code"># Atención</string>
+    <string name="date">Fecha</string>
+    <string name="record_attention_type_field">Tipo Atención</string>
+    <string name="doctor">Médico</string>
+    <string name="patient">Paciente</string>
+    <string name="next">Siguiente</string>
+    <string name="doctor_name_value">VEGA CHUQUIANO TOMAS ALEJANDRO</string>
+    <string name="doctor_code_value">CMP: 45676</string>
+    <string name="doctor_specialty_value">MEDICINA GENERAL</string>
+    <string name="institution_name_value">Hospital X</string>
+    <string name="tracking_code_value">676455</string>
+    <string name="institution_address_value">AV. DEFENSORES DEL MORRO 2DO PISO CURVA POLICLINICO NOVAMEDIC</string>
+    <string name="code">123456</string>
+    <string name="patient_name_value">VEGA CHUQUIANO TOMAS ALEJANDRO</string>
+    <string name="patient_dni_value">Dni: 44796683</string>
+    <string name="attention_type_value">Inicio de Tratamiento</string>
+    <string name="date_value">12/01/2016 11:30</string>
+    <string name="tracking_description_value">Inicio Sesión: 12/12/2015 14:00</string>
+    <string name="queries">Consultas</string>
+    <string name="logout">Salir</string>
+    <string name="doctors">Médicos</string>
+    <string name="new_doctor">Nuevo Médico</string>
+    <string name="map">Mapa</string>
+    <string name="new_patient">Nuevo Paciente</string>
 </resources>

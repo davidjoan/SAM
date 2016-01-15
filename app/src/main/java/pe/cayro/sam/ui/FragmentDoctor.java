@@ -40,8 +40,8 @@ public class FragmentDoctor extends Fragment {
     @Bind(R.id.doctor_recycler_view)
     protected RecyclerView mRecyclerView;
 
-    Realm realm;
-    List<Doctor> doctorList;
+    private Realm realm;
+    private List<Doctor> doctorList;
     private DoctorListAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
 
@@ -89,7 +89,7 @@ public class FragmentDoctor extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
+        //menu.clear();
         inflater.inflate(R.menu.menu_doctor, menu);
     }
 

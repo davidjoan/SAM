@@ -83,28 +83,24 @@ public class NewRecordActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_record);
 
+        trackingUuid = getIntent().getStringExtra(Constants.TRACKING_UUID);
+
         format = new SimpleDateFormat(Constants.FORMAT_DATE_SLASH);
-        sdf = new SimpleDateFormat(Constants.FORMAT_DATE);
+        sdf    = new SimpleDateFormat(Constants.FORMAT_DATE);
 
         ButterKnife.bind(this);
 
         start = Calendar.getInstance();
-
         realm = Realm.getDefaultInstance();
-
-        trackingUuid = getIntent().getStringExtra(Constants.TRACKING_UUID);
-
         tracking = realm.where(Tracking.class).equalTo(Constants.UUID, trackingUuid).findFirst();
 
-        toolbar.setTitle("Nuevo Registro de MM");
-
+        toolbar.setTitle(R.string.new_record);
         toolbar.setSubtitle(tracking.getInstitution().getName());
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         record = new Record();
-
         record.setUuid(UUID.randomUUID().toString());
         record.setInstitutionId(tracking.getInstitutionId());
 
@@ -114,7 +110,6 @@ public class NewRecordActivity extends AppCompatActivity
         spinner.setAdapter(adapter);
 
         recordCode.setText(tracking.getCode());
-
         editTextDate.setText(sdf.format(new Date()));
 
         final DatePickerDialog datePickerDialog = DatePickerDialog.
@@ -148,7 +143,7 @@ public class NewRecordActivity extends AppCompatActivity
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String temp =  adapterDoctor.getItem(position);
 
-                doctor = realm.where(Doctor.class).equalTo("uuid", temp).findFirst();
+                doctor = realm.where(Doctor.class).equalTo(Constants.UUID, temp).findFirst();
                 recordDoctor.setText(doctor.getName());
             }
         });
@@ -159,7 +154,7 @@ public class NewRecordActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String temp = adapterPatient.getItem(position);
-                patient = realm.where(Patient.class).equalTo("uuid", temp).findFirst();
+                patient = realm.where(Patient.class).equalTo(Constants.UUID, temp).findFirst();
                 recordPatient.setText(patient.getName());
             }
         });

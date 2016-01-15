@@ -4,27 +4,27 @@
         <item
             android:id="@+id/nav_first_fragment"
             android:icon="@drawable/fa_hospital_o"
-            android:title="Instituciones" />
+            android:title="@string/institutions" />
 
         <item
             android:id="@+id/nav_second_fragment"
             android:icon="@drawable/fa_calendar"
-            android:title="Asistencia" />
+            android:title="@string/assistance" />
 
         <item
             android:id="@+id/nav_third_fragment"
             android:icon="@drawable/fa_document"
-            android:title="Consultas" />
+            android:title="@string/queries" />
 
         <item
             android:id="@+id/nav_fourth_fragment"
             android:icon="@drawable/fa_user"
-            android:title="Usuario" />
+            android:title="@string/user" />
 
         <item
             android:id="@+id/nav_five_fragment"
             android:icon="@drawable/fa_logout"
-            android:title="Salir" />
+            android:title="@string/logout" />
 
     </group>
 </menu>

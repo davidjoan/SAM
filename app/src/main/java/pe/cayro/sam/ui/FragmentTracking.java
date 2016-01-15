@@ -31,20 +31,18 @@ import util.Constants;
  * Created by David on 8/01/16.
  */
 public class FragmentTracking extends Fragment {
-
     private static String TAG = FragmentTracking.class.getSimpleName();
 
     @Bind(R.id.institution_recycler_view)
-    protected RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView;
 
-    protected Realm realm;
-    protected List<Tracking> trackingList;
-    protected TrackingListAdapter mAdapter;
-    protected RecyclerView.LayoutManager mLayoutManager;
+    private Realm realm;
+    private List<Tracking> trackingList;
+    private TrackingListAdapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     public static FragmentTracking newInstance() {
         Bundle args = new Bundle();
-
         FragmentTracking fragment = new FragmentTracking();
         fragment.setArguments(args);
         return fragment;
@@ -65,7 +63,6 @@ public class FragmentTracking extends Fragment {
         ButterKnife.bind(this, view);
 
         realm = Realm.getDefaultInstance();
-
         trackingList = realm.where(Tracking.class).findAll();
 
         Log.d(TAG, Constants.QTY_FIELD+String.valueOf(trackingList.size()));
@@ -74,7 +71,6 @@ public class FragmentTracking extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new TrackingListAdapter(trackingList, R.layout.tracking_item);
         mRecyclerView.setAdapter(mAdapter);
-
         return view;
     }
 
@@ -105,18 +101,15 @@ public class FragmentTracking extends Fragment {
         public void onBindViewHolder(ViewHolder viewHolder, int position) {
             Tracking item = items.get(position);
 
-
             viewHolder.name.setText(item.getInstitution().getName());
             viewHolder.uuid = item.getUuid();
+            String typeString = Constants.EMPTY;
 
-            String typeString = "";
-            String dateFormat = "";
+            SimpleDateFormat formatter = new SimpleDateFormat(Constants.FORMAT_DATETIME_SLASH);
+            String dateFormat = formatter.format(item.getCreatedAt());
 
-            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm");
-            dateFormat = formatter.format(item.getCreatedAt());
-
-            if(item.getType().equals("login")){
-                typeString = "Inicio Sesión el ";
+            if(item.getType().equals(Constants.LOGIN)){
+                typeString = Constants.LOGIN_AT;
             }
             viewHolder.address.setText(typeString+dateFormat);
             viewHolder.itemView.setTag(item);
@@ -139,7 +132,6 @@ public class FragmentTracking extends Fragment {
                 super(itemView);
                 name    = (TextView) itemView.findViewById(R.id.institution_name);
                 address = (TextView) itemView.findViewById(R.id.tracking_name);
-
                 itemView.setOnClickListener(this);
             }
 

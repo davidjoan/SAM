@@ -21,6 +21,7 @@ import butterknife.ButterKnife;
 import io.realm.Realm;
 import pe.cayro.sam.model.Patient;
 import pe.cayro.sam.model.User;
+import util.Constants;
 
 public class NewPatientActivity extends AppCompatActivity {
 
@@ -28,31 +29,23 @@ public class NewPatientActivity extends AppCompatActivity {
 
     @Bind(R.id.toolbar)
     protected Toolbar toolbar;
-
     @Bind(R.id.patient_save)
     protected Button patientSave;
-
     @Bind(R.id.patient_code)
     protected EditText patientCode;
-
     @Bind(R.id.patient_name)
     protected EditText patientName;
-
+    @Bind(R.id.patient_mail)
+    protected EditText patientEmail;
     @Bind(R.id.patient_phone)
     protected EditText patientPhone;
-
     @Bind(R.id.patient_address)
     protected EditText patientAddress;
-
     @Bind(R.id.patient_location)
     protected EditText patientLocation;
 
-    @Bind(R.id.patient_mail)
-    protected EditText patientEmail;
-
-    Realm realm;
-
-    User user;
+    private User user;
+    private Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,11 +53,9 @@ public class NewPatientActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_patient);
 
         ButterKnife.bind(this);
-
         toolbar.setTitle(R.string.title_activity_new_patient);
 
         realm = Realm.getDefaultInstance();
-
         user =realm.where(User.class).findFirst();
 
         setSupportActionBar(toolbar);
@@ -95,7 +86,6 @@ public class NewPatientActivity extends AppCompatActivity {
                     try {
 
                         realm.beginTransaction();
-
                         Patient patient = realm.createObject(Patient.class);
 
                         patient.setUuid(UUID.randomUUID().toString());
@@ -110,10 +100,9 @@ public class NewPatientActivity extends AppCompatActivity {
                         patient.setUserId(user.getId());
 
                         realm.copyToRealmOrUpdate(patient);
-
                         realm.commitTransaction();
 
-                        Toast.makeText(getApplicationContext(), "Se guardo correctamente.",
+                        Toast.makeText(getApplicationContext(), Constants.SAVE_OK,
                                 Toast.LENGTH_SHORT).show();
 
                         Intent data = new Intent();
