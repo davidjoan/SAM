@@ -217,7 +217,7 @@ public class FragmentRecords extends Fragment {
 
             for (RecordDetail temp : item.getRecordDetails()) {
                 if(item.getAttentionTypeId() == 2 ) {
-                    sumMM = sumMM + ((float) temp.getQty()) + temp.getQtyCalculated();
+                    sumMM = sumMM + temp.getQtyCalculated();
                 }else{
                     sumMM = sumMM + temp.getQty();
                 }

@@ -18,6 +18,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.UUID;
 
@@ -49,6 +51,8 @@ public class AddRecordDetailActivity extends AppCompatActivity {
     @Bind(R.id.record_detail_product_autocompleter)
     protected AppCompatAutoCompleteTextView recordDetailProduct;
 
+    private static final DecimalFormat oneDecimal = new DecimalFormat("#");
+
     private Realm realm;
     private Record record;
     private String recordUuid;
@@ -68,6 +72,8 @@ public class AddRecordDetailActivity extends AppCompatActivity {
         recordCode = getIntent().getIntExtra(Constants.CODE, 0);
 
         ButterKnife.bind(this);
+
+        oneDecimal.setRoundingMode(RoundingMode.DOWN);
 
         toolbar.setTitle(R.string.medical_sample);
         toolbar.setSubtitle(Constants.CODE_FIELD + String.valueOf(recordCode));
@@ -114,7 +120,8 @@ public class AddRecordDetailActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
                 if(recordDetailQty.getText().length() > 0){
                     Float value =  Float.valueOf(recordDetailQty.getText().toString());
-                    recordDetailQtyCalculated.setText(String.valueOf(Math.round(value.floatValue()/2)));
+
+                    recordDetailQtyCalculated.setText(String.valueOf(oneDecimal.format(value.floatValue()/2)));
                 }else{
                     recordDetailQtyCalculated.setText("");
                 }
