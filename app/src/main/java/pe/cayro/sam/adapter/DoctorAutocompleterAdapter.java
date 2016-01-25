@@ -65,7 +65,8 @@ public class DoctorAutocompleterAdapter extends ArrayAdapter<String> implements 
         viewHolder.name.setText((doctor.getName().length() > 30) ?
                 doctor.getName().substring(0, 30) + Constants.ELLIPSIS : doctor.getName());
 
-        viewHolder.code.setText(Constants.CMP_FIELD+ doctor.getCode());
+        viewHolder.code.setText(Constants.CMP_FIELD+ doctor.getCode()+" ("+
+                doctor.getScore()+") "+doctor.getSpecialty().getName());
 
         Picasso.with(getContext()).
                 load(new StringBuilder().append(Constants.CMP_PHOTO_SERVER).

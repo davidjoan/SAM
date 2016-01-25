@@ -1,7 +1,6 @@
 package pe.cayro.sam.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,62 +14,46 @@ import java.util.ArrayList;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import pe.cayro.sam.R;
-import pe.cayro.sam.model.Patient;
+import pe.cayro.sam.model.Ubigeo;
 import util.Constants;
 
 /**
  * Created by David on 12/01/16.
  */
-public class PatientAutocompleterAdapter extends ArrayAdapter<String> implements Filterable {
+public class UbigeoAutocompleterAdapter extends ArrayAdapter<Integer> implements Filterable {
+    private static String TAG = UbigeoAutocompleterAdapter.class.getSimpleName();
 
-    private static String TAG = PatientAutocompleterAdapter.class.getSimpleName();
-
-    public PatientAutocompleterAdapter(Context context, int textViewResourceId) {
+    public UbigeoAutocompleterAdapter(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
     }
 
     private class ViewHolder {
         TextView name;
-        TextView code;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        String uuid = getItem(position);
-
-        Log.i(TAG, uuid);
+        Integer id = getItem(position);
 
         Realm realm = Realm.getDefaultInstance();
-        /* TODO: Check if exist another way to load a information of patient using Realm. */
-        Patient patient = realm.where(Patient.class).equalTo(Constants.UUID, uuid).findFirst();
+        Ubigeo ubigeo = realm.where(Ubigeo.class).equalTo(Constants.ID, id).findFirst();
+        realm.close();
 
         ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.patient_autocomplete_item, parent, false);
-            viewHolder.name = (TextView) convertView.findViewById(R.id.patient_name);
-            viewHolder.code = (TextView) convertView.findViewById(R.id.patient_code);
+            convertView = inflater.inflate(R.layout.ubigeo_autocomplete_item, parent, false);
+            viewHolder.name = (TextView) convertView.findViewById(R.id.ubigeo_name);
 
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.name.setText((patient.getName().length() > 30)?
-                patient.getName().substring(0, 30)+Constants.ELLIPSIS:
-                patient.getName());
-
-        String ubigeoStr = "";
-
-        if (patient.getUbigeoId() > 0) {
-            ubigeoStr = patient.getUbigeo().getName();
-        }
-
-        viewHolder.code.setText(Constants.DNI_FIELD + patient.getCode()+" , "+ubigeoStr);
-
-        realm.close();
-
+        viewHolder.name.setText((ubigeo.getName().length() > 30) ?
+                ubigeo.getName().substring(0, 30) + Constants.ELLIPSIS :
+                ubigeo.getName());
         return convertView;
     }
 
@@ -80,18 +63,16 @@ public class PatientAutocompleterAdapter extends ArrayAdapter<String> implements
 
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
-                ArrayList<String> data = new ArrayList<String>();
+                ArrayList<Integer> data = new ArrayList<Integer>();
                 FilterResults filterResults = new FilterResults();
 
                 Realm  realm = Realm.getDefaultInstance();
 
-                RealmResults<Patient> realmResults = realm.where(Patient.class).beginGroup().
-                        contains(Constants.NAME, constraint.toString().toUpperCase()).or().
-                        contains(Constants.CODE, constraint.toString().toUpperCase()).
-                        endGroup().findAll();
+                RealmResults<Ubigeo> realmResults = realm.where(Ubigeo.class).
+                        contains(Constants.NAME, constraint.toString().toUpperCase()).findAll();
 
-                for(Patient patient : realmResults){
-                    data.add(patient.getUuid());
+                for(Ubigeo ubigeo : realmResults){
+                    data.add(Integer.valueOf(ubigeo.getId()));
                 }
 
                 filterResults.values = data;
@@ -104,7 +85,7 @@ public class PatientAutocompleterAdapter extends ArrayAdapter<String> implements
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 if (results != null && results.count > 0) {
                     clear();
-                    addAll((ArrayList<String>) results.values);
+                    addAll((ArrayList<Integer>) results.values);
                     notifyDataSetChanged();
                 } else {
                     notifyDataSetInvalidated();

@@ -13,7 +13,7 @@ public class RecordDetail extends RealmObject {
     private String recordUuid;
     private int productId;
     private int qty;
-
+    private float qtyCalculated;
     private Record record;
     private Product product;
 
@@ -63,5 +63,13 @@ public class RecordDetail extends RealmObject {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public float getQtyCalculated() {
+        return qtyCalculated;
+    }
+
+    public void setQtyCalculated(float qtyCalculated) {
+        this.qtyCalculated = qtyCalculated;
     }
 }

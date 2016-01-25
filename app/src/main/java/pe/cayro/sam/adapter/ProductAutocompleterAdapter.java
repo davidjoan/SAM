@@ -72,8 +72,10 @@ public class ProductAutocompleterAdapter extends ArrayAdapter<Integer> implement
 
                 Realm  realm = Realm.getDefaultInstance();
 
-                RealmResults<Product> realmResults = realm.where(Product.class).
-                        contains(Constants.NAME, constraint.toString().toUpperCase()).findAll();
+                RealmResults<Product> realmResults = realm.where(Product.class).beginGroup().
+                        contains(Constants.NAME, constraint.toString().toUpperCase()).or().
+                        contains(Constants.CODE, constraint.toString().toUpperCase()).
+                        endGroup().findAll();
 
                 for(Product product : realmResults){
                     data.add(Integer.valueOf(product.getId()));

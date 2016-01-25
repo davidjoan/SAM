@@ -12,7 +12,9 @@ public class Constants {
     public static final String DATEPICKER_TAG = "datepicker";
     public static final String DOT_JPG = ".jpg";
 
+
     public static final String API_AGENT = "/agents";
+    public static final String API_UBIGEO = "/ubigeos";
     public static final String API_DOCTOR = "/doctors";
     public static final String API_PRODUCT = "/products";
     public static final String API_SPECIALTY = "/specialties";
@@ -85,4 +87,8 @@ public class Constants {
     public static final String LOGOUT_2 = "Desea Cerrar Sesión en ";
     public static final String DATE_FIELD = "Fecha: ";
     public static final Object RECORD_DATE = "recordDate";
+    public static final String SNACK = "snack";
+    public static final String LOADING_UBIGEOS = "Cargando Localidades";
+
+    public static final String INSTITUTION_ID = "institutionId";
 }

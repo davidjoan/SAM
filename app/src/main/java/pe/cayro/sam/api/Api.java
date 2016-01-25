@@ -8,6 +8,7 @@ import pe.cayro.sam.model.Doctor;
 import pe.cayro.sam.model.Institution;
 import pe.cayro.sam.model.Product;
 import pe.cayro.sam.model.Specialty;
+import pe.cayro.sam.model.Ubigeo;
 import pe.cayro.sam.model.User;
 import retrofit.http.GET;
 import retrofit.http.Path;
@@ -38,5 +39,8 @@ public interface Api {
 
     @GET(Constants.API_AGENT)
     List<Agent> getAgents();
+
+    @GET(Constants.API_UBIGEO)
+    List<Ubigeo> getUbigeos();
 
 }

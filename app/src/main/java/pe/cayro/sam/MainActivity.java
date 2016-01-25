@@ -25,7 +25,9 @@ import butterknife.ButterKnife;
 import io.realm.Realm;
 import pe.cayro.sam.model.User;
 import pe.cayro.sam.ui.FragmentInstitution;
+import pe.cayro.sam.ui.FragmentReport;
 import pe.cayro.sam.ui.FragmentTracking;
+import pe.cayro.sam.ui.FragmentUser;
 import util.Constants;
 
 public class MainActivity extends AppCompatActivity {
@@ -125,10 +127,10 @@ public class MainActivity extends AppCompatActivity {
                     fragment = FragmentTracking.newInstance();
                     break;
                 case R.id.nav_third_fragment:
-                    fragment = FragmentInstitution.newInstance();
+                    fragment = FragmentReport.newInstance();
                     break;
                 case R.id.nav_fourth_fragment:
-                    fragment = FragmentInstitution.newInstance();
+                    fragment = FragmentUser.newInstance();
                     break;
                 case R.id.nav_five_fragment:
                     fragment = FragmentInstitution.newInstance();

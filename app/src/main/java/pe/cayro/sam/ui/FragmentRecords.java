@@ -213,10 +213,14 @@ public class FragmentRecords extends Fragment {
             viewHolder.attentionType.setText(item.getAttentionType().getName());
             viewHolder.code.setText("#: "+String.valueOf(item.getCode()));
 
-            int sumMM = 0;
-            for (RecordDetail temp : item.getRecordDetails()) {
-                sumMM = sumMM+temp.getQty();
+            float sumMM = 0;
 
+            for (RecordDetail temp : item.getRecordDetails()) {
+                if(item.getAttentionTypeId() == 2 ) {
+                    sumMM = sumMM + ((float) temp.getQty()) + temp.getQtyCalculated();
+                }else{
+                    sumMM = sumMM + temp.getQty();
+                }
             }
 
             viewHolder.mm.setText("mm: "+String.valueOf(sumMM));

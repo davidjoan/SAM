@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -17,7 +19,9 @@ import java.util.UUID;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import pe.cayro.sam.adapter.UbigeoAutocompleterAdapter;
 import pe.cayro.sam.model.Patient;
+import pe.cayro.sam.model.Ubigeo;
 import pe.cayro.sam.model.User;
 import util.Constants;
 
@@ -39,11 +43,13 @@ public class NewPatientActivity extends AppCompatActivity {
     protected EditText patientPhone;
     @Bind(R.id.patient_address)
     protected EditText patientAddress;
-    @Bind(R.id.patient_location)
-    protected EditText patientLocation;
+    @Bind(R.id.patient_ubigeo_autocompleter)
+    protected AppCompatAutoCompleteTextView patientUbigeo;
 
     private User user;
     private Realm realm;
+    private Ubigeo ubigeo = null;
+    private UbigeoAutocompleterAdapter adapterUbigeo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +63,20 @@ public class NewPatientActivity extends AppCompatActivity {
         user =realm.where(User.class).findFirst();
 
         setSupportActionBar(toolbar);
+
+        adapterUbigeo = new UbigeoAutocompleterAdapter(this, R.layout.ubigeo_autocomplete_item);
+        patientUbigeo.setAdapter(adapterUbigeo);
+        patientUbigeo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Integer temp = adapterUbigeo.getItem(position);
+                ubigeo = realm.where(Ubigeo.class).equalTo(Constants.ID, temp.intValue()).findFirst();
+                patientUbigeo.setText(ubigeo.getName());
+                //patient.setUbigeo(doctor);
+                //record.setDoctorUuid(doctor.getUuid());
+            }
+        });
 
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -90,12 +110,18 @@ public class NewPatientActivity extends AppCompatActivity {
                         patient.setCode(patientCode.getText().toString());
                         patient.setName(patientName.getText().toString());
                         patient.setAddress(patientAddress.getText().toString());
-                        patient.setLocation(patientLocation.getText().toString());
+                        //patient.setLocation(patientLocation.getText().toString());
                         patient.setPhone(patientPhone.getText().toString());
                         patient.setEmail(patientEmail.getText().toString());
                         patient.setCreatedAt(new Date());
                         patient.setUser(user);
                         patient.setUserId(user.getId());
+
+                        if(ubigeo != null){
+                            patient.setUbigeoId(ubigeo.getId());
+                            patient.setUbigeo(ubigeo);
+
+                        }
 
                         realm.copyToRealmOrUpdate(patient);
                         realm.commitTransaction();

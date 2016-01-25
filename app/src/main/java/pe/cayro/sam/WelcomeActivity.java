@@ -25,6 +25,7 @@ import pe.cayro.sam.model.Doctor;
 import pe.cayro.sam.model.Institution;
 import pe.cayro.sam.model.Product;
 import pe.cayro.sam.model.Specialty;
+import pe.cayro.sam.model.Ubigeo;
 import pe.cayro.sam.model.User;
 import util.Constants;
 
@@ -69,7 +70,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 } else {
                     progress.setCancelable(false);
                     progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                    progress.setMax(8);
+                    progress.setMax(9);
                     progress.setMessage(Constants.SINCRONIZATION);
                     progress.show();
                     new LoginAsyncTask(getApplicationContext()).execute(Constants.EMPTY);
@@ -149,6 +150,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 realm.clear(Product.class);
                 realm.clear(Doctor.class);
                 realm.clear(Agent.class);
+                realm.clear(Ubigeo.class);
 
                 this.publishProgress(Constants.LOADING_USERS);
                 User user = RestClient.get().getUserByImei(imei);
@@ -169,8 +171,9 @@ public class WelcomeActivity extends AppCompatActivity {
                 this.publishProgress(Constants.LOADING_DOCTORS);
                 List<Doctor> doctors = RestClient.get().getListDoctors();
 
-                realm.commitTransaction();
-                realm.beginTransaction();
+                this.publishProgress(Constants.LOADING_UBIGEOS);
+                List<Ubigeo> ubigeos = RestClient.get().getUbigeos();
+                realm.copyToRealmOrUpdate(ubigeos);
 
                 List<Doctor> doctorsTemp = new ArrayList<Doctor>();
                 for(Doctor temp : doctors){
@@ -192,6 +195,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 realm.commitTransaction();
 
                 editor.putString(Constants.CYCLE_LOADED, Constants.YES);
+                editor.putString(Constants.SNACK,Constants.NO);
                 editor.apply();
 
             } finally {

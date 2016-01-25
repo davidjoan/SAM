@@ -26,6 +26,7 @@ public class Record extends RealmObject {
     private Date saleDate;
     private String serial;
     private int institutionOriginId;
+    private boolean sent;
     private Date createdAt;
     private Date updatedAt;
 
@@ -229,5 +230,13 @@ public class Record extends RealmObject {
 
     public void setRecordDetails(RealmList<RecordDetail> recordDetails) {
         this.recordDetails = recordDetails;
+    }
+
+    public boolean isSent() {
+        return sent;
+    }
+
+    public void setSent(boolean sent) {
+        this.sent = sent;
     }
 }

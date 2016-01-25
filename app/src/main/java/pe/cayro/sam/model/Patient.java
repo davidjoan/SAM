@@ -13,13 +13,15 @@ public class Patient extends RealmObject {
     @PrimaryKey
     private String uuid;
     private int userId;
+    private int ubigeoId;
     private String code;
     private String name;
     private String address;
-    private String location;
     private String phone;
     private String email;
     private Date createdAt;
+
+    private Ubigeo ubigeo;
 
     private User user;
 
@@ -53,14 +55,6 @@ public class Patient extends RealmObject {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
     }
 
     public String getPhone() {
@@ -101,5 +95,21 @@ public class Patient extends RealmObject {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public int getUbigeoId() {
+        return ubigeoId;
+    }
+
+    public void setUbigeoId(int ubigeoId) {
+        this.ubigeoId = ubigeoId;
+    }
+
+    public Ubigeo getUbigeo() {
+        return ubigeo;
+    }
+
+    public void setUbigeo(Ubigeo ubigeo) {
+        this.ubigeo = ubigeo;
     }
 }

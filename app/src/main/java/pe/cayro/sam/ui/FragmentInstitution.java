@@ -1,5 +1,6 @@
 package pe.cayro.sam.ui;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,7 +9,13 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -18,6 +25,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import io.realm.RealmResults;
 import pe.cayro.sam.LoginActivity;
 import pe.cayro.sam.R;
 import pe.cayro.sam.model.Institution;
@@ -34,6 +42,7 @@ public class FragmentInstitution extends Fragment {
 
     Realm realm;
     List<Institution> institutionList;
+    RealmResults<Institution> result;
     private InstitutionListAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
 
@@ -62,14 +71,60 @@ public class FragmentInstitution extends Fragment {
 
         realm = Realm.getDefaultInstance();
 
-        institutionList = realm.where(Institution.class).findAll();
+        result = realm.where(Institution.class).findAll();
 
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new InstitutionListAdapter(institutionList, R.layout.institution_item);
+        mAdapter = new InstitutionListAdapter(result, R.layout.institution_item);
         mRecyclerView.setAdapter(mAdapter);
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchManager searchManager = (SearchManager) getActivity().
+                getSystemService(Context.SEARCH_SERVICE);
+
+        SearchView searchView = null;
+        if (searchItem != null) {
+            searchView = (SearchView) searchItem.getActionView();
+        }
+        if (searchView != null) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().
+                    getComponentName()));
+            searchView.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+            SearchView.OnQueryTextListener queryListener = new SearchView.OnQueryTextListener() {
+
+                @Override
+                public boolean onQueryTextChange(String data) {
+
+                    if (TextUtils.isEmpty(data)) {
+                        result = realm.where(Institution.class).findAll();
+                        mAdapter.setData(result);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextSubmit(String data) {
+                    if (!TextUtils.isEmpty(data)) {
+                        result = realm.where(Institution.class)
+                                .contains(Constants.NAME, data.toUpperCase())
+                                .findAll();
+
+                        mAdapter.setData(result);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                    return false;
+                }
+            };
+            searchView.setOnQueryTextListener(queryListener);
+        }
     }
 
     public class InstitutionListAdapter extends RecyclerView.

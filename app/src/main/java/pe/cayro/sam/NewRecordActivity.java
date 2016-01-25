@@ -128,7 +128,7 @@ public class NewRecordActivity extends AppCompatActivity {
         record.setCode((int) code);
 
         attentionType = realm.where(AttentionType.class).equalTo(Constants.ID,
-                1).findFirst();
+                2).findFirst();
 
         record.setAttentionTypeId(attentionType.getId());
         record.setAttentionType(attentionType);
@@ -137,6 +137,8 @@ public class NewRecordActivity extends AppCompatActivity {
                 R.array.attention_type_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+
+        spinner.setSelection(1);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -180,6 +182,8 @@ public class NewRecordActivity extends AppCompatActivity {
                 Log.d(TAG, "Tipo de Atención: Nada Seleccionado");
             }
         });
+
+
 
         recordCode.setText(String.valueOf(code));
         editTextDate.setText(sdf.format(new Date()));
@@ -334,6 +338,11 @@ public class NewRecordActivity extends AppCompatActivity {
                     errors++;
                     recordDoctor.setError("El Médico no puede estar vacio");
                 }
+                if(doctor == null){
+                    errors++;
+                    recordDoctor.setError("Tiene que seleccionar un Médico");
+                }
+
                 if(recordPatient.getText().length() == 0){
                     errors++;
                     recordPatient.setError("El Paciente no puede estar vacio");
@@ -344,9 +353,17 @@ public class NewRecordActivity extends AppCompatActivity {
                     errors++;
                     recordDoctor.setError("El Médico no puede estar vacio");
                 }
+                if(doctor == null){
+                    errors++;
+                    recordDoctor.setError("Tiene que seleccionar un Médico");
+                }
                 if(recordPatient.getText().length() == 0){
                     errors++;
                     recordPatient.setError("El Paciente no puede estar vacio");
+                }
+                if(patient == null){
+                    errors++;
+                    recordPatient.setError("Tiene que seleccionar un Paciente");
                 }
                 if(recordSerial.getText().length() == 0){
                     errors++;
@@ -371,6 +388,10 @@ public class NewRecordActivity extends AppCompatActivity {
                 if(recordDoctor.getText().length() == 0){
                     errors++;
                     recordDoctor.setError("El Médico no puede estar vacio");
+                }
+                if(doctor == null){
+                    errors++;
+                    recordDoctor.setError("Tiene que seleccionar un Médico");
                 }
                 break;
         }

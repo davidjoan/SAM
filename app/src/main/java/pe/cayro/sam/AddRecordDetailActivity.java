@@ -8,6 +8,8 @@ import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,7 +89,37 @@ public class AddRecordDetailActivity extends AppCompatActivity {
 
         realm = Realm.getDefaultInstance();
 
+        record = realm.where(Record.class).equalTo(Constants.UUID,recordUuid).findFirst();
+
         recordDetails = realm.where(RecordDetail.class).equalTo("recordUuid",recordUuid).findAll();
+
+        if(record.getAttentionTypeId() == 2){
+
+            recordDetailQtyCalculated.setVisibility(View.VISIBLE);
+
+        }else{
+            recordDetailQtyCalculated.setVisibility(View.GONE);
+        }
+
+        recordDetailQty.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(recordDetailQty.getText().length() > 0){
+                    Float value =  Float.valueOf(recordDetailQty.getText().toString());
+                    recordDetailQtyCalculated.setText(String.valueOf(Math.round(value.floatValue()/2)));
+                }else{
+                    recordDetailQtyCalculated.setText("");
+                }
+            }
+        });
 
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -113,29 +145,31 @@ public class AddRecordDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 int errors = 0;
-                if(recordDetailQty.getText().length() == 0){
+                if (recordDetailQty.getText().length() == 0) {
                     errors++;
                     recordDetailQty.setError("La cantidad no puede estar en blanco");
                 }
-                if(recordDetailProduct.getText().length() == 0){
+                if (recordDetailProduct.getText().length() == 0) {
                     errors++;
                     recordDetailProduct.setError("La Muestra Médica no puede estar en blanco");
                 }
+                if(product == null){
+                    errors++;
+                    recordDetailProduct.setError("La Muestra Médica no es correcta");
+                }
 
-                if(errors == 0){
+                if (errors == 0) {
 
                     realm.beginTransaction();
 
-                    record = realm.where(Record.class).equalTo(Constants.UUID,recordUuid).findFirst();
-
                     RecordDetail recordDetail = realm.createObject(RecordDetail.class);
-
                     recordDetail.setRecord(record);
                     recordDetail.setProduct(product);
                     recordDetail.setProductId(product.getId());
                     recordDetail.setRecordUuid(record.getUuid());
                     recordDetail.setUuid(UUID.randomUUID().toString());
                     recordDetail.setQty(Integer.valueOf(recordDetailQty.getText().toString()).intValue());
+                    recordDetail.setQtyCalculated(Float.valueOf(recordDetailQtyCalculated.getText().toString()).floatValue());
 
                     realm.copyToRealm(recordDetail);
                     record.getRecordDetails().add(recordDetail);
@@ -147,7 +181,7 @@ public class AddRecordDetailActivity extends AppCompatActivity {
                     recordDetailQtyCalculated.setText("");
 
                     recordDetails = realm.where(RecordDetail.class)
-                            .equalTo("recordUuid",recordUuid).findAll();
+                            .equalTo("recordUuid", recordUuid).findAll();
                     mAdapter.setData(recordDetails);
                     mAdapter.notifyDataSetChanged();
                 }
@@ -181,9 +215,13 @@ public class AddRecordDetailActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, int position) {
             RecordDetail item = items.get(position);
-
             viewHolder.name.setText(item.getProduct().getName());
-            viewHolder.qty.setText(Constants.QTY_FIELD+String.valueOf(item.getQty()));
+            if(item.getRecord().getAttentionTypeId() == 2) {
+                viewHolder.qty.setText(Constants.QTY_FIELD + String.valueOf(item.getQty())+
+                        ", C Calculada: "+String.valueOf(item.getQtyCalculated()));
+            }else{
+                viewHolder.qty.setText(Constants.QTY_FIELD + String.valueOf(item.getQty()));
+            }
             viewHolder.uuid = item.getUuid();
 
             viewHolder.itemView.setTag(item);

@@ -172,7 +172,6 @@
         android:layout_height="wrap_content"
         android:text="@string/finish_treatment"
         android:id="@+id/header_finish_treatment"
-        android:visibility="gone"
         android:textStyle="bold"
         android:layout_gravity="center_horizontal" />
 
@@ -182,7 +181,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
         android:id="@+id/body_finish_treatment_1"
-        android:visibility="gone"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true">
 
@@ -199,7 +197,8 @@
                 android:layout_height="match_parent"
                 android:id="@+id/record_serial"
                 android:hint="@string/record_serial"
-                android:inputType="number"
+                android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 "
+                android:inputType="textCapCharacters"
                 />
 
         </android.support.design.widget.TextInputLayout>
@@ -233,7 +232,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
         android:id="@+id/body_finish_treatment_2"
-        android:visibility="gone"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true">
 

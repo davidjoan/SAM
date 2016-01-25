@@ -55,7 +55,9 @@ public class InstitutionActivity extends AppCompatActivity implements GoogleApiC
     private User user;
     private Tracking tracking;
     private int trackingCode;
+    private String trackingUuid;
     private String institutionName;
+    private int institutionId;
     private Institution institution;
     private FragmentManager fragmentManager;
     private ActionBarDrawerToggle drawerToggle;
@@ -72,11 +74,15 @@ public class InstitutionActivity extends AppCompatActivity implements GoogleApiC
 
         trackingCode = getIntent().getIntExtra(Constants.TRACKING_CODE, 0);
         institutionName = getIntent().getStringExtra(Constants.INSTITUTION_NAME);
+        institutionId = getIntent().getIntExtra(Constants.INSTITUTION_ID, 0);
+        trackingUuid = getIntent().getStringExtra(Constants.UUID);
 
         ButterKnife.bind(this);
 
         realm = Realm.getDefaultInstance();
-        tracking = realm.where(Tracking.class).equalTo(Constants.CODE, trackingCode).findFirst();
+        tracking = realm.where(Tracking.class).equalTo(Constants.CODE, trackingCode)
+                .equalTo(Constants.INSTITUTION_ID, institutionId)
+                .equalTo(Constants.UUID, trackingUuid).findFirst();
 
         institution = realm.where(Institution.class)
                 .equalTo(Constants.ID, tracking.getInstitutionId()).findFirst();
