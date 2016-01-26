@@ -183,6 +183,11 @@ public class FragmentPatient extends Fragment {
             viewHolder.name.setText(item.getName());
             viewHolder.code.setText(Constants.DNI_FIELD+item.getCode());
             viewHolder.address.setText(Constants.PHONE_FIELD+item.getPhone());
+            if(item.getUbigeo() != null){
+                viewHolder.ubigeo.setText(item.getUbigeo().getName()+
+                        Constants.DASH_SEPARATOR+item.getUbigeo().getProvince());
+            }
+
             viewHolder.id = item.getUuid();
             viewHolder.itemView.setTag(item);
         }
@@ -197,6 +202,7 @@ public class FragmentPatient extends Fragment {
 
             public TextView name;
             public TextView address;
+            public TextView ubigeo;
             public TextView code;
             public String id;
 
@@ -205,6 +211,7 @@ public class FragmentPatient extends Fragment {
                 name    = (TextView) itemView.findViewById(R.id.patient_name);
                 address = (TextView) itemView.findViewById(R.id.patient_address);
                 code = (TextView) itemView.findViewById(R.id.patient_code);
+                ubigeo = (TextView) itemView.findViewById(R.id.patient_ubigeo);
 
                 itemView.setOnClickListener(this);
             }

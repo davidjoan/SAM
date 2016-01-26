@@ -96,6 +96,7 @@
             android:layout_height="wrap_content"
             android:text="@string/add"
             android:layout_weight="1"
+            style="@style/ButtonAppTheme"
             android:id="@+id/record_detail_add_record_detail"
             android:layout_gravity="center_horizontal" />
 
@@ -138,7 +139,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/finish"
-
+            style="@style/ButtonAppTheme"
             android:id="@+id/record_detail_cancel_record_detail"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true" />

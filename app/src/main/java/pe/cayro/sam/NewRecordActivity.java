@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -468,5 +469,38 @@ public class NewRecordActivity extends AppCompatActivity {
                 finish();
             }
         }
+    }
+
+    /**
+     * Exit the app if user select yes.
+     */
+    private void doExit() {
+      /*  AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setPositiveButton(Constants.SI, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                finish();
+            }
+        });
+        alertDialog.setNegativeButton(Constants.NO, null);
+        alertDialog.setMessage(Constants.LOGOUT_3);
+        alertDialog.setTitle(getString(R.string.app_name));
+        alertDialog.show();*/
+    }
+
+    @Override
+    public void onBackPressed() {
+        doExit();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if(keyCode == KeyEvent.KEYCODE_BACK) {
+            doExit();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

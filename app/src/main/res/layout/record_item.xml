@@ -50,11 +50,13 @@
                 android:paddingLeft="5dp"
                 android:textSize="10sp"
                 android:text="@string/patient_name_value"
-                android:layout_toRightOf="@+id/record_image" />
+                android:layout_toRightOf="@+id/record_image"
+                android:layout_alignRight="@+id/record_doctor"
+                android:layout_alignEnd="@+id/record_doctor" />
 
             <TextView
                 android:id="@+id/record_code_final"
-                android:layout_width="match_parent"
+                android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/record_patient"
                 android:paddingLeft="5dp"
@@ -65,27 +67,25 @@
 
             <TextView
                 android:id="@+id/record_attention_type"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/record_code_final"
                 android:paddingLeft="5dp"
                 android:textSize="10sp"
                 android:text="@string/attention_type_value"
-                android:layout_toRightOf="@+id/record_image"
-                android:layout_toLeftOf="@+id/record_qty_mm"
-                android:layout_toStartOf="@+id/record_qty_mm" />
+                android:layout_below="@+id/record_patient"
+                android:layout_toRightOf="@+id/textView3"
+                android:layout_toEndOf="@+id/textView3" />
 
             <TextView
                 android:id="@+id/record_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/record_attention_type"
                 android:paddingLeft="5dp"
                 android:textSize="10sp"
                 android:text="@string/date_value"
+                android:layout_below="@+id/record_institution"
                 android:layout_toRightOf="@+id/record_image"
-                android:layout_toLeftOf="@+id/record_qty_mm"
-                android:layout_toStartOf="@+id/record_qty_mm" />
+                android:layout_toEndOf="@+id/record_image" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -95,6 +95,7 @@
                 android:id="@+id/record_qty_mm"
                 android:layout_gravity="right"
                 android:paddingRight="5dp"
+                android:layout_below="@+id/record_institution"
                 android:layout_alignBaseline="@+id/record_date"
                 android:layout_alignBottom="@+id/record_date"
                 android:layout_alignParentRight="true"
@@ -108,6 +109,31 @@
                 android:paddingRight="5dp"
                 android:paddingTop="5dp"
                 android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tipo: "
+                android:textSize="10sp"
+                android:textColor="@android:color/holo_red_dark"
+                android:id="@+id/textView3"
+                android:layout_alignTop="@+id/record_code_final"
+                android:layout_toRightOf="@+id/record_code_final"
+                android:layout_toEndOf="@+id/record_code_final" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Institución: HOSPITAL LARCO HERRERA"
+                android:textSize="10sp"
+                android:paddingLeft="5dp"
+                android:id="@+id/record_institution"
+                android:textColor="@android:color/holo_red_dark"
+                android:layout_below="@+id/record_code_final"
+                android:layout_alignLeft="@+id/record_code_final"
+                android:layout_alignStart="@+id/record_code_final"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true" />
 

@@ -51,9 +51,9 @@ public class UbigeoAutocompleterAdapter extends ArrayAdapter<Integer> implements
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.name.setText((ubigeo.getName().length() > 30) ?
-                ubigeo.getName().substring(0, 30) + Constants.ELLIPSIS :
-                ubigeo.getName());
+        viewHolder.name.setText(new StringBuilder().append(ubigeo.getName()).
+                append(Constants.DASH_SEPARATOR).append(ubigeo.getProvince()).toString());
+
         return convertView;
     }
 
@@ -68,8 +68,11 @@ public class UbigeoAutocompleterAdapter extends ArrayAdapter<Integer> implements
 
                 Realm  realm = Realm.getDefaultInstance();
 
-                RealmResults<Ubigeo> realmResults = realm.where(Ubigeo.class).
-                        contains(Constants.NAME, constraint.toString().toUpperCase()).findAll();
+                RealmResults<Ubigeo> realmResults = realm.where(Ubigeo.class).beginGroup().
+                        contains(Constants.NAME, constraint.toString().toUpperCase()).or().
+                        contains(Constants.PROVINCE, constraint.toString().toUpperCase()).
+                        endGroup().
+                        findAll();
 
                 for(Ubigeo ubigeo : realmResults){
                     data.add(Integer.valueOf(ubigeo.getId()));

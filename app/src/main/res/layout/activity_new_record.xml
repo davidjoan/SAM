@@ -291,7 +291,9 @@
             android:text="@string/next"
             android:layout_weight="1"
             android:onClick="nextButton"
+            style="@style/ButtonAppTheme"
             android:id="@+id/record_next_button"
+            android:layout_marginRight="2.5dp"
             android:layout_gravity="center_horizontal" />
 
 
@@ -299,10 +301,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cancel"
+            style="@style/ButtonAppTheme"
             android:layout_weight="1"
+            android:layout_marginLeft="2.5dp"
             android:id="@+id/record_cancel_button"
             android:layout_gravity="center_horizontal" />
     </LinearLayout>
-
-
 </LinearLayout>

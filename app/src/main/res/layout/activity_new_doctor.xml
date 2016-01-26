@@ -88,6 +88,9 @@
         android:layout_height="wrap_content"
         android:text="@string/save"
         android:onClick="saveDoctor"
+        style="@style/ButtonAppTheme"
+        android:paddingRight="6dp"
+        android:paddingLeft="6dp"
         android:id="@+id/doctor_save"
         android:layout_gravity="center_horizontal" />
 

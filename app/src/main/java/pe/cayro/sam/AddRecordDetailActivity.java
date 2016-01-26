@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -259,6 +260,39 @@ public class AddRecordDetailActivity extends AppCompatActivity {
                 /* TODO: Implement Intent to edit the patient information */
             }
         }
+    }
+
+    /**
+     * Exit the app if user select yes.
+     */
+    private void doExit() {
+      /*  AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setPositiveButton(Constants.SI, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                finish();
+            }
+        });
+        alertDialog.setNegativeButton(Constants.NO, null);
+        alertDialog.setMessage(Constants.LOGOUT_3);
+        alertDialog.setTitle(getString(R.string.app_name));
+        alertDialog.show();*/
+    }
+
+    @Override
+    public void onBackPressed() {
+        doExit();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if(keyCode == KeyEvent.KEYCODE_BACK) {
+            doExit();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
 }

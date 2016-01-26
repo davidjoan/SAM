@@ -16,7 +16,6 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true">
 
-
         <android.support.design.widget.TextInputLayout
             android:id="@+id/patient_code_text_input_layout"
             android:layout_width="match_parent"
@@ -170,6 +169,9 @@
         android:text="@string/save"
         android:onClick="savePatient"
         android:id="@+id/patient_save"
+        style="@style/ButtonAppTheme"
+        android:paddingRight="6dp"
+        android:paddingLeft="6dp"
         android:layout_gravity="center_horizontal" />
 
 

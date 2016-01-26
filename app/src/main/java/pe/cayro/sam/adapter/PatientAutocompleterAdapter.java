@@ -32,6 +32,7 @@ public class PatientAutocompleterAdapter extends ArrayAdapter<String> implements
     private class ViewHolder {
         TextView name;
         TextView code;
+        TextView ubigeo;
     }
 
     @Override
@@ -51,6 +52,7 @@ public class PatientAutocompleterAdapter extends ArrayAdapter<String> implements
             convertView = inflater.inflate(R.layout.patient_autocomplete_item, parent, false);
             viewHolder.name = (TextView) convertView.findViewById(R.id.patient_name);
             viewHolder.code = (TextView) convertView.findViewById(R.id.patient_code);
+            viewHolder.ubigeo = (TextView) convertView.findViewById(R.id.patient_ubigeo);
 
             convertView.setTag(viewHolder);
         } else {
@@ -61,13 +63,12 @@ public class PatientAutocompleterAdapter extends ArrayAdapter<String> implements
                 patient.getName().substring(0, 30)+Constants.ELLIPSIS:
                 patient.getName());
 
-        String ubigeoStr = "";
-
-        if (patient.getUbigeoId() > 0) {
-            ubigeoStr = patient.getUbigeo().getName();
+        if (patient.getUbigeo() != null) {
+            viewHolder.ubigeo.setText(patient.getUbigeo().getName()+
+                    Constants.DASH_SEPARATOR+patient.getUbigeo().getProvince());
         }
 
-        viewHolder.code.setText(Constants.DNI_FIELD + patient.getCode()+" , "+ubigeoStr);
+        viewHolder.code.setText(Constants.DNI_FIELD + patient.getCode());
 
         realm.close();
 

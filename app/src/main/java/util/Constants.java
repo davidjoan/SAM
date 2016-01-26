@@ -85,10 +85,13 @@ public class Constants {
 
 
     public static final String LOGOUT_2 = "Desea Cerrar Sesión en ";
+    public static final String LOGOUT_3 = "Desea cerrar el registro";
     public static final String DATE_FIELD = "Fecha: ";
     public static final Object RECORD_DATE = "recordDate";
     public static final String SNACK = "snack";
     public static final String LOADING_UBIGEOS = "Cargando Localidades";
 
     public static final String INSTITUTION_ID = "institutionId";
+    public static final String PROVINCE = "province";
+    public static final String DASH_SEPARATOR = " / ";
 }

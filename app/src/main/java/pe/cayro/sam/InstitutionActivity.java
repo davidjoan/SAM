@@ -34,9 +34,9 @@ import pe.cayro.sam.model.Institution;
 import pe.cayro.sam.model.Tracking;
 import pe.cayro.sam.model.User;
 import pe.cayro.sam.ui.FragmentDoctor;
-import pe.cayro.sam.ui.FragmentInstitution;
 import pe.cayro.sam.ui.FragmentPatient;
 import pe.cayro.sam.ui.FragmentRecords;
+import pe.cayro.sam.ui.FragmentReport;
 import pe.cayro.sam.ui.FragmentTracking;
 import util.Constants;
 
@@ -163,7 +163,7 @@ public class InstitutionActivity extends AppCompatActivity implements GoogleApiC
                     fragment = FragmentTracking.newInstance();
                     break;
                 case R.id.nav_five_fragment:
-                    fragment = FragmentInstitution.newInstance();
+                    fragment = FragmentReport.newInstance();
                     break;
 
                 default:
