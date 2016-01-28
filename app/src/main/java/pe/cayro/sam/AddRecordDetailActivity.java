@@ -8,6 +8,7 @@ import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -18,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -134,18 +136,63 @@ public class AddRecordDetailActivity extends AppCompatActivity {
         mAdapter = new RecordDetailListAdapter(recordDetails, R.layout.record_detail_item);
         mRecyclerView.setAdapter(mAdapter);
 
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView,
+                                  RecyclerView.ViewHolder viewHolder,
+                                  RecyclerView.ViewHolder target) {
+                return true;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+                RecordDetailListAdapter.ViewHolder temp = (RecordDetailListAdapter.ViewHolder)
+                        viewHolder;
+
+                realm.beginTransaction();
+                RecordDetail recordDetailTemp = realm.
+                        where(RecordDetail.class).
+                        equalTo(Constants.UUID, temp.uuid).findFirst();
+
+                recordDetailTemp.removeFromRealm();
+
+                realm.commitTransaction();
+
+                recordDetails = realm.where(RecordDetail.class)
+                        .equalTo("recordUuid", recordUuid).findAll();
+                mAdapter.setData(recordDetails);
+                mAdapter.notifyDataSetChanged();
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
+
+
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                recordDetails = realm.where(RecordDetail.class)
+                        .equalTo("recordUuid", recordUuid).findAll();
+                mAdapter.setData(recordDetails);
+                mAdapter.notifyDataSetChanged();
 
-                Intent intent = new Intent();
-                if (getParent() == null) {
-                    setResult(Activity.RESULT_OK, intent);
-                } else {
-                    getParent().setResult(Activity.RESULT_OK, intent);
+                if(recordDetails.size() > 0){
+
+                    Intent intent = new Intent();
+                    if (getParent() == null) {
+                        setResult(Activity.RESULT_OK, intent);
+                    } else {
+                        getParent().setResult(Activity.RESULT_OK, intent);
+                    }
+
+                    finish();
+                }else{
+                    Toast.makeText(getApplicationContext(), "Debe Ingresar al menos 1 muestra medica",
+                            Toast.LENGTH_SHORT).show();
                 }
-
-                finish();
             }
         });
 
@@ -266,19 +313,7 @@ public class AddRecordDetailActivity extends AppCompatActivity {
      * Exit the app if user select yes.
      */
     private void doExit() {
-      /*  AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-        alertDialog.setPositiveButton(Constants.SI, new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                finish();
-            }
-        });
-        alertDialog.setNegativeButton(Constants.NO, null);
-        alertDialog.setMessage(Constants.LOGOUT_3);
-        alertDialog.setTitle(getString(R.string.app_name));
-        alertDialog.show();*/
     }
 
     @Override
@@ -294,5 +329,4 @@ public class AddRecordDetailActivity extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-
 }

@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
@@ -44,6 +45,7 @@ import util.Constants;
  * Created by David on 8/01/16.
  */
 public class FragmentRecords extends Fragment {
+
     private static String TAG = FragmentRecords.class.getSimpleName();
     static final int ADD_RECORD_REQUEST = 1;
 
@@ -97,6 +99,38 @@ public class FragmentRecords extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new RecordListAdapter(result, R.layout.record_item);
         mRecyclerView.setAdapter(mAdapter);
+
+
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.
+                SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView,
+                                  RecyclerView.ViewHolder viewHolder,
+                                  RecyclerView.ViewHolder target) {
+                return true;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                RecordListAdapter.ViewHolder temp = (RecordListAdapter.ViewHolder) viewHolder;
+
+                realm.beginTransaction();
+                RealmResults<RecordDetail> recordDetailsTemp = realm.where(RecordDetail.class).
+                        equalTo("recordUuid", temp.uuid).findAll();
+
+                recordDetailsTemp.clear();
+
+                Record record = realm.where(Record.class).
+                        equalTo(Constants.UUID, temp.uuid).findFirst();
+                record.removeFromRealm();
+                realm.commitTransaction();
+                refreshRecordUi();
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
+
         setHasOptionsMenu(true);
         return view;
     }
@@ -125,11 +159,7 @@ public class FragmentRecords extends Fragment {
                 public boolean onQueryTextChange(String data) {
 
                     if (TextUtils.isEmpty(data)) {
-                        result = realm.where(Record.class).
-                                equalTo("institutionId",tracking.getInstitutionId()).findAll();
-                        result.sort("recordDate", Sort.DESCENDING);
-                        mAdapter.setData(result);
-                        mAdapter.notifyDataSetChanged();
+                        refreshRecordUi();
                     }
                     return false;
                 }
@@ -208,9 +238,13 @@ public class FragmentRecords extends Fragment {
             Record item = items.get(position);
 
             viewHolder.doctor.setText(
-                    new StringBuilder().append(Constants.DOCTOR_ABR).append(item.getDoctor().getFirstname()).
-                            append(Constants.SPACE).append(item.getDoctor().getLastname()).
-                            append(Constants.SPACE).append(item.getDoctor().getSurname()).toString());
+                    new StringBuilder().
+                            //append(Constants.DOCTOR_ABR).
+                            append(item.getDoctor().getFirstname()).
+                            append(Constants.SPACE).
+                            append(item.getDoctor().getLastname()).
+                            append(Constants.SPACE).
+                            append(item.getDoctor().getSurname()).toString());
 
             if(item.getAttentionTypeId() == 3){
                 viewHolder.patient.setText(R.string.record_whitout_patient);
@@ -255,6 +289,7 @@ public class FragmentRecords extends Fragment {
             viewHolder.institution.setText(Constants.INSTITUTION_LABEL+
                     item.getInstitutionOrigin().getName());
 
+            viewHolder.uuid = item.getUuid();
             viewHolder.itemView.setTag(item);
         }
 
@@ -274,6 +309,7 @@ public class FragmentRecords extends Fragment {
             public TextView attentionType;
             public TextView date;
             public TextView institution;
+            public String uuid;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -305,15 +341,20 @@ public class FragmentRecords extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ADD_RECORD_REQUEST) {
             if (resultCode == Activity.RESULT_OK) {
-                result = realm.where(Record.class).
-                        equalTo("institutionId", tracking.getInstitutionId()).findAll();
-                result.sort("recordDate", Sort.DESCENDING);
-                mAdapter.setData(result);
-                mAdapter.notifyDataSetChanged();
-
-                ((AppCompatActivity) getActivity()).getSupportActionBar().
-                        setSubtitle(Constants.QTY_FIELD+String.valueOf(result.size()));
+                refreshRecordUi();
             }
         }
+    }
+
+    public void refreshRecordUi(){
+
+        result = realm.where(Record.class).
+                equalTo("institutionId", tracking.getInstitutionId()).findAll();
+        result.sort("recordDate", Sort.DESCENDING);
+        mAdapter.setData(result);
+        mAdapter.notifyDataSetChanged();
+
+        ((AppCompatActivity) getActivity()).getSupportActionBar().
+                setSubtitle(Constants.QTY_FIELD+String.valueOf(result.size()));
     }
 }

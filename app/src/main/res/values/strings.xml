@@ -89,4 +89,5 @@
     <string name="patient_firstname_field">Nombres</string>
     <string name="patient_lastname_field">Apellido Paterno</string>
     <string name="patient_surname_field">Apellido Materno</string>
+    <string name="title_activity_add_agent">Representante</string>
 </resources>

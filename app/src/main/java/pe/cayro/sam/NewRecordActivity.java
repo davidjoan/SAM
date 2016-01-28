@@ -38,6 +38,7 @@ import pe.cayro.sam.model.Record;
 import pe.cayro.sam.model.Tracking;
 import pe.cayro.sam.model.User;
 import util.Constants;
+import util.RucValidator;
 
 public class NewRecordActivity extends AppCompatActivity {
 
@@ -387,7 +388,15 @@ public class NewRecordActivity extends AppCompatActivity {
                 if(recordRuc.getText().length() != 11){
                     errors++;
                     recordRuc.setError("El RUC debe tener 11 digitos");
+                }else{
+                    if(!new RucValidator().validate(recordRuc.getText().toString()))
+                    {
+                        errors++;
+                        recordRuc.setError("El RUC es incorrecto");
+                    }
                 }
+
+
                 break;
             case 3:
                 if(recordDoctor.getText().length() == 0){
