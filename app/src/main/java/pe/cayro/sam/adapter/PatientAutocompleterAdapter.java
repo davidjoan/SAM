@@ -59,9 +59,9 @@ public class PatientAutocompleterAdapter extends ArrayAdapter<String> implements
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.name.setText((patient.getName().length() > 30)?
-                patient.getName().substring(0, 30)+Constants.ELLIPSIS:
-                patient.getName());
+        viewHolder.name.setText(new StringBuilder().append(patient.getFirstname()).
+                append(Constants.SPACE).append(patient.getLastname()).
+                append(Constants.SPACE).append(patient.getSurname()).toString());
 
         if (patient.getUbigeo() != null) {
             viewHolder.ubigeo.setText(patient.getUbigeo().getName()+
@@ -87,7 +87,9 @@ public class PatientAutocompleterAdapter extends ArrayAdapter<String> implements
                 Realm  realm = Realm.getDefaultInstance();
 
                 RealmResults<Patient> realmResults = realm.where(Patient.class).beginGroup().
-                        contains(Constants.NAME, constraint.toString().toUpperCase()).or().
+                        contains(Constants.FIRSTNAME, constraint.toString().toUpperCase()).or().
+                        contains(Constants.LASTNAME, constraint.toString().toUpperCase()).or().
+                        contains(Constants.SURNAME, constraint.toString().toUpperCase()).or().
                         contains(Constants.CODE, constraint.toString().toUpperCase()).
                         endGroup().findAll();
 

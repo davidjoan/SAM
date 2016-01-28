@@ -94,4 +94,11 @@ public class Constants {
     public static final String INSTITUTION_ID = "institutionId";
     public static final String PROVINCE = "province";
     public static final String DASH_SEPARATOR = " / ";
+    public static final String INSTITUTION_LABEL = "Institución: ";
+    public static final String SPACE = " ";
+    public static final String FIRSTNAME = "firstname";
+    public static final String LASTNAME = "lastname";
+    public static final String SURNAME = "surname";
+    public static final String SESSION = "session";
+    public static final String SESSION_TRACKING = "session_tracking";
 }

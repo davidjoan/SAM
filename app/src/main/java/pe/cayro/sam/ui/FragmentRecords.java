@@ -45,7 +45,6 @@ import util.Constants;
  */
 public class FragmentRecords extends Fragment {
     private static String TAG = FragmentRecords.class.getSimpleName();
-
     static final int ADD_RECORD_REQUEST = 1;
 
     @Bind(R.id.record_recycler_view)
@@ -54,7 +53,7 @@ public class FragmentRecords extends Fragment {
     private Realm realm;
     private Tracking tracking;
     private String trackingUuid;
-    RealmResults<Record> result;
+    private RealmResults<Record> result;
     private RecordListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
@@ -129,7 +128,6 @@ public class FragmentRecords extends Fragment {
                         result = realm.where(Record.class).
                                 equalTo("institutionId",tracking.getInstitutionId()).findAll();
                         result.sort("recordDate", Sort.DESCENDING);
-
                         mAdapter.setData(result);
                         mAdapter.notifyDataSetChanged();
                     }
@@ -141,9 +139,17 @@ public class FragmentRecords extends Fragment {
                     if (!TextUtils.isEmpty(data)) {
                         result = realm.where(Record.class).
                                 equalTo("institutionId",tracking.getInstitutionId()).beginGroup()
-                                .contains("doctor.name", data.toUpperCase())
+                                .contains("doctor.firstname", data.toUpperCase())
                                 .or()
-                                .contains("patient.name", data.toUpperCase())
+                                .contains("doctor.lastname", data.toUpperCase())
+                                .or()
+                                .contains("doctor.surname", data.toUpperCase())
+                                .or()
+                                .contains("patient.firstname", data.toUpperCase())
+                                .or()
+                                .contains("patient.lastname", data.toUpperCase())
+                                .or()
+                                .contains("patient.surname", data.toUpperCase())
                                 .or()
                                 .contains("doctor.code", data.toUpperCase())
                                 .or()
@@ -201,13 +207,22 @@ public class FragmentRecords extends Fragment {
         public void onBindViewHolder(ViewHolder viewHolder, int position) {
             Record item = items.get(position);
 
-            viewHolder.doctor.setText(Constants.DOCTOR_ABR+item.getDoctor().getName());
+            viewHolder.doctor.setText(
+                    new StringBuilder().append(Constants.DOCTOR_ABR).append(item.getDoctor().getFirstname()).
+                            append(Constants.SPACE).append(item.getDoctor().getLastname()).
+                            append(Constants.SPACE).append(item.getDoctor().getSurname()).toString());
 
             if(item.getAttentionTypeId() == 3){
                 viewHolder.patient.setText(R.string.record_whitout_patient);
 
             }else{
-                viewHolder.patient.setText(Constants.PATIENT_ABR+item.getPatient().getName());
+                viewHolder.patient.setText(
+                        new StringBuilder().append(Constants.PATIENT_ABR).
+                                append(item.getPatient().getFirstname()).
+                                append(Constants.SPACE).append(item.getPatient()
+                                .getLastname()).
+                                append(Constants.SPACE).append(item.getPatient()
+                                .getSurname()).toString());
             }
 
             viewHolder.attentionType.setText(item.getAttentionType().getName());
@@ -236,6 +251,10 @@ public class FragmentRecords extends Fragment {
             SimpleDateFormat formatter = new SimpleDateFormat(Constants.FORMAT_DATETIME_SLASH);
             String dateFormat = formatter.format(item.getRecordDate());
             viewHolder.date.setText(Constants.DATE_FIELD+dateFormat);
+
+            viewHolder.institution.setText(Constants.INSTITUTION_LABEL+
+                    item.getInstitutionOrigin().getName());
+
             viewHolder.itemView.setTag(item);
         }
 
@@ -254,6 +273,7 @@ public class FragmentRecords extends Fragment {
             public TextView patient;
             public TextView attentionType;
             public TextView date;
+            public TextView institution;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -264,6 +284,7 @@ public class FragmentRecords extends Fragment {
                 attentionType = (TextView) itemView.findViewById(R.id.record_attention_type);
                 date = (TextView) itemView.findViewById(R.id.record_date);
                 image = (ImageView) itemView.findViewById(R.id.record_image);
+                institution = (TextView) itemView.findViewById(R.id.record_institution);
                 itemView.setOnClickListener(this);
             }
 

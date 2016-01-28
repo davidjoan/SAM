@@ -1,6 +1,7 @@
 package pe.cayro.sam;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -127,6 +128,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                     realm.copyToRealm(tracking);
                     realm.commitTransaction();
+
+                    SharedPreferences settings = getApplicationContext().
+                            getSharedPreferences(Constants.PREFERENCES_SAM, 0);
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putString(Constants.SESSION,Constants.YES);
+                    editor.putString(Constants.SESSION_TRACKING,tracking.getUuid());
+                    editor.commit();
 
                     Intent intent = new Intent(LoginActivity.this, InstitutionActivity.class);
                     intent.putExtra(Constants.TRACKING_CODE, tracking.getCode());

@@ -1,6 +1,7 @@
 package pe.cayro.sam;
 
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -223,6 +224,13 @@ public class InstitutionActivity extends AppCompatActivity implements GoogleApiC
 
                 realm.copyToRealm(tracking);
                 realm.commitTransaction();
+
+                SharedPreferences settings = getApplicationContext().
+                        getSharedPreferences(Constants.PREFERENCES_SAM, 0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString(Constants.SESSION, Constants.NO);
+                editor.putString(Constants.SESSION_TRACKING, Constants.EMPTY);
+                editor.commit();
 
                 finish();
             }

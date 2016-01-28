@@ -126,7 +126,11 @@ public class FragmentPatient extends Fragment {
                 public boolean onQueryTextSubmit(String data) {
                     if (!TextUtils.isEmpty(data)) {
                         RealmResults<Patient> result = realm.where(Patient.class).beginGroup()
-                                .contains("name", data.toUpperCase())
+                                .contains("firstname", data.toUpperCase())
+                                .or()
+                                .contains("lastname", data.toUpperCase())
+                                .or()
+                                .contains("surname", data.toUpperCase())
                                 .or()
                                 .contains("code", data.toUpperCase())
                                 .endGroup().findAll();
@@ -180,7 +184,9 @@ public class FragmentPatient extends Fragment {
         public void onBindViewHolder(ViewHolder viewHolder, int position) {
             Patient item = items.get(position);
 
-            viewHolder.name.setText(item.getName());
+            viewHolder.name.setText(new StringBuilder().append(item.getFirstname()).
+                    append(Constants.SPACE).append(item.getLastname()).
+                    append(Constants.SPACE).append(item.getSurname()).toString());
             viewHolder.code.setText(Constants.DNI_FIELD+item.getCode());
             viewHolder.address.setText(Constants.PHONE_FIELD+item.getPhone());
             if(item.getUbigeo() != null){

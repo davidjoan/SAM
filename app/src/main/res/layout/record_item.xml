@@ -56,7 +56,7 @@
 
             <TextView
                 android:id="@+id/record_code_final"
-                android:layout_width="70dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/record_patient"
                 android:paddingLeft="5dp"
@@ -85,21 +85,23 @@
                 android:text="@string/date_value"
                 android:layout_below="@+id/record_institution"
                 android:layout_toRightOf="@+id/record_image"
-                android:layout_toEndOf="@+id/record_image" />
+                android:layout_toLeftOf="@+id/record_qty_mm"
+                android:layout_toStartOf="@+id/record_qty_mm"
+                android:layout_alignParentBottom="true" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="10sp"
                 android:text="mm: 120"
                 android:id="@+id/record_qty_mm"
                 android:layout_gravity="right"
                 android:paddingRight="5dp"
+                android:textStyle="bold"
                 android:layout_below="@+id/record_institution"
-                android:layout_alignBaseline="@+id/record_date"
-                android:layout_alignBottom="@+id/record_date"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -117,6 +119,7 @@
                 android:layout_height="wrap_content"
                 android:text="Tipo: "
                 android:textSize="10sp"
+                android:paddingLeft="10dp"
                 android:textColor="@android:color/holo_red_dark"
                 android:id="@+id/textView3"
                 android:layout_alignTop="@+id/record_code_final"

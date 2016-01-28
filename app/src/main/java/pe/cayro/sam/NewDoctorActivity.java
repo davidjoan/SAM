@@ -33,8 +33,13 @@ public class NewDoctorActivity extends AppCompatActivity {
     protected Button doctorSave;
     @Bind(R.id.doctor_code)
     protected EditText doctorCode;
-    @Bind(R.id.doctor_name)
-    protected EditText doctorName;
+    @Bind(R.id.doctor_firstname)
+    protected EditText doctorFirstname;
+    @Bind(R.id.doctor_lastname)
+    protected EditText doctorLastname;
+    @Bind(R.id.doctor_surname)
+    protected EditText doctorSurname;
+
     @Bind(R.id.doctor_specialty_autocompleter)
     protected AppCompatAutoCompleteTextView doctorSpecialty;
 
@@ -84,10 +89,21 @@ public class NewDoctorActivity extends AppCompatActivity {
                     countErrors++;
                     doctorCode.setError("El Código CMP es requerido.");
                 }
-                if (doctorName.getText().length() < 2) {
+                if (doctorFirstname.getText().length() < 2) {
                     countErrors++;
-                    doctorName.setError("El Nombre y Apellido es requerido.");
+                    doctorFirstname.setError("El Nombre es requerido.");
                 }
+
+                if (doctorLastname.getText().length() < 2) {
+                    countErrors++;
+                    doctorLastname.setError("El Apellido Paterno es requerido.");
+                }
+
+                if (doctorSurname.getText().length() < 2) {
+                    countErrors++;
+                    doctorSurname.setError("El Apellido Materno es requerido.");
+                }
+
                 if (doctorSpecialty.getText().length() < 2) {
                     countErrors++;
                     doctorSpecialty.setError("La Especialidad es requerida.");
@@ -101,7 +117,10 @@ public class NewDoctorActivity extends AppCompatActivity {
 
                         doctor.setUuid(UUID.randomUUID().toString());
                         doctor.setCode(doctorCode.getText().toString());
-                        doctor.setName(doctorName.getText().toString());
+                        doctor.setFirstname(doctorFirstname.getText().toString());
+                        doctor.setLastname(doctorLastname.getText().toString());
+                        doctor.setSurname(doctorSurname.getText().toString());
+
                         doctor.setActive(true);
                         doctor.setScore("X");
 

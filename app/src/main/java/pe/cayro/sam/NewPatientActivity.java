@@ -35,8 +35,13 @@ public class NewPatientActivity extends AppCompatActivity {
     protected Button patientSave;
     @Bind(R.id.patient_code)
     protected EditText patientCode;
-    @Bind(R.id.patient_name)
-    protected EditText patientName;
+    @Bind(R.id.patient_firstname)
+    protected EditText patientFirstname;
+    @Bind(R.id.patient_lastname)
+    protected EditText patientLastname;
+    @Bind(R.id.patient_surname)
+    protected EditText patientSurname;
+
     @Bind(R.id.patient_mail)
     protected EditText patientEmail;
     @Bind(R.id.patient_phone)
@@ -90,10 +95,19 @@ public class NewPatientActivity extends AppCompatActivity {
                     countErrors++;
                     patientPhone.setError("El teléfono es requerido.");
                 }
-                if(patientName.getText().length() < 2){
+                if(patientFirstname.getText().length() < 2){
                     countErrors++;
-                    patientName.setError("El Nombre y Apellido es requerido.");
+                    patientFirstname.setError("El Nombre es requerido.");
                 }
+                if(patientLastname.getText().length() < 2){
+                    countErrors++;
+                    patientLastname.setError("El Apellido Paterno es requerido.");
+                }
+                if(patientSurname.getText().length() < 2){
+                    countErrors++;
+                    patientSurname.setError("El Apellido Materno es requerido.");
+                }
+
                 if(patientCode.getText().length() != 8){
                     countErrors++;
                     patientCode.setError("El DNI debe tener 8 digitos");
@@ -108,7 +122,11 @@ public class NewPatientActivity extends AppCompatActivity {
 
                         patient.setUuid(UUID.randomUUID().toString());
                         patient.setCode(patientCode.getText().toString());
-                        patient.setName(patientName.getText().toString());
+
+                        patient.setFirstname(patientFirstname.getText().toString());
+                        patient.setLastname(patientLastname.getText().toString());
+                        patient.setSurname(patientSurname.getText().toString());
+
                         patient.setAddress(patientAddress.getText().toString());
                         //patient.setLocation(patientLocation.getText().toString());
                         patient.setPhone(patientPhone.getText().toString());

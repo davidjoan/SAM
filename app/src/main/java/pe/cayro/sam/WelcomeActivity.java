@@ -25,6 +25,7 @@ import pe.cayro.sam.model.Doctor;
 import pe.cayro.sam.model.Institution;
 import pe.cayro.sam.model.Product;
 import pe.cayro.sam.model.Specialty;
+import pe.cayro.sam.model.Tracking;
 import pe.cayro.sam.model.Ubigeo;
 import pe.cayro.sam.model.User;
 import util.Constants;
@@ -61,11 +62,32 @@ public class WelcomeActivity extends AppCompatActivity {
 
                 SharedPreferences settings = getSharedPreferences(Constants.PREFERENCES_SAM, 0);
                 String cycleLoaded = settings.getString(Constants.CYCLE_LOADED, "");
+                String session = settings.getString(Constants.SESSION, "");
 
                 if (cycleLoaded.equals(Constants.YES)) {
-                    Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
-                    WelcomeActivity.this.startActivity(intent);
-                    finish();
+
+                    if(session.equals(Constants.YES)){
+
+                        Tracking tempTracking = Realm.getDefaultInstance().
+                                where(Tracking.class).
+                                equalTo(Constants.UUID,
+                                        settings.getString(Constants.SESSION_TRACKING, "")).
+                                findFirst();
+
+                        Intent intent = new Intent(WelcomeActivity.this, InstitutionActivity.class);
+                        intent.putExtra(Constants.TRACKING_CODE, tempTracking.getCode());
+                        intent.putExtra(Constants.INSTITUTION_NAME, tempTracking.getInstitution().getName());
+                        intent.putExtra(Constants.INSTITUTION_ID, tempTracking.getInstitutionId());
+                        intent.putExtra(Constants.UUID, tempTracking.getUuid());
+                        WelcomeActivity.this.startActivity(intent);
+                        finish();
+
+                    }else{
+                        Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+                        WelcomeActivity.this.startActivity(intent);
+                        finish();
+                    }
+
 
                 } else {
                     progress.setCancelable(false);
@@ -196,6 +218,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
                 editor.putString(Constants.CYCLE_LOADED, Constants.YES);
                 editor.putString(Constants.SNACK,Constants.NO);
+                editor.putString(Constants.SESSION,Constants.NO);
                 editor.apply();
 
             } finally {

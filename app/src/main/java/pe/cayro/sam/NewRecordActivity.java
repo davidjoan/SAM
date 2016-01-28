@@ -198,7 +198,9 @@ public class NewRecordActivity extends AppCompatActivity {
 
                 String temp = adapterDoctor.getItem(position);
                 doctor = realm.where(Doctor.class).equalTo(Constants.UUID, temp).findFirst();
-                recordDoctor.setText(doctor.getName());
+                recordDoctor.setText(new StringBuilder().append(doctor.getFirstname()).
+                        append(Constants.SPACE).append(doctor.getLastname()).
+                        append(Constants.SPACE).append(doctor.getSurname()).toString());
                 record.setDoctor(doctor);
                 record.setDoctorUuid(doctor.getUuid());
             }
@@ -212,7 +214,9 @@ public class NewRecordActivity extends AppCompatActivity {
 
                 String temp = adapterPatient.getItem(position);
                 patient = realm.where(Patient.class).equalTo(Constants.UUID, temp).findFirst();
-                recordPatient.setText(patient.getName());
+                recordPatient.setText(new StringBuilder().append(patient.getFirstname()).
+                        append(Constants.SPACE).append(patient.getLastname()).
+                        append(Constants.SPACE).append(patient.getSurname()).toString());
                 record.setPatient(patient);
                 record.setPatientUuid(patient.getUuid());
             }
@@ -408,6 +412,8 @@ public class NewRecordActivity extends AppCompatActivity {
             record.setAttentionType(attentionType);
             record.setInstitutionId(tracking.getInstitutionId());
             record.setInstitution(tracking.getInstitution());
+            record.setInstitutionOriginId(tracking.getInstitutionId());
+            record.setInstitutionOrigin(tracking.getInstitution());
             record.setUserId(tracking.getUserId());
             record.setUser(user);
 
@@ -440,7 +446,9 @@ public class NewRecordActivity extends AppCompatActivity {
                 String uuid = data.getStringExtra(Constants.UUID);
 
                 patient = realm.where(Patient.class).equalTo(Constants.UUID, uuid).findFirst();
-                recordPatient.setText(patient.getName());
+                recordPatient.setText(new StringBuilder().append(patient.getFirstname()).
+                        append(Constants.SPACE).append(patient.getLastname()).
+                        append(Constants.SPACE).append(patient.getSurname()).toString());
 
                 record.setPatient(patient);
                 record.setPatientUuid(patient.getUuid());
@@ -451,7 +459,9 @@ public class NewRecordActivity extends AppCompatActivity {
             if (resultCode == Activity.RESULT_OK) {
                 String uuid = data.getStringExtra(Constants.UUID);
                 doctor = realm.where(Doctor.class).equalTo(Constants.UUID, uuid).findFirst();
-                recordDoctor.setText(doctor.getName());
+                recordDoctor.setText(new StringBuilder().append(doctor.getFirstname()).
+                        append(Constants.SPACE).append(doctor.getLastname()).
+                        append(Constants.SPACE).append(doctor.getSurname()).toString());
                 record.setDoctor(doctor);
                 record.setDoctorUuid(doctor.getUuid());
             }
@@ -475,19 +485,6 @@ public class NewRecordActivity extends AppCompatActivity {
      * Exit the app if user select yes.
      */
     private void doExit() {
-      /*  AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-        alertDialog.setPositiveButton(Constants.SI, new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                finish();
-            }
-        });
-        alertDialog.setNegativeButton(Constants.NO, null);
-        alertDialog.setMessage(Constants.LOGOUT_3);
-        alertDialog.setTitle(getString(R.string.app_name));
-        alertDialog.show();*/
     }
 
     @Override

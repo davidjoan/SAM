@@ -27,7 +27,6 @@ public class FragmentReport extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -35,6 +34,4 @@ public class FragmentReport extends Fragment {
 
         return view;
     }
-
-
 }

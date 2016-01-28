@@ -62,8 +62,9 @@ public class DoctorAutocompleterAdapter extends ArrayAdapter<String> implements 
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.name.setText((doctor.getName().length() > 30) ?
-                doctor.getName().substring(0, 30) + Constants.ELLIPSIS : doctor.getName());
+        viewHolder.name.setText(new StringBuilder().append(doctor.getFirstname()).
+                append(Constants.SPACE).append(doctor.getLastname()).
+                append(Constants.SPACE).append(doctor.getSurname()).toString());
 
         viewHolder.code.setText(Constants.CMP_FIELD+ doctor.getCode()+" ("+
                 doctor.getScore()+") "+doctor.getSpecialty().getName());
@@ -91,7 +92,9 @@ public class DoctorAutocompleterAdapter extends ArrayAdapter<String> implements 
                 Realm  realm = Realm.getDefaultInstance();
 
                 RealmResults<Doctor> realmResults = realm.where(Doctor.class).beginGroup().
-                        contains(Constants.NAME, constraint.toString().toUpperCase()).or().
+                        contains(Constants.FIRSTNAME, constraint.toString().toUpperCase()).or().
+                        contains(Constants.LASTNAME, constraint.toString().toUpperCase()).or().
+                        contains(Constants.SURNAME, constraint.toString().toUpperCase()).or().
                         contains(Constants.CODE, constraint.toString().toUpperCase()).
                         endGroup().findAll();
 
