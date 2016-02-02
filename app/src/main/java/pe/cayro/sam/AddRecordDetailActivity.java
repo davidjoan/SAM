@@ -102,6 +102,22 @@ public class AddRecordDetailActivity extends AppCompatActivity {
             recordDetailQtyCalculated.setVisibility(View.GONE);
         }
 
+        recordDetailProduct.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                alertButton.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
         recordDetailQty.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -109,6 +125,7 @@ public class AddRecordDetailActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
             }
 
             @Override
@@ -123,7 +140,6 @@ public class AddRecordDetailActivity extends AppCompatActivity {
             }
         });
 
-
         adapterProduct = new ProductAutocompleterAdapter(this, R.layout.product_autocomplete_item);
         recordDetailProduct.setAdapter(adapterProduct);
         recordDetailProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -136,27 +152,27 @@ public class AddRecordDetailActivity extends AppCompatActivity {
                 recordDetailProduct.setText(product.getName());
 
                 //Check If Exist Old Data
-
                 if(record.getAttentionTypeId() == 3){
-                    oldRecordDetail = realm.where(RecordDetail.class).equalTo("productId", product.getId())
+                    oldRecordDetail = realm.where(RecordDetail.class)
+                            .equalTo("productId", product.getId())
                             .equalTo("record.doctorUuid", record.getDoctorUuid())
                             .equalTo("record.attentionTypeId", record.getAttentionTypeId())
                             .findFirst();
                 }else{
-                    oldRecordDetail = realm.where(RecordDetail.class).equalTo("productId", product.getId())
+                    oldRecordDetail = realm.where(RecordDetail.class)
+                            .equalTo("productId", product.getId())
                             .equalTo("record.patientUuid", record.getPatientUuid())
                             .findFirst();
                 }
-
-
 
                 if(oldRecordDetail == null){
                     alertButton.setVisibility(View.GONE);
                 }else{
                     alertButton.setVisibility(View.VISIBLE);
-
                 }
 
+                recordDetailQty.setFocusableInTouchMode(true);
+                recordDetailQty.requestFocus();
             }
         });
 
@@ -210,7 +226,6 @@ public class AddRecordDetailActivity extends AppCompatActivity {
             }
         });
 
-
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -253,9 +268,22 @@ public class AddRecordDetailActivity extends AppCompatActivity {
                     recordDetailProduct.setError("La Muestra Médica no es correcta");
                 }
 
+                RecordDetail tempDetailDuplicated = realm.where(RecordDetail.class)
+                        .equalTo("recordUuid", recordUuid)
+                        .equalTo("productId", product.getId())
+                        .findFirst();
+
+                if(tempDetailDuplicated != null){
+                    errors++;
+                    Toast.makeText(getApplicationContext(),
+                            "Esta Muestra Médica ya fue ingresada.", Toast.LENGTH_SHORT).show();
+                }
+
                 if (errors == 0) {
 
                     realm.beginTransaction();
+
+
 
                     RecordDetail recordDetail = realm.createObject(RecordDetail.class);
                     recordDetail.setRecord(record);
@@ -274,6 +302,9 @@ public class AddRecordDetailActivity extends AppCompatActivity {
                     recordDetailProduct.setText("");
                     recordDetailQty.setText("");
                     recordDetailQtyCalculated.setText("");
+                    alertButton.setVisibility(View.GONE);
+                    recordDetailProduct.setFocusableInTouchMode(true);
+                    recordDetailProduct.requestFocus();
 
                     recordDetails = realm.where(RecordDetail.class)
                             .equalTo("recordUuid", recordUuid).findAll();
@@ -313,7 +344,7 @@ public class AddRecordDetailActivity extends AppCompatActivity {
             viewHolder.name.setText(item.getProduct().getName());
             if(item.getRecord().getAttentionTypeId() == 2) {
                 viewHolder.qty.setText(Constants.QTY_FIELD + String.valueOf(item.getQty())+
-                        ", C Calculada: "+String.valueOf(item.getQtyCalculated()));
+                        ", C Bonificada: "+String.valueOf(item.getQtyCalculated()));
             }else{
                 viewHolder.qty.setText(Constants.QTY_FIELD + String.valueOf(item.getQty()));
             }

@@ -33,7 +33,7 @@
     <string name="login">Iniciar Sesión</string>
     <string name="validation_tracking_code">Ingrese el Número de Atención</string>
     <string name="title_activity_map">Mapa</string>
-    <string name="new_record">Nuevo Registro de MM</string>
+    <string name="new_record">Nuevo Registro de Atención</string>
     <string name="institution">Institución</string>
     <string name="login_message">Verifique y/o edite el número del correlativo de atención siguiente.</string>
     <string name="number_attention">Número Atención</string>
@@ -81,7 +81,7 @@
     <string name="record_ruc">R.U.C.</string>
     <string name="finish_treatment">Fin de Tratamiento</string>
     <string name="qty">Cantidad</string>
-    <string name="qty_calculated">C. Calculada</string>
+    <string name="qty_calculated">C. Bonificada</string>
     <string name="add">Agregar</string>
     <string name="record_whitout_patient">Registro sin Paciente</string>
     <string name="cancel">Cancelar</string>
@@ -94,4 +94,5 @@
     <string name="close">Cerrar</string>
     <string name="agent_field">Representante</string>
     <string name="atentions">Atenciones</string>
+    <string name="reports">Reportes</string>
 </resources>

@@ -142,7 +142,6 @@ public class NewPatientActivity extends AppCompatActivity {
                         if(ubigeo != null){
                             patient.setUbigeoId(ubigeo.getId());
                             patient.setUbigeo(ubigeo);
-
                         }
 
                         realm.copyToRealmOrUpdate(patient);

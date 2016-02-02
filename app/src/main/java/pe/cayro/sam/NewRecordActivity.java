@@ -31,11 +31,13 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import pe.cayro.sam.adapter.DoctorAutocompleterAdapter;
 import pe.cayro.sam.adapter.PatientAutocompleterAdapter;
+import pe.cayro.sam.adapter.UbigeoAutocompleterAdapter;
 import pe.cayro.sam.model.AttentionType;
 import pe.cayro.sam.model.Doctor;
 import pe.cayro.sam.model.Patient;
 import pe.cayro.sam.model.Record;
 import pe.cayro.sam.model.Tracking;
+import pe.cayro.sam.model.Ubigeo;
 import pe.cayro.sam.model.User;
 import util.Constants;
 import util.RucValidator;
@@ -73,12 +75,15 @@ public class NewRecordActivity extends AppCompatActivity {
     protected AppCompatAutoCompleteTextView recordDoctor;
     @Bind(R.id.record_patient_autocompleter)
     protected AppCompatAutoCompleteTextView recordPatient;
+    @Bind(R.id.record_ubigeo_autocompleter)
+    protected AppCompatAutoCompleteTextView recordUbigeo;
 
     private long code = 1;
     private User user;
     private Realm realm;
     private Record record;
     private Doctor doctor;
+    private Ubigeo ubigeo;
     private Calendar start;
     private Patient patient;
     private Tracking tracking;
@@ -86,6 +91,7 @@ public class NewRecordActivity extends AppCompatActivity {
     private SimpleDateFormat sdf;
     private SimpleDateFormat format;
     private AttentionType attentionType;
+    private UbigeoAutocompleterAdapter adapterUbigeo;
     private DoctorAutocompleterAdapter adapterDoctor;
     private PatientAutocompleterAdapter adapterPatient;
 
@@ -145,9 +151,7 @@ public class NewRecordActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
                 Log.d(TAG, "Tipo de Atención: " + String.valueOf(i));
-
                 attentionType = realm.where(AttentionType.class).equalTo(Constants.ID,
                         i + 1).findFirst();
 
@@ -157,22 +161,25 @@ public class NewRecordActivity extends AppCompatActivity {
                 switch (i) {
                     case 0:
                         findViewById(R.id.header_finish_treatment).setVisibility(View.GONE);
-                        findViewById(R.id.body_finish_treatment_1).setVisibility(View.GONE);
+                        //  findViewById(R.id.body_finish_treatment_1).setVisibility(View.GONE);
                         findViewById(R.id.body_finish_treatment_2).setVisibility(View.GONE);
+                        findViewById(R.id.body_finish_treatment_3).setVisibility(View.GONE);
                         findViewById(R.id.body_patient).setVisibility(View.VISIBLE);
 
                         break;
                     case 1:
                         findViewById(R.id.header_finish_treatment).setVisibility(View.VISIBLE);
-                        findViewById(R.id.body_finish_treatment_1).setVisibility(View.VISIBLE);
+                        //  findViewById(R.id.body_finish_treatment_1).setVisibility(View.VISIBLE);
                         findViewById(R.id.body_finish_treatment_2).setVisibility(View.VISIBLE);
+                        findViewById(R.id.body_finish_treatment_3).setVisibility(View.VISIBLE);
                         findViewById(R.id.body_patient).setVisibility(View.VISIBLE);
 
                         break;
                     case 2:
                         findViewById(R.id.header_finish_treatment).setVisibility(View.GONE);
-                        findViewById(R.id.body_finish_treatment_1).setVisibility(View.GONE);
+                        //    findViewById(R.id.body_finish_treatment_1).setVisibility(View.GONE);
                         findViewById(R.id.body_finish_treatment_2).setVisibility(View.GONE);
+                        findViewById(R.id.body_finish_treatment_3).setVisibility(View.GONE);
                         findViewById(R.id.body_patient).setVisibility(View.GONE);
 
                         break;
@@ -220,6 +227,19 @@ public class NewRecordActivity extends AppCompatActivity {
                         append(Constants.SPACE).append(patient.getSurname()).toString());
                 record.setPatient(patient);
                 record.setPatientUuid(patient.getUuid());
+            }
+        });
+
+        adapterUbigeo = new UbigeoAutocompleterAdapter(this, R.layout.ubigeo_autocomplete_item);
+        recordUbigeo.setAdapter(adapterUbigeo);
+        recordUbigeo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
+                Integer temp = adapterUbigeo.getItem(position);
+                ubigeo = realm.where(Ubigeo.class).equalTo(Constants.ID, temp.intValue()).findFirst();
+                recordUbigeo.setText(ubigeo.getName());
+                record.setUbigeo(ubigeo);
+                record.setUbigeoId(ubigeo.getId());
             }
         });
 
@@ -309,6 +329,9 @@ public class NewRecordActivity extends AppCompatActivity {
 
             long time = c.getTimeInMillis();
             datePicker.setMaxDate(time+1000);
+            c.add(Calendar.MONTH, -2);
+            long timeLow = c.getTimeInMillis();
+            datePicker.setMinDate(timeLow);
 
             return dialog;
         }
@@ -371,13 +394,22 @@ public class NewRecordActivity extends AppCompatActivity {
                     errors++;
                     recordPatient.setError("Tiene que seleccionar un Paciente");
                 }
-                if(recordSerial.getText().length() == 0){
+              /*  if(recordSerial.getText().length() == 0){
                     errors++;
                     recordSerial.setError("La serie no puede estar vacia");
                 }
                 if(recordVoucher.getText().length() == 0){
                     errors++;
                     recordVoucher.setError("El # de Comprobante no puede estar vacio");
+                }*/
+
+                if(recordUbigeo.getText().length() == 0){
+                    errors++;
+                    recordUbigeo.setError("El Distrito no puede estar vacio");
+                }
+                if(ubigeo == null){
+                    errors++;
+                    recordUbigeo.setError("Tiene que seleccionar un Distrito correcto");
                 }
 
                 if(editTextSaleDate.getText().length() == 0){
@@ -431,12 +463,12 @@ public class NewRecordActivity extends AppCompatActivity {
 
             //Finish treatment
             if(record.getAttentionTypeId() == 2){
-                record.setVoucher(recordVoucher.getText().toString());
+                //record.setVoucher(recordVoucher.getText().toString());
                 record.setRuc(recordRuc.getText().toString());
-                record.setSerial(recordSerial.getText().toString());
+                //record.setSerial(recordSerial.getText().toString());
             }
 
-            realm.copyToRealm(record);
+            realm.copyToRealmOrUpdate(record);
 
             realm.commitTransaction();
 
@@ -477,6 +509,7 @@ public class NewRecordActivity extends AppCompatActivity {
         }
 
         if (requestCode == ADD_MEDICAL_SAMPLE_REQUEST) {
+
             if (resultCode == Activity.RESULT_OK) {
                 Intent intent = new Intent();
                 if (getParent() == null) {

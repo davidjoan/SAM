@@ -22,9 +22,10 @@ public class Patient extends RealmObject {
     private String phone;
     private String email;
     private Date createdAt;
+    private boolean active;
+
 
     private Ubigeo ubigeo;
-
     private User user;
 
     public String getUuid() {
@@ -131,4 +132,11 @@ public class Patient extends RealmObject {
         this.ubigeo = ubigeo;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 }

@@ -190,12 +190,7 @@ public class InstitutionActivity extends AppCompatActivity implements GoogleApiC
             case R.id.action_close_institution :
                 doExit();
                 break;
-            case R.id.action_logout :
-                finish();
-                break;
         }
-
-
 
         return super.onOptionsItemSelected(item);
     }
@@ -250,14 +245,15 @@ public class InstitutionActivity extends AppCompatActivity implements GoogleApiC
 
     @Override
     public void onBackPressed() {
-        doExit();
+
+        //doExit();
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
         if(keyCode == KeyEvent.KEYCODE_BACK) {
-            doExit();
+            //doExit();
         }
         return super.onKeyDown(keyCode, event);
     }

@@ -18,6 +18,7 @@ public class Record extends RealmObject {
     private String doctorUuid;
     private int institutionId;
     private int agentId;
+    private int ubigeoId;
     private int code;
     private int attentionTypeId;
     private Date recordDate;
@@ -37,6 +38,7 @@ public class Record extends RealmObject {
     private Institution institution;
     private Agent agent;
     private Institution institutionOrigin;
+    private Ubigeo ubigeo;
 
     private RealmList<RecordDetail> recordDetails;
 
@@ -238,5 +240,21 @@ public class Record extends RealmObject {
 
     public void setSent(boolean sent) {
         this.sent = sent;
+    }
+
+    public int getUbigeoId() {
+        return ubigeoId;
+    }
+
+    public void setUbigeoId(int ubigeoId) {
+        this.ubigeoId = ubigeoId;
+    }
+
+    public Ubigeo getUbigeo() {
+        return ubigeo;
+    }
+
+    public void setUbigeo(Ubigeo ubigeo) {
+        this.ubigeo = ubigeo;
     }
 }

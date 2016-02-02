@@ -180,6 +180,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
+        android:visibility="gone"
         android:id="@+id/body_finish_treatment_1"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true">
@@ -273,6 +274,34 @@
                 android:onClick="showSaleDatePickerDialog"
                 android:hint="@string/date" />
 
+        </android.support.design.widget.TextInputLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:id="@+id/body_finish_treatment_3"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/record_ubigeo_text_input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+
+            <AutoCompleteTextView
+                android:id="@+id/record_ubigeo_autocompleter"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:ems="10"
+                android:hint="@string/patient_location_field"
+                android:inputType="textCapCharacters"
+                />
         </android.support.design.widget.TextInputLayout>
 
     </LinearLayout>
