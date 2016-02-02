@@ -192,7 +192,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 realm.commitTransaction();
 
                 editor.putString(Constants.CYCLE_LOADED, Constants.YES);
-                editor.putString(Constants.SNACK,Constants.NO);
+                editor.putBoolean(Constants.SNACK,false);
                 editor.putString(Constants.SESSION,Constants.NO);
                 editor.apply();
 

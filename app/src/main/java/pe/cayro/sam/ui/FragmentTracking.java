@@ -22,6 +22,8 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import io.realm.RealmResults;
+import io.realm.Sort;
 import pe.cayro.sam.InstitutionMapActivity;
 import pe.cayro.sam.R;
 import pe.cayro.sam.model.Tracking;
@@ -37,7 +39,7 @@ public class FragmentTracking extends Fragment {
     protected RecyclerView mRecyclerView;
 
     private Realm realm;
-    private List<Tracking> trackingList;
+    private RealmResults<Tracking> trackingList;
     private TrackingListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
@@ -64,8 +66,12 @@ public class FragmentTracking extends Fragment {
 
         realm = Realm.getDefaultInstance();
         trackingList = realm.where(Tracking.class).findAll();
+        trackingList.sort("createdAt", Sort.DESCENDING);
 
         Log.d(TAG, Constants.QTY_FIELD+String.valueOf(trackingList.size()));
+
+        ((AppCompatActivity) getActivity()).getSupportActionBar()
+                .setSubtitle(Constants.QTY_FIELD + String.valueOf(trackingList.size()));
 
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -101,7 +107,12 @@ public class FragmentTracking extends Fragment {
         public void onBindViewHolder(ViewHolder viewHolder, int position) {
             Tracking item = items.get(position);
 
-            viewHolder.name.setText(item.getInstitution().getName());
+            if(item.getInstitution() != null){
+                viewHolder.name.setText(item.getInstitution().getName());
+            }else{
+                viewHolder.name.setText("Refrigerio");
+            }
+
             viewHolder.uuid = item.getUuid();
             String typeString = Constants.EMPTY;
 
@@ -110,10 +121,19 @@ public class FragmentTracking extends Fragment {
 
             if(item.getType().equals(Constants.LOGIN)){
                 typeString = Constants.LOGIN_AT;
+                viewHolder.image.setImageResource(R.drawable.fa_map_marker);
             }else if(item.getType().equals(Constants.LOGOUT)){
                 typeString = Constants.LOGOUT_AT;
+                viewHolder.image.setImageResource(R.drawable.fa_map_marker);
+            }else if(item.getType().equals(Constants.OPEN)){
+                typeString = Constants.OPEN_AT;
+                viewHolder.image.setImageResource(R.drawable.fa_lunch);
+            }else if(item.getType().equals(Constants.CLOSE)){
+                typeString = Constants.CLOSE_AT;
+                viewHolder.image.setImageResource(R.drawable.fa_lunch);
             }
             viewHolder.address.setText(typeString+dateFormat);
+
             viewHolder.itemView.setTag(item);
         }
 
@@ -134,6 +154,7 @@ public class FragmentTracking extends Fragment {
                 super(itemView);
                 name    = (TextView) itemView.findViewById(R.id.institution_name);
                 address = (TextView) itemView.findViewById(R.id.tracking_name);
+                image = (ImageView) itemView.findViewById(R.id.tracking_image);
                 itemView.setOnClickListener(this);
             }
 

@@ -1,5 +1,6 @@
 package pe.cayro.sam.ui;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -191,6 +193,7 @@ public class FragmentDoctor extends Fragment {
             viewHolder.code.setText(Constants.CMP_FIELD+item.getCode());
             viewHolder.specialty.setText(Constants.SPECIALTY_FIELD+item.getSpecialty().getName());
             viewHolder.uuid = item.getUuid();
+            viewHolder.active = item.isActive();
 
             Picasso.with(getContext()).
                     load(new StringBuilder().append(Constants.CMP_PHOTO_SERVER)
@@ -214,6 +217,7 @@ public class FragmentDoctor extends Fragment {
             public TextView specialty;
             public TextView code;
             public String uuid;
+            public boolean active;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -227,7 +231,17 @@ public class FragmentDoctor extends Fragment {
 
             @Override
             public void onClick(View view) {
-                /* TODO: Implement Intent to edit the doctor information */
+
+                if(!active){
+                    Intent intent = new Intent(getActivity(), NewDoctorActivity.class);
+                    intent.putExtra(Constants.UUID, uuid);
+                    startActivityForResult(intent, ADD_DOCTOR_REQUEST);
+                }else{
+                    Toast.makeText(getActivity(), "El médico no puede modificarse",
+                            Toast.LENGTH_SHORT).show();
+                }
+
+
             }
         }
     }
@@ -236,5 +250,19 @@ public class FragmentDoctor extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         realm.close();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ADD_DOCTOR_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                doctorList = realm.where(Doctor.class).findAll();
+                mAdapter.setData(doctorList);
+                mAdapter.notifyDataSetChanged();
+
+                ((AppCompatActivity) getActivity()).getSupportActionBar().
+                        setSubtitle(Constants.QTY_FIELD + String.valueOf(doctorList.size()));
+            }
+        }
     }
 }

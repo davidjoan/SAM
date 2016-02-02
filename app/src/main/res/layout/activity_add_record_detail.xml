@@ -94,7 +94,7 @@
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp">
+        android:layout_margin="8dp">
 
         <Button
             android:layout_width="wrap_content"
@@ -133,17 +133,40 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/textView2"
-            android:layout_above="@+id/record_detail_cancel_record_detail" />
+            android:layout_above="@+id/record_detail_footer_record_detail" />
 
-        <Button
-            android:layout_width="match_parent"
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/finish"
-            style="@style/ButtonAppTheme"
-            android:id="@+id/record_detail_cancel_record_detail"
+            android:layout_margin="4dp"
+            android:id="@+id/record_detail_footer_record_detail"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true">
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/back"
+                android:layout_weight="0.5"
+                android:layout_margin="4dp"
+                style="@style/ButtonAppTheme"
+                android:id="@+id/record_detail_back_record_detail"
+                />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/finish"
+                android:layout_weight="0.5"
+                android:layout_margin="4dp"
+                style="@style/ButtonAppTheme"
+                android:id="@+id/record_detail_cancel_record_detail"
+                />
+        </LinearLayout>
+
+
 
 
     </RelativeLayout>

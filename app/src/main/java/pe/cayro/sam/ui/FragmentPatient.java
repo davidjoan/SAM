@@ -72,7 +72,6 @@ public class FragmentPatient extends Fragment {
         ButterKnife.bind(this, view);
 
         realm = Realm.getDefaultInstance();
-
         patientList = realm.where(Patient.class).findAll();
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(Constants.QTY_FIELD+
@@ -149,7 +148,6 @@ public class FragmentPatient extends Fragment {
         switch (item.getItemId()){
             case R.id.action_patient_new:
                 Intent intent = new Intent(getActivity(), NewPatientActivity.class);
-
                 startActivityForResult(intent, ADD_PATIENT_REQUEST);
                 break;
 
@@ -194,7 +192,7 @@ public class FragmentPatient extends Fragment {
                         Constants.DASH_SEPARATOR+item.getUbigeo().getProvince());
             }
 
-            viewHolder.id = item.getUuid();
+            viewHolder.uuid = item.getUuid();
             viewHolder.itemView.setTag(item);
         }
 
@@ -210,7 +208,7 @@ public class FragmentPatient extends Fragment {
             public TextView address;
             public TextView ubigeo;
             public TextView code;
-            public String id;
+            public String uuid;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -224,7 +222,9 @@ public class FragmentPatient extends Fragment {
 
             @Override
             public void onClick(View view) {
-                /* TODO: Implement Intent to edit the patient information */
+                Intent intent = new Intent(getActivity(), NewPatientActivity.class);
+                intent.putExtra(Constants.UUID, uuid);
+                startActivityForResult(intent, ADD_PATIENT_REQUEST);
             }
         }
     }

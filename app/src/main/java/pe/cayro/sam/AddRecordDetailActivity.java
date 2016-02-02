@@ -46,6 +46,8 @@ public class AddRecordDetailActivity extends AppCompatActivity {
     protected Button buttonSave;
     @Bind(R.id.record_detail_cancel_record_detail)
     protected Button buttonCancel;
+    @Bind(R.id.record_detail_back_record_detail)
+    protected Button buttonBack;
     @Bind(R.id.record_detail_qty)
     protected EditText recordDetailQty;
     @Bind(R.id.record_detail_list)
@@ -251,6 +253,31 @@ public class AddRecordDetailActivity extends AppCompatActivity {
             }
         });
 
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recordDetails = realm.where(RecordDetail.class)
+                        .equalTo("recordUuid", recordUuid).findAll();
+                mAdapter.setData(recordDetails);
+                mAdapter.notifyDataSetChanged();
+
+                if(recordDetails.size() > 0){
+
+                    Intent intent = new Intent();
+                    if (getParent() == null) {
+                        setResult(Activity.RESULT_CANCELED, intent);
+                    } else {
+                        getParent().setResult(Activity.RESULT_CANCELED, intent);
+                    }
+
+                    finish();
+                }else{
+                    Toast.makeText(getApplicationContext(),
+                            "Debe Ingresar al menos 1 muestra medica", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -282,8 +309,6 @@ public class AddRecordDetailActivity extends AppCompatActivity {
                 if (errors == 0) {
 
                     realm.beginTransaction();
-
-
 
                     RecordDetail recordDetail = realm.createObject(RecordDetail.class);
                     recordDetail.setRecord(record);

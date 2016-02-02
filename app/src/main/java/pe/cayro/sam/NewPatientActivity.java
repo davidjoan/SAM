@@ -53,18 +53,45 @@ public class NewPatientActivity extends AppCompatActivity {
 
     private User user;
     private Realm realm;
+    private Patient patient;
     private Ubigeo ubigeo = null;
     private UbigeoAutocompleterAdapter adapterUbigeo;
+
+    private String uuid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_patient);
 
+        uuid = getIntent().getStringExtra(Constants.UUID);
+
         ButterKnife.bind(this);
         toolbar.setTitle(R.string.title_activity_new_patient);
 
         realm = Realm.getDefaultInstance();
+
+        if(uuid != null){
+            patient = realm.where(Patient.class).equalTo(Constants.UUID, uuid).findFirst();
+            ubigeo = patient.getUbigeo();
+            toolbar.setTitle(R.string.edit_patient);
+            toolbar.setSubtitle(patient.getLastname() + " " + patient.getSurname());
+
+            patientCode.setText(patient.getCode());
+            patientFirstname.setText(patient.getFirstname());
+            patientLastname.setText(patient.getLastname());
+            patientSurname.setText(patient.getSurname());
+            patientAddress.setText(patient.getAddress());
+            patientUbigeo.setText(ubigeo.getName());
+            patientPhone.setText(patient.getPhone());
+            patientEmail.setText(patient.getEmail());
+
+        }else{
+            patient = new Patient();
+            patient.setUuid(UUID.randomUUID().toString());
+
+        }
+
         user =realm.where(User.class).findFirst();
 
         setSupportActionBar(toolbar);
@@ -74,21 +101,15 @@ public class NewPatientActivity extends AppCompatActivity {
         patientUbigeo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 Integer temp = adapterUbigeo.getItem(position);
                 ubigeo = realm.where(Ubigeo.class).equalTo(Constants.ID, temp.intValue()).findFirst();
                 patientUbigeo.setText(ubigeo.getName());
-                //patient.setUbigeo(doctor);
-                //record.setDoctorUuid(doctor.getUuid());
             }
         });
-
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         patientSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 int countErrors = 0;
 
                 if(patientUbigeo.getText().length() < 2){
@@ -122,9 +143,7 @@ public class NewPatientActivity extends AppCompatActivity {
                     try {
 
                         realm.beginTransaction();
-                        Patient patient = realm.createObject(Patient.class);
-
-                        patient.setUuid(UUID.randomUUID().toString());
+                        //Patient patient = realm.createObject(Patient.class);
                         patient.setCode(patientCode.getText().toString());
 
                         patient.setFirstname(patientFirstname.getText().toString());
@@ -132,10 +151,11 @@ public class NewPatientActivity extends AppCompatActivity {
                         patient.setSurname(patientSurname.getText().toString());
 
                         patient.setAddress(patientAddress.getText().toString());
-                        //patient.setLocation(patientLocation.getText().toString());
+
                         patient.setPhone(patientPhone.getText().toString());
                         patient.setEmail(patientEmail.getText().toString());
                         patient.setCreatedAt(new Date());
+                        patient.setActive(false);
                         patient.setUser(user);
                         patient.setUserId(user.getId());
 

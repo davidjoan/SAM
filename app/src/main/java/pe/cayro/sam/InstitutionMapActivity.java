@@ -22,7 +22,6 @@ public class InstitutionMapActivity extends AppCompatActivity implements OnMapRe
 
     @Bind(R.id.toolbar)
     protected Toolbar toolbar;
-
     private Realm realm;
     private GoogleMap mMap;
     private Tracking tracking;
@@ -41,8 +40,14 @@ public class InstitutionMapActivity extends AppCompatActivity implements OnMapRe
 
         tracking = realm.where(Tracking.class).equalTo(Constants.UUID, trackingUuid).findFirst();
 
-        toolbar.setTitle(tracking.getInstitution().getName());
-        toolbar.setSubtitle(tracking.getInstitution().getAddress());
+        if(tracking.getInstitution() != null){
+            toolbar.setTitle(tracking.getInstitution().getName());
+            toolbar.setSubtitle(tracking.getInstitution().getAddress());
+        }else{
+            toolbar.setTitle("Refrigerio");
+            toolbar.setSubtitle(tracking.getType());
+        }
+
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -62,14 +67,17 @@ public class InstitutionMapActivity extends AppCompatActivity implements OnMapRe
 
         LatLng sydney = new LatLng(tracking.getLatitude(), tracking.getLongitude());
 
-        LatLng institutionLatLng = new LatLng(tracking.getInstitution().getLatitude(),
-                tracking.getInstitution().getLongitude());
-
         mMap.addMarker(new MarkerOptions().position(sydney).title(getString(R.string.user)));
 
-        mMap.addMarker(new MarkerOptions()
-                .position(institutionLatLng)
-                .title(tracking.getInstitution().getName()));
+        if(tracking.getInstitution() != null){
+
+            LatLng institutionLatLng = new LatLng(tracking.getInstitution().getLatitude(),
+                    tracking.getInstitution().getLongitude());
+
+            mMap.addMarker(new MarkerOptions()
+                    .position(institutionLatLng)
+                    .title(tracking.getInstitution().getName()));
+        }
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(sydney).zoom(12).build();

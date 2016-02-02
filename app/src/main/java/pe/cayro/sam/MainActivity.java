@@ -3,6 +3,7 @@ package pe.cayro.sam;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -21,6 +22,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.UUID;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
@@ -31,7 +40,8 @@ import pe.cayro.sam.ui.FragmentReport;
 import pe.cayro.sam.ui.FragmentTracking;
 import util.Constants;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener{
     private static String TAG = MainActivity.class.getSimpleName();
 
     @Bind(R.id.toolbar)
@@ -48,12 +58,17 @@ public class MainActivity extends AppCompatActivity {
     private FragmentManager fragmentManager;
     private ActionBarDrawerToggle drawerToggle;
 
+    protected GoogleApiClient mGoogleApiClient;
+    protected Location mLastLocation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        buildGoogleApiClient();
 
         toolbar.setTitle(getString(R.string.app_name));
         toolbar.setLogoDescription(getResources().getString(R.string.app_name));
@@ -116,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(final MenuItem menuItem) {
+
                         // Highlight the selected item, update the title, and close the drawer
                         mDrawer.closeDrawers();
                         menuItem.setChecked(true);
@@ -166,7 +182,44 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        SharedPreferences settings = getApplicationContext().
+                getSharedPreferences(Constants.PREFERENCES_SAM, 0);
+
+        Calendar startTime = Calendar.getInstance();
+        startTime.setTime(new Date());
+        startTime.set(Calendar.HOUR_OF_DAY, 0);
+        startTime.set(Calendar.MINUTE, 0);
+        startTime.set(Calendar.SECOND, 0);
+
+        Calendar finishTime = Calendar.getInstance();
+        finishTime.setTime(new Date());
+        finishTime.set(Calendar.HOUR_OF_DAY, 24);
+        finishTime.set(Calendar.MINUTE, 0);
+        finishTime.set(Calendar.SECOND, 0);
+
+        Tracking temp = realm.where(Tracking.class)
+                .equalTo("type","close")
+                .between("createdAt",startTime.getTime(), finishTime.getTime())
+                .findFirst();
+
+        if(temp == null){
+            Boolean snack = settings.getBoolean(Constants.SNACK,false);
+            if(snack.booleanValue()){
+                getMenuInflater().inflate(R.menu.menu_close_break, menu);
+            }else{
+                getMenuInflater().inflate(R.menu.menu_open_break, menu);
+            }
+        }
         return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+
+
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -178,7 +231,69 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, MapsActivity.class);
             startActivity(intent);
         }
+
+        if (id == R.id.action_close_break) {
+            changeSnack(false);
+
+        }
+
+        if (id == R.id.action_open_break) {
+            changeSnack(true);
+
+        }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Exit the app if user select yes.
+     */
+    private void changeSnack(final boolean status) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setPositiveButton(Constants.SI, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                mGoogleApiClient.connect();
+
+                mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+                realm.beginTransaction();
+                Tracking tracking = new Tracking();
+                tracking.setUuid(UUID.randomUUID().toString());
+                if (status) {
+                    tracking.setType(Constants.OPEN);
+                } else {
+                    tracking.setType(Constants.CLOSE);
+                }
+
+                tracking.setCreatedAt(new Date());
+                tracking.setUserId(user.getId());
+
+
+                if (mLastLocation != null) {
+                    tracking.setLatitude(mLastLocation.getLatitude());
+                    tracking.setLongitude(mLastLocation.getLongitude());
+                }
+
+                realm.copyToRealmOrUpdate(tracking);
+                realm.commitTransaction();
+
+                SharedPreferences settings = getApplicationContext().
+                        getSharedPreferences(Constants.PREFERENCES_SAM, 0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putBoolean(Constants.SNACK, status);
+                editor.commit();
+
+                invalidateOptionsMenu();
+
+
+            }
+        }).setNegativeButton(Constants.NO, null);
+        alertDialog.setMessage("Quiere "+((status)?"Iniciar":"Finalizar")+" Refrigerio?");
+        alertDialog.setTitle(getString(R.string.app_name));
+        alertDialog.show();
     }
 
     /**
@@ -211,5 +326,53 @@ public class MainActivity extends AppCompatActivity {
             doExit();
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    /**
+     * Builds a GoogleApiClient. Uses the addApi() method to request the LocationServices API.
+     */
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (mLastLocation != null) {
+            Log.i(TAG, Constants.LATITUDE + String.valueOf(mLastLocation.getLatitude()));
+            Log.i(TAG, Constants.LONGITUDE + String.valueOf(mLastLocation.getLongitude()));
+        } else {
+            Log.i(TAG,Constants.GPS_DISABLED);
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.i(TAG, Constants.CONNECTION_SUSPENDED + String.valueOf(i));
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        Log.i(TAG, Constants.CONNECTION_FAILED + result.getErrorCode());
     }
 }

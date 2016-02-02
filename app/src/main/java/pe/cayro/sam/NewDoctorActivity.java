@@ -48,19 +48,41 @@ public class NewDoctorActivity extends AppCompatActivity {
     private Specialty specialty;
     private SpecialtyAutocompleterAdapter adapterSpecialty;
 
+    private String uuid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_doctor);
+
+        uuid = getIntent().getStringExtra(Constants.UUID);
 
         ButterKnife.bind(this);
         toolbar.setTitle(R.string.title_activity_new_doctor);
 
         realm = Realm.getDefaultInstance();
 
+        if(uuid != null){
+            doctor = realm.where(Doctor.class).equalTo(Constants.UUID, uuid).findFirst();
+
+            toolbar.setTitle(R.string.edit_doctor);
+            toolbar.setSubtitle(doctor.getLastname() + " " + doctor.getSurname());
+            specialty = doctor.getSpecialty();
+            doctorCode.setText(doctor.getCode());
+            doctorFirstname.setText(doctor.getFirstname());
+            doctorLastname.setText(doctor.getLastname());
+            doctorSurname.setText(doctor.getSurname());
+            doctorSpecialty.setText(specialty.getName());
+
+        }else{
+            doctor = new Doctor();
+            doctor.setUuid(UUID.randomUUID().toString());
+            doctor.setActive(false);
+        }
+
         setSupportActionBar(toolbar);
 
-        doctor = new Doctor();
+
 
         adapterSpecialty = new SpecialtyAutocompleterAdapter(this,
                 R.layout.specialty_autocomplete_item);
@@ -74,8 +96,7 @@ public class NewDoctorActivity extends AppCompatActivity {
                         temp.intValue()).findFirst();
                 doctorSpecialty.setText(specialty.getName());
 
-                doctor.setSpecialty(specialty);
-                doctor.setSpecialtyId(specialty.getId());
+
             }
         });
 
@@ -109,20 +130,25 @@ public class NewDoctorActivity extends AppCompatActivity {
                     doctorSpecialty.setError("La Especialidad es requerida.");
                 }
 
+                if (specialty == null) {
+                    countErrors++;
+                    doctorSpecialty.setError("La Especialidad es incorrecta.");
+                }
+
                 if (countErrors == 0) {
 
                     try {
 
                         realm.beginTransaction();
 
-                        doctor.setUuid(UUID.randomUUID().toString());
                         doctor.setCode(doctorCode.getText().toString());
                         doctor.setFirstname(doctorFirstname.getText().toString());
                         doctor.setLastname(doctorLastname.getText().toString());
                         doctor.setSurname(doctorSurname.getText().toString());
-
-                        doctor.setActive(true);
                         doctor.setScore("X");
+
+                        doctor.setSpecialty(specialty);
+                        doctor.setSpecialtyId(specialty.getId());
 
                         realm.copyToRealmOrUpdate(doctor);
                         realm.commitTransaction();

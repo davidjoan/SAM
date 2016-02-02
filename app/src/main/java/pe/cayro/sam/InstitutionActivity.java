@@ -25,6 +25,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -179,7 +180,44 @@ public class InstitutionActivity extends AppCompatActivity implements GoogleApiC
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_institution, menu);
+
+        SharedPreferences settings = getApplicationContext().
+                getSharedPreferences(Constants.PREFERENCES_SAM, 0);
+
+        Calendar startTime = Calendar.getInstance();
+        startTime.setTime(new Date());
+        startTime.set(Calendar.HOUR_OF_DAY, 0);
+        startTime.set(Calendar.MINUTE, 0);
+        startTime.set(Calendar.SECOND, 0);
+
+        Calendar finishTime = Calendar.getInstance();
+        finishTime.setTime(new Date());
+        finishTime.set(Calendar.HOUR_OF_DAY, 24);
+        finishTime.set(Calendar.MINUTE, 0);
+        finishTime.set(Calendar.SECOND, 0);
+
+        Tracking temp = realm.where(Tracking.class)
+                .equalTo("type","close")
+                .between("createdAt", startTime.getTime(), finishTime.getTime())
+                .findFirst();
+
+        if(temp == null){
+
+            Boolean snack = settings.getBoolean(Constants.SNACK,false);
+            if(snack.booleanValue()){
+                getMenuInflater().inflate(R.menu.menu_close_break, menu);
+            }else{
+                getMenuInflater().inflate(R.menu.menu_open_break, menu);
+            }
+        }
         return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -190,9 +228,70 @@ public class InstitutionActivity extends AppCompatActivity implements GoogleApiC
             case R.id.action_close_institution :
                 doExit();
                 break;
+
+            case R.id.action_close_break :
+                changeSnack(false);
+                break;
+
+            case R.id.action_open_break :
+                changeSnack(true);
+                break;
+
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Exit the app if user select yes.
+     */
+    private void changeSnack(final boolean status) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setPositiveButton(Constants.SI, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                mGoogleApiClient.connect();
+
+                mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+                realm.beginTransaction();
+                Tracking tracking = new Tracking();
+                tracking.setUuid(UUID.randomUUID().toString());
+                if(status){
+                    tracking.setType(Constants.OPEN);
+                }else{
+                    tracking.setType(Constants.CLOSE);
+                }
+
+                tracking.setCode(trackingCode);
+                tracking.setInstitutionId(institution.getId());
+                tracking.setCreatedAt(new Date());
+                tracking.setUserId(user.getId());
+                tracking.setInstitution(institution);
+
+                if(mLastLocation != null){
+                    tracking.setLatitude(mLastLocation.getLatitude());
+                    tracking.setLongitude(mLastLocation.getLongitude());
+                }
+
+                realm.copyToRealmOrUpdate(tracking);
+                realm.commitTransaction();
+
+                SharedPreferences settings = getApplicationContext().
+                        getSharedPreferences(Constants.PREFERENCES_SAM, 0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putBoolean(Constants.SNACK, status);
+                editor.commit();
+
+                invalidateOptionsMenu();
+            }
+        });
+        alertDialog.setNegativeButton(Constants.NO, null);
+        alertDialog.setMessage("Quiere "+((status)?"Iniciar":"Finalizar")+" Refrigerio?");
+        alertDialog.setTitle(getString(R.string.app_name));
+        alertDialog.show();
     }
 
     /**

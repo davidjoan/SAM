@@ -428,7 +428,6 @@ public class NewRecordActivity extends AppCompatActivity {
                     }
                 }
 
-
                 break;
             case 3:
                 if(recordDoctor.getText().length() == 0){

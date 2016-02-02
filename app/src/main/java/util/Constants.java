@@ -39,6 +39,8 @@ public class Constants {
     public static final String NAME = "name";
     public static final String LOGIN = "login";
     public static final String LOGOUT = "logout";
+    public static final String OPEN = "open";
+    public static final String CLOSE = "close";
     public static final String ACTION = "Action";
     public static final String EXIT = "¿Desea Salir?";
     public static final String LATITUDE = "latitude";
@@ -69,6 +71,8 @@ public class Constants {
 
     public static final String LOGIN_AT = "Inicio Sesión el ";
     public static final String LOGOUT_AT = "Cerro Sesión el ";
+    public static final String OPEN_AT = "Inicio Refrigerio el ";
+    public static final String CLOSE_AT = "Finalizo Refrigerio el ";
     public static final String SAVE_OK = "Se guardo correctamente.";
     public static final String GPS_DISABLED = "No esta activado el gps.";
     public static final String CONNECTION_SUSPENDED = "Connection suspended, code:";

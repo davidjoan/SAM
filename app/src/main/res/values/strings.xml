@@ -95,4 +95,9 @@
     <string name="agent_field">Representante</string>
     <string name="atentions">Atenciones</string>
     <string name="reports">Reportes</string>
+    <string name="open_break">Iniciar Refrigerio</string>
+    <string name="close_break">Finalizar Refrigerio</string>
+    <string name="edit_patient">Editar Paciente</string>
+    <string name="edit_doctor">Editar Médico</string>
+    <string name="back">Regresar</string>
 </resources>

@@ -41,7 +41,6 @@ public class FragmentInstitution extends Fragment {
     protected RecyclerView mRecyclerView;
 
     Realm realm;
-    List<Institution> institutionList;
     RealmResults<Institution> result;
     private InstitutionListAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
