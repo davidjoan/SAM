@@ -145,6 +145,7 @@
         <android.support.design.widget.TextInputLayout
             android:id="@+id/patient_location_text_input_layout"
             android:layout_width="match_parent"
+            android:layout_weight="0.3"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true">
@@ -159,21 +160,11 @@
                 />
         </android.support.design.widget.TextInputLayout>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true">
-
-
         <android.support.design.widget.TextInputLayout
             android:id="@+id/patient_phone_text_input_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="0.7"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true">
             <EditText
@@ -185,6 +176,8 @@
         </android.support.design.widget.TextInputLayout>
 
     </LinearLayout>
+
+
 
     <LinearLayout
         android:orientation="horizontal"

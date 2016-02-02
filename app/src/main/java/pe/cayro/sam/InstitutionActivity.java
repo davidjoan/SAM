@@ -186,9 +186,16 @@ public class InstitutionActivity extends AppCompatActivity implements GoogleApiC
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id){
+            case R.id.action_close_institution :
+                doExit();
+                break;
+            case R.id.action_logout :
+                finish();
+                break;
         }
+
+
 
         return super.onOptionsItemSelected(item);
     }

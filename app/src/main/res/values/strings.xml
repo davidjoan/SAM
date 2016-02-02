@@ -41,13 +41,13 @@
     <string name="login_wish">Desea Iniciar Sesión en</string>
     <string name="save">Guardar</string>
     <string name="email_field">Correo Electrónico * (opcional)</string>
-    <string name="phone_field">Teléfono</string>
+    <string name="phone_field">Teléfono  * (opcional)</string>
     <string name="location_field">Distrito * (opcional)</string>
     <string name="specialty_field">Especialidad</string>
     <string name="patient_code_field">Dni</string>
     <string name="patient_name_field">Nombres y Apellidos</string>
     <string name="patient_address_field">Dirección * (opcional)</string>
-    <string name="patient_location_field">Distrito * (opcional)</string>
+    <string name="patient_location_field">Distrito</string>
     <string name="patient_mail_field">Correo Electrónico * (opcional)</string>
     <string name="record_code"># Atención</string>
     <string name="date">Fecha</string>
@@ -90,4 +90,8 @@
     <string name="patient_lastname_field">Apellido Paterno</string>
     <string name="patient_surname_field">Apellido Materno</string>
     <string name="title_activity_add_agent">Representante</string>
+    <string name="title_activity_alert">Alerta</string>
+    <string name="close">Cerrar</string>
+    <string name="agent_field">Representante</string>
+    <string name="atentions">Atenciones</string>
 </resources>

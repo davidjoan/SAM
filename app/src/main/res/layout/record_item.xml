@@ -120,7 +120,6 @@
                 android:text="Tipo: "
                 android:textSize="10sp"
                 android:paddingLeft="10dp"
-                android:textColor="@android:color/holo_red_dark"
                 android:id="@+id/textView3"
                 android:layout_alignTop="@+id/record_code_final"
                 android:layout_toRightOf="@+id/record_code_final"
@@ -133,7 +132,7 @@
                 android:textSize="10sp"
                 android:paddingLeft="5dp"
                 android:id="@+id/record_institution"
-                android:textColor="@android:color/holo_red_dark"
+
                 android:layout_below="@+id/record_code_final"
                 android:layout_alignLeft="@+id/record_code_final"
                 android:layout_alignStart="@+id/record_code_final"

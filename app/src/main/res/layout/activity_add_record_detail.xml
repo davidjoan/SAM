@@ -76,6 +76,18 @@
                 android:hint="@string/qty_calculated" />
 
         </android.support.design.widget.TextInputLayout>
+
+        <ImageButton
+            android:src="@drawable/fa_alert"
+            android:layout_height="50dp"
+            android:visibility="gone"
+            android:layout_width="50dp"
+            android:id="@+id/record_detail_alert_button"
+            android:scaleType="fitXY"
+            android:onClick="openAlert"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
     </LinearLayout>
 
     <LinearLayout

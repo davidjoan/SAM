@@ -115,6 +115,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pe.cayro.sam.NewRecordActivity" />
         </activity>
+        <activity
+            android:name=".AlertActivity"
+            android:label="@string/title_activity_alert"
+            android:parentActivityName=".AddRecordDetailActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="pe.cayro.sam.AddRecordDetailActivity" />
+        </activity>
     </application>
 
 </manifest>

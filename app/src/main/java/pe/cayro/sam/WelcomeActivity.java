@@ -25,19 +25,16 @@ import pe.cayro.sam.model.Doctor;
 import pe.cayro.sam.model.Institution;
 import pe.cayro.sam.model.Product;
 import pe.cayro.sam.model.Specialty;
-import pe.cayro.sam.model.Tracking;
 import pe.cayro.sam.model.Ubigeo;
 import pe.cayro.sam.model.User;
 import util.Constants;
 
 public class WelcomeActivity extends AppCompatActivity {
-
     private static String TAG = WelcomeActivity.class.getSimpleName();
     private static final int SPLASH_DURATION = 1500;
 
     @Bind(R.id.logo_sam)
     protected ImageView logo;
-
     private Handler handler;
     private ProgressDialog progress;
     private boolean mIsBackButtonPressed;
@@ -62,33 +59,11 @@ public class WelcomeActivity extends AppCompatActivity {
 
                 SharedPreferences settings = getSharedPreferences(Constants.PREFERENCES_SAM, 0);
                 String cycleLoaded = settings.getString(Constants.CYCLE_LOADED, "");
-                String session = settings.getString(Constants.SESSION, "");
 
                 if (cycleLoaded.equals(Constants.YES)) {
-
-                    if(session.equals(Constants.YES)){
-
-                        Tracking tempTracking = Realm.getDefaultInstance().
-                                where(Tracking.class).
-                                equalTo(Constants.UUID,
-                                        settings.getString(Constants.SESSION_TRACKING, "")).
-                                findFirst();
-
-                        Intent intent = new Intent(WelcomeActivity.this, InstitutionActivity.class);
-                        intent.putExtra(Constants.TRACKING_CODE, tempTracking.getCode());
-                        intent.putExtra(Constants.INSTITUTION_NAME, tempTracking.getInstitution().getName());
-                        intent.putExtra(Constants.INSTITUTION_ID, tempTracking.getInstitutionId());
-                        intent.putExtra(Constants.UUID, tempTracking.getUuid());
-                        WelcomeActivity.this.startActivity(intent);
-                        finish();
-
-                    }else{
-                        Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
-                        WelcomeActivity.this.startActivity(intent);
-                        finish();
-                    }
-
-
+                    Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+                    WelcomeActivity.this.startActivity(intent);
+                    finish();
                 } else {
                     progress.setCancelable(false);
                     progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);

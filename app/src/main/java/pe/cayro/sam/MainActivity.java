@@ -2,6 +2,7 @@ package pe.cayro.sam;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import pe.cayro.sam.model.Tracking;
 import pe.cayro.sam.model.User;
 import pe.cayro.sam.ui.FragmentInstitution;
 import pe.cayro.sam.ui.FragmentReport;
@@ -50,9 +52,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
-
         ButterKnife.bind(this);
 
         toolbar.setTitle(getString(R.string.app_name));
@@ -81,6 +81,25 @@ public class MainActivity extends AppCompatActivity {
         userName.setText(user.getName());
         userCode = (TextView) header.findViewById(R.id.NavUserCode);
         userCode.setText(user.getCode());
+
+        SharedPreferences settings = getSharedPreferences(Constants.PREFERENCES_SAM, 0);
+        String session = settings.getString(Constants.SESSION, Constants.EMPTY);
+
+        if(session.equals(Constants.YES)){
+
+            Tracking tempTracking = Realm.getDefaultInstance().
+                    where(Tracking.class).
+                    equalTo(Constants.UUID,
+                            settings.getString(Constants.SESSION_TRACKING, "")).
+                    findFirst();
+
+            Intent intent = new Intent(MainActivity.this, InstitutionActivity.class);
+            intent.putExtra(Constants.TRACKING_CODE, tempTracking.getCode());
+            intent.putExtra(Constants.INSTITUTION_NAME, tempTracking.getInstitution().getName());
+            intent.putExtra(Constants.INSTITUTION_ID, tempTracking.getInstitutionId());
+            intent.putExtra(Constants.UUID, tempTracking.getUuid());
+            MainActivity.this.startActivity(intent);
+        }
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {

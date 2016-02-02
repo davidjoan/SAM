@@ -109,8 +109,8 @@
                 android:layout_height="match_parent"
                 android:ems="10"
                 android:hint="@string/doctor"
-                android:inputType="textCapCharacters"
-                />
+                android:inputType="textCapCharacters" />
+
         </android.support.design.widget.TextInputLayout>
 
         <ImageButton

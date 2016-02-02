@@ -91,9 +91,13 @@ public class NewPatientActivity extends AppCompatActivity {
 
                 int countErrors = 0;
 
-                if(patientPhone.getText().length() < 2){
+                if(patientUbigeo.getText().length() < 2){
                     countErrors++;
-                    patientPhone.setError("El teléfono es requerido.");
+                    patientUbigeo.setError("El Distrito es requerido.");
+                }
+                if(ubigeo == null){
+                    countErrors++;
+                    patientUbigeo.setError("El Distrito es incorrecto.");
                 }
                 if(patientFirstname.getText().length() < 2){
                     countErrors++;

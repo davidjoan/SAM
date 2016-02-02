@@ -3,15 +3,18 @@ package pe.cayro.sam.ui;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.support.v7.widget.helper.ItemTouchHelper.SimpleCallback;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
@@ -79,7 +82,7 @@ public class FragmentRecords extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.fragment_record,container,false);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.medical_sample);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.atentions);
 
         ButterKnife.bind(this, view);
 
@@ -101,7 +104,7 @@ public class FragmentRecords extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
 
 
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.
+        SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.
                 SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(RecyclerView recyclerView,
@@ -111,20 +114,40 @@ public class FragmentRecords extends Fragment {
             }
 
             @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                RecordListAdapter.ViewHolder temp = (RecordListAdapter.ViewHolder) viewHolder;
+            public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
 
-                realm.beginTransaction();
-                RealmResults<RecordDetail> recordDetailsTemp = realm.where(RecordDetail.class).
-                        equalTo("recordUuid", temp.uuid).findAll();
+                new AlertDialog.Builder(getActivity())
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle("Eliminar Registro")
+                        .setMessage("Desea eliminar este registro?")
+                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                RecordListAdapter.ViewHolder temp = (RecordListAdapter.ViewHolder) viewHolder;
 
-                recordDetailsTemp.clear();
+                                realm.beginTransaction();
+                                RealmResults<RecordDetail> recordDetailsTemp = realm.where(RecordDetail.class).
+                                        equalTo("recordUuid", temp.uuid).findAll();
 
-                Record record = realm.where(Record.class).
-                        equalTo(Constants.UUID, temp.uuid).findFirst();
-                record.removeFromRealm();
-                realm.commitTransaction();
-                refreshRecordUi();
+                                recordDetailsTemp.clear();
+
+                                Record record = realm.where(Record.class).
+                                        equalTo(Constants.UUID, temp.uuid).findFirst();
+                                record.removeFromRealm();
+                                realm.commitTransaction();
+                                refreshRecordUi();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                refreshRecordUi();
+
+                            }
+                        })
+                        .show();
+
+               // refreshRecordUi();
             }
         };
 

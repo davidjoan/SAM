@@ -67,7 +67,6 @@ public class AgentAutocompleterAdapter extends ArrayAdapter<Integer> implements 
                 FilterResults filterResults = new FilterResults();
 
                 Realm  realm = Realm.getDefaultInstance();
-
                 RealmResults<Agent> realmResults = realm.where(Agent.class).
                         contains(Constants.NAME, constraint.toString()).findAll();
 

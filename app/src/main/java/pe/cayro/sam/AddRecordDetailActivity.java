@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,8 +37,8 @@ import pe.cayro.sam.model.RecordDetail;
 import util.Constants;
 
 public class AddRecordDetailActivity extends AppCompatActivity {
-
     private static String TAG = AddRecordDetailActivity.class.getSimpleName();
+    private static final int SHOW_ALERT_REQUEST = 1;
 
     @Bind(R.id.toolbar)
     protected Toolbar toolbar;
@@ -53,6 +54,8 @@ public class AddRecordDetailActivity extends AppCompatActivity {
     protected EditText recordDetailQtyCalculated;
     @Bind(R.id.record_detail_product_autocompleter)
     protected AppCompatAutoCompleteTextView recordDetailProduct;
+    @Bind(R.id.record_detail_alert_button)
+    protected ImageButton alertButton;
 
     private static final DecimalFormat oneDecimal = new DecimalFormat("#");
 
@@ -65,6 +68,8 @@ public class AddRecordDetailActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private RecordDetailListAdapter mAdapter;
     private ProductAutocompleterAdapter adapterProduct;
+
+    private RecordDetail oldRecordDetail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,19 +87,6 @@ public class AddRecordDetailActivity extends AppCompatActivity {
         toolbar.setSubtitle(Constants.CODE_FIELD + String.valueOf(recordCode));
 
         setSupportActionBar(toolbar);
-
-        adapterProduct = new ProductAutocompleterAdapter(this, R.layout.product_autocomplete_item);
-        recordDetailProduct.setAdapter(adapterProduct);
-        recordDetailProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Integer temp = adapterProduct.getItem(position);
-
-                product = realm.where(Product.class).equalTo(Constants.ID,
-                        temp.intValue()).findFirst();
-                recordDetailProduct.setText(product.getName());
-            }
-        });
 
         realm = Realm.getDefaultInstance();
 
@@ -131,12 +123,51 @@ public class AddRecordDetailActivity extends AppCompatActivity {
             }
         });
 
+
+        adapterProduct = new ProductAutocompleterAdapter(this, R.layout.product_autocomplete_item);
+        recordDetailProduct.setAdapter(adapterProduct);
+        recordDetailProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Integer temp = adapterProduct.getItem(position);
+
+                product = realm.where(Product.class).equalTo(Constants.ID,
+                        temp.intValue()).findFirst();
+                recordDetailProduct.setText(product.getName());
+
+                //Check If Exist Old Data
+
+                if(record.getAttentionTypeId() == 3){
+                    oldRecordDetail = realm.where(RecordDetail.class).equalTo("productId", product.getId())
+                            .equalTo("record.doctorUuid", record.getDoctorUuid())
+                            .equalTo("record.attentionTypeId", record.getAttentionTypeId())
+                            .findFirst();
+                }else{
+                    oldRecordDetail = realm.where(RecordDetail.class).equalTo("productId", product.getId())
+                            .equalTo("record.patientUuid", record.getPatientUuid())
+                            .findFirst();
+                }
+
+
+
+                if(oldRecordDetail == null){
+                    alertButton.setVisibility(View.GONE);
+                }else{
+                    alertButton.setVisibility(View.VISIBLE);
+
+                }
+
+            }
+        });
+
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new RecordDetailListAdapter(recordDetails, R.layout.record_detail_item);
         mRecyclerView.setAdapter(mAdapter);
 
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.
+                SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
             @Override
             public boolean onMove(RecyclerView recyclerView,
                                   RecyclerView.ViewHolder viewHolder,
@@ -170,6 +201,15 @@ public class AddRecordDetailActivity extends AppCompatActivity {
 
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
 
+        alertButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), AlertActivity.class);
+                intent.putExtra(Constants.UUID, oldRecordDetail.getUuid());
+                startActivityForResult(intent, SHOW_ALERT_REQUEST);
+            }
+        });
+
 
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,8 +230,8 @@ public class AddRecordDetailActivity extends AppCompatActivity {
 
                     finish();
                 }else{
-                    Toast.makeText(getApplicationContext(), "Debe Ingresar al menos 1 muestra medica",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),
+                            "Debe Ingresar al menos 1 muestra medica", Toast.LENGTH_SHORT).show();
                 }
             }
         });
