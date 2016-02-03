@@ -105,4 +105,6 @@ public class Constants {
     public static final String SURNAME = "surname";
     public static final String SESSION = "session";
     public static final String SESSION_TRACKING = "session_tracking";
+    public static final String DEFAULT_AGENT_ID = "default_agent_id";
+    public static final String DEFAULT_INSTITUTION_ID = "default_institution_id";
 }

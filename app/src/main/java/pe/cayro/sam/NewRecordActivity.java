@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,8 @@ import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -32,8 +35,10 @@ import io.realm.RealmResults;
 import pe.cayro.sam.adapter.DoctorAutocompleterAdapter;
 import pe.cayro.sam.adapter.PatientAutocompleterAdapter;
 import pe.cayro.sam.adapter.UbigeoAutocompleterAdapter;
+import pe.cayro.sam.model.Agent;
 import pe.cayro.sam.model.AttentionType;
 import pe.cayro.sam.model.Doctor;
+import pe.cayro.sam.model.Institution;
 import pe.cayro.sam.model.Patient;
 import pe.cayro.sam.model.Record;
 import pe.cayro.sam.model.Tracking;
@@ -49,7 +54,7 @@ public class NewRecordActivity extends AppCompatActivity {
     static final int ADD_DOCTOR_REQUEST = 1;
     static final int ADD_PATIENT_REQUEST = 2;
     static final int ADD_MEDICAL_SAMPLE_REQUEST = 3;
-
+    static final int ADD_AGENT_REQUEST = 4;
 
     @Bind(R.id.toolbar)
     protected Toolbar toolbar;
@@ -95,6 +100,8 @@ public class NewRecordActivity extends AppCompatActivity {
     private DoctorAutocompleterAdapter adapterDoctor;
     private PatientAutocompleterAdapter adapterPatient;
 
+    SharedPreferences settings;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +113,8 @@ public class NewRecordActivity extends AppCompatActivity {
         sdf    = new SimpleDateFormat(Constants.FORMAT_DATE);
 
         ButterKnife.bind(this);
+
+        settings = getSharedPreferences(Constants.PREFERENCES_SAM, 0);
 
         start = Calendar.getInstance();
         realm = Realm.getDefaultInstance();
@@ -258,10 +267,40 @@ public class NewRecordActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_new_record, menu);
+
+        if(settings.getInt(Constants.DEFAULT_AGENT_ID, 0) == 0){
+            menu.findItem(R.id.action_add_agent).setIcon(R.drawable.fa_user_add);
+        }else{
+            menu.findItem(R.id.action_add_agent).setIcon(R.drawable.fa_user_minus);
+        }
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        switch (id){
+            case R.id.action_add_agent :
+
+                Intent intent = new Intent(NewRecordActivity.this, AddAgentActivity.class);
+                startActivityForResult(intent, ADD_AGENT_REQUEST);
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     public void showDatePickerDialog(View v) {
         DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getSupportFragmentManager(), Constants.DATEPICKER_TAG);
     }
+
     public void showSaleDatePickerDialog(View v) {
         DialogFragment newFragment = new SaleDatePickerFragment();
         newFragment.show(getSupportFragmentManager(), Constants.DATEPICKER_TAG);
@@ -348,6 +387,7 @@ public class NewRecordActivity extends AppCompatActivity {
         Intent intent = new Intent(this, NewDoctorActivity.class);
         startActivityForResult(intent, ADD_DOCTOR_REQUEST);
     }
+
     public void openNewPatient(View v) {
         Intent intent = new Intent(this, NewPatientActivity.class);
         startActivityForResult(intent, ADD_PATIENT_REQUEST) ;
@@ -460,6 +500,22 @@ public class NewRecordActivity extends AppCompatActivity {
             record.setCreatedAt(new Date());
             record.setUpdatedAt(new Date());
 
+            int agentId = settings.getInt(Constants.DEFAULT_AGENT_ID,0);
+
+            if( agentId > 0){
+                Agent agent  = realm.where(Agent.class).equalTo(Constants.ID, agentId).findFirst();
+                record.setAgent(agent);
+                record.setAgentId(agentId);
+            }
+
+            int institutionId = settings.getInt(Constants.DEFAULT_INSTITUTION_ID,0);
+
+            if( institutionId > 0){
+                Institution institution = realm.where(Institution.class).equalTo(Constants.ID, agentId).findFirst();
+                record.setInstitutionOrigin(institution);
+                record.setInstitutionOriginId(institutionId);
+            }
+
             //Finish treatment
             if(record.getAttentionTypeId() == 2){
                 //record.setVoucher(recordVoucher.getText().toString());
@@ -516,9 +572,13 @@ public class NewRecordActivity extends AppCompatActivity {
                 } else {
                     getParent().setResult(Activity.RESULT_OK, intent);
                 }
-
                 finish();
             }
+        }
+
+        if(requestCode == ADD_AGENT_REQUEST){
+
+            invalidateOptionsMenu();
         }
     }
 

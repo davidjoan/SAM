@@ -192,8 +192,11 @@ public class WelcomeActivity extends AppCompatActivity {
                 realm.commitTransaction();
 
                 editor.putString(Constants.CYCLE_LOADED, Constants.YES);
-                editor.putBoolean(Constants.SNACK,false);
-                editor.putString(Constants.SESSION,Constants.NO);
+                editor.putBoolean(Constants.SNACK, false);
+                editor.putString(Constants.SESSION, Constants.NO);
+                editor.putInt(Constants.DEFAULT_AGENT_ID, 0);
+                editor.putInt(Constants.DEFAULT_INSTITUTION_ID,0);
+
                 editor.apply();
 
             } finally {

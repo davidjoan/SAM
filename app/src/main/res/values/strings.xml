@@ -100,4 +100,6 @@
     <string name="edit_patient">Editar Paciente</string>
     <string name="edit_doctor">Editar Médico</string>
     <string name="back">Regresar</string>
+    <string name="remove">Quitar</string>
+    <string name="add_agent">Agregar Representante</string>
 </resources>
