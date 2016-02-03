@@ -135,7 +135,6 @@
             android:layout_below="@+id/textView2"
             android:layout_above="@+id/record_detail_footer_record_detail" />
 
-
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"

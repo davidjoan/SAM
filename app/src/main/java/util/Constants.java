@@ -107,4 +107,10 @@ public class Constants {
     public static final String SESSION_TRACKING = "session_tracking";
     public static final String DEFAULT_AGENT_ID = "default_agent_id";
     public static final String DEFAULT_INSTITUTION_ID = "default_institution_id";
+    public static final String QTY_MIN = "qty_min";
+    public static final String QTY_MAX = "qty_max";
+    public static final String QTY_MAX_A = "qty_max_a";
+    public static final String QTY_MAX_B = "qty_max_b";
+    public static final String STOCK_MIN= "stock_min";
+    public static final String STOCK_MAX = "stock_max";
 }

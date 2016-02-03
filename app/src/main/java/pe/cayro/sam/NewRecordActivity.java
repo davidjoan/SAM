@@ -245,7 +245,8 @@ public class NewRecordActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
                 Integer temp = adapterUbigeo.getItem(position);
-                ubigeo = realm.where(Ubigeo.class).equalTo(Constants.ID, temp.intValue()).findFirst();
+                ubigeo = realm.where(Ubigeo.class).equalTo(Constants.ID,
+                        temp.intValue()).findFirst();
                 recordUbigeo.setText(ubigeo.getName());
                 record.setUbigeo(ubigeo);
                 record.setUbigeoId(ubigeo.getId());
@@ -278,7 +279,6 @@ public class NewRecordActivity extends AppCompatActivity {
         }
         return true;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -500,7 +500,7 @@ public class NewRecordActivity extends AppCompatActivity {
             record.setCreatedAt(new Date());
             record.setUpdatedAt(new Date());
 
-            int agentId = settings.getInt(Constants.DEFAULT_AGENT_ID,0);
+            int agentId = settings.getInt(Constants.DEFAULT_AGENT_ID, 0);
 
             if( agentId > 0){
                 Agent agent  = realm.where(Agent.class).equalTo(Constants.ID, agentId).findFirst();
@@ -508,10 +508,11 @@ public class NewRecordActivity extends AppCompatActivity {
                 record.setAgentId(agentId);
             }
 
-            int institutionId = settings.getInt(Constants.DEFAULT_INSTITUTION_ID,0);
+            int institutionId = settings.getInt(Constants.DEFAULT_INSTITUTION_ID, 0);
 
             if( institutionId > 0){
-                Institution institution = realm.where(Institution.class).equalTo(Constants.ID, agentId).findFirst();
+                Institution institution = realm.where(Institution.class)
+                        .equalTo(Constants.ID, institutionId).findFirst();
                 record.setInstitutionOrigin(institution);
                 record.setInstitutionOriginId(institutionId);
             }

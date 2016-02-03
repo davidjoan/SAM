@@ -12,14 +12,11 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.math.RoundingMode;
@@ -31,6 +28,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import pe.cayro.sam.adapter.ProductAutocompleterAdapter;
+import pe.cayro.sam.adapter.RecordDetailListAdapter;
 import pe.cayro.sam.model.Product;
 import pe.cayro.sam.model.Record;
 import pe.cayro.sam.model.RecordDetail;
@@ -90,6 +88,8 @@ public class AddRecordDetailActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
+        recordDetailQty.setEnabled(false);
+
         realm = Realm.getDefaultInstance();
 
         record = realm.where(Record.class).equalTo(Constants.UUID,recordUuid).findFirst();
@@ -132,10 +132,43 @@ public class AddRecordDetailActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
+
                 if(recordDetailQty.getText().length() > 0){
+
+                    Integer temp = Integer.valueOf(recordDetailQty.getText().toString());
+
+                    switch(record.getAttentionTypeId()){
+                        case 1 :  //Inicio de Tratamiento
+                            if(temp > product.getQtyMax()){
+                                String value = String.valueOf(product.getQtyMax());
+                                Toast.makeText(getApplicationContext(),
+                                        "La cantidad maxima para este producto es "+value, Toast.LENGTH_SHORT).show();
+                                recordDetailQty.setText(value);
+                            }
+
+                            break;
+                        case 2 ://Fin de Tratamiento"
+                            if(temp > product.getQtyMaxA()){
+                                String value = String.valueOf(product.getQtyMaxA());
+                                Toast.makeText(getApplicationContext(),
+                                        "La cantidad maxima para este producto es "+value, Toast.LENGTH_SHORT).show();
+                                recordDetailQty.setText(value);
+                            }
+                            break;
+                        case 3 ://Uso Propio
+                            if(temp > product.getQtyMaxB()){
+                                String value = String.valueOf(product.getQtyMaxB());
+                                Toast.makeText(getApplicationContext(),
+                                        "La cantidad maxima para este producto es "+value, Toast.LENGTH_SHORT).show();
+                                recordDetailQty.setText(value);
+                            }
+                            break;
+
+                    }
+
                     Float value =  Float.valueOf(recordDetailQty.getText().toString());
 
-                    recordDetailQtyCalculated.setText(String.valueOf(oneDecimal.format(value.floatValue()/2)));
+                    recordDetailQtyCalculated.setText(String.valueOf(oneDecimal.format(value.floatValue()/product.getBonus())));
                 }else{
                     recordDetailQtyCalculated.setText("");
                 }
@@ -173,8 +206,11 @@ public class AddRecordDetailActivity extends AppCompatActivity {
                     alertButton.setVisibility(View.VISIBLE);
                 }
 
+                recordDetailQty.setEnabled(true);
                 recordDetailQty.setFocusableInTouchMode(true);
                 recordDetailQty.requestFocus();
+                recordDetailQty.setText(String.valueOf(product.getQtyMin()));
+
             }
         });
 
@@ -338,71 +374,6 @@ public class AddRecordDetailActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    public class RecordDetailListAdapter extends RecyclerView.
-            Adapter<RecordDetailListAdapter.ViewHolder> {
-
-        private List<RecordDetail> items;
-        private int itemLayout;
-
-        public RecordDetailListAdapter(List<RecordDetail> items, int itemLayout) {
-            this.items = items;
-            this.itemLayout = itemLayout;
-        }
-
-        public void setData(List<RecordDetail> items) {
-            this.items = items;
-        }
-
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
-            View itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(itemLayout,
-                    parent, false);
-            ViewHolder viewHolder = new ViewHolder(itemLayoutView);
-            return viewHolder;
-        }
-
-        @Override
-        public void onBindViewHolder(ViewHolder viewHolder, int position) {
-            RecordDetail item = items.get(position);
-            viewHolder.name.setText(item.getProduct().getName());
-            if(item.getRecord().getAttentionTypeId() == 2) {
-                viewHolder.qty.setText(Constants.QTY_FIELD + String.valueOf(item.getQty())+
-                        ", C Bonificada: "+String.valueOf(item.getQtyCalculated()));
-            }else{
-                viewHolder.qty.setText(Constants.QTY_FIELD + String.valueOf(item.getQty()));
-            }
-            viewHolder.uuid = item.getUuid();
-
-            viewHolder.itemView.setTag(item);
-        }
-
-        @Override
-        public int getItemCount() {
-            return items.size();
-        }
-
-        public class ViewHolder extends RecyclerView.ViewHolder
-                implements RecyclerView.OnClickListener {
-
-            public TextView name;
-            public TextView qty;
-            public String uuid;
-
-            public ViewHolder(View itemView) {
-                super(itemView);
-                name    = (TextView) itemView.findViewById(R.id.record_detail_name);
-                qty = (TextView) itemView.findViewById(R.id.record_detail_qty);
-
-                itemView.setOnClickListener(this);
-            }
-
-            @Override
-            public void onClick(View view) {
-                /* TODO: Implement Intent to edit the patient information */
-            }
-        }
     }
 
     /**

@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
      * Exit the app if user select yes.
      */
     private void changeSnack(final boolean status) {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getSupportActionBar().getThemedContext());
         alertDialog.setPositiveButton(Constants.SI, new DialogInterface.OnClickListener() {
 
             @Override

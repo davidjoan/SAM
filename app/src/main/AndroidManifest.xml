@@ -123,6 +123,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pe.cayro.sam.AddRecordDetailActivity" />
         </activity>
+        <activity
+            android:name=".ShowRecordActivity"
+            android:label="@string/title_activity_show_record"
+            android:parentActivityName=".InstitutionActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="pe.cayro.sam.InstitutionActivity" />
+        </activity>
     </application>
 
 </manifest>

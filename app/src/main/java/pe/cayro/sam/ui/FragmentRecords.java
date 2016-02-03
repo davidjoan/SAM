@@ -39,6 +39,7 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 import pe.cayro.sam.NewRecordActivity;
 import pe.cayro.sam.R;
+import pe.cayro.sam.ShowRecordActivity;
 import pe.cayro.sam.model.Record;
 import pe.cayro.sam.model.RecordDetail;
 import pe.cayro.sam.model.Tracking;
@@ -51,6 +52,7 @@ public class FragmentRecords extends Fragment {
 
     private static String TAG = FragmentRecords.class.getSimpleName();
     static final int ADD_RECORD_REQUEST = 1;
+    static final int SHOW_RECORD_REQUEST = 2;
 
     @Bind(R.id.record_recycler_view)
     protected RecyclerView mRecyclerView;
@@ -116,7 +118,7 @@ public class FragmentRecords extends Fragment {
             @Override
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
 
-                new AlertDialog.Builder(getActivity())
+                new AlertDialog.Builder(((AppCompatActivity) getActivity()).getSupportActionBar().getThemedContext())
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setTitle("Eliminar Registro")
                         .setMessage("Desea eliminar este registro?")
@@ -349,7 +351,9 @@ public class FragmentRecords extends Fragment {
 
             @Override
             public void onClick(View view) {
-                /* TODO: Implement Intent to edit the record information */
+                Intent intent = new Intent(getActivity(), ShowRecordActivity.class);
+                intent.putExtra(Constants.UUID, uuid);
+                startActivityForResult(intent, SHOW_RECORD_REQUEST);
             }
         }
     }

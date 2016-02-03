@@ -1,7 +1,10 @@
 package pe.cayro.sam.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import util.Constants;
 
 /**
  * Created by David on 7/01/16.
@@ -12,12 +15,19 @@ public class Product extends RealmObject {
     private int id;
     private String code;
     private String name;
+    @SerializedName(Constants.QTY_MIN)
     private int qtyMin;
+    @SerializedName(Constants.QTY_MAX)
     private int qtyMax;
+
     private int bonus;
+    @SerializedName(Constants.QTY_MAX_A)
     private int qtyMaxA;
+    @SerializedName(Constants.QTY_MAX_B)
     private int qtyMaxB;
+    @SerializedName(Constants.STOCK_MIN)
     private int stockMin;
+    @SerializedName(Constants.STOCK_MAX)
     private int stockMax;
 
     public int getId() {

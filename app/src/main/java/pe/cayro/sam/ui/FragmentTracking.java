@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -163,7 +162,6 @@ public class FragmentTracking extends Fragment {
                 Context context = itemView.getContext();
                 Intent intent = new Intent(getActivity(), InstitutionMapActivity.class);
                 intent.putExtra(Constants.TRACKING_UUID, uuid);
-                Toast.makeText(getActivity(), uuid, Toast.LENGTH_SHORT).show();
                 context.startActivity(intent);
             }
         }

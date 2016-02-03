@@ -102,4 +102,7 @@
     <string name="back">Regresar</string>
     <string name="remove">Quitar</string>
     <string name="add_agent">Agregar Representante</string>
+    <string name="title_activity_show_record">Comprobante Registrado</string>
+    <string name="patient_agent_field">Representante</string>
+    <string name="patient_institution_field">Institución</string>
 </resources>

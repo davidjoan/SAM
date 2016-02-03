@@ -126,7 +126,7 @@ public class AddAgentActivity extends AppCompatActivity {
                     editor.putInt(Constants.DEFAULT_AGENT_ID, agent.getId());
                     editor.putInt(Constants.DEFAULT_INSTITUTION_ID, institution.getId());
 
-                    editor.apply();
+                    editor.commit();
 
                     Intent intent = new Intent();
                     if (getParent() == null) {
@@ -143,8 +143,6 @@ public class AddAgentActivity extends AppCompatActivity {
         agentCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 SharedPreferences settings = getApplicationContext().
                         getSharedPreferences(Constants.PREFERENCES_SAM, 0);
                 SharedPreferences.Editor editor = settings.edit();
@@ -160,7 +158,6 @@ public class AddAgentActivity extends AppCompatActivity {
                 } else {
                     getParent().setResult(Activity.RESULT_CANCELED, intent);
                 }
-
                 finish();
             }
         });
