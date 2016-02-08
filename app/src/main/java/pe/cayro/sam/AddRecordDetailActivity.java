@@ -142,7 +142,8 @@ public class AddRecordDetailActivity extends AppCompatActivity {
                             if(temp > product.getQtyMax()){
                                 String value = String.valueOf(product.getQtyMax());
                                 Toast.makeText(getApplicationContext(),
-                                        "La cantidad maxima para este producto es "+value, Toast.LENGTH_SHORT).show();
+                                        "La cantidad maxima para este producto es "+
+                                                value, Toast.LENGTH_SHORT).show();
                                 recordDetailQty.setText(value);
                             }
 
@@ -151,7 +152,8 @@ public class AddRecordDetailActivity extends AppCompatActivity {
                             if(temp > product.getQtyMaxA()){
                                 String value = String.valueOf(product.getQtyMaxA());
                                 Toast.makeText(getApplicationContext(),
-                                        "La cantidad maxima para este producto es "+value, Toast.LENGTH_SHORT).show();
+                                        "La cantidad maxima para este producto es "+
+                                                value, Toast.LENGTH_SHORT).show();
                                 recordDetailQty.setText(value);
                             }
                             break;
@@ -159,11 +161,11 @@ public class AddRecordDetailActivity extends AppCompatActivity {
                             if(temp > product.getQtyMaxB()){
                                 String value = String.valueOf(product.getQtyMaxB());
                                 Toast.makeText(getApplicationContext(),
-                                        "La cantidad maxima para este producto es "+value, Toast.LENGTH_SHORT).show();
+                                        "La cantidad maxima para este producto es "+
+                                                value, Toast.LENGTH_SHORT).show();
                                 recordDetailQty.setText(value);
                             }
                             break;
-
                     }
 
                     Float value =  Float.valueOf(recordDetailQty.getText().toString());
@@ -209,8 +211,10 @@ public class AddRecordDetailActivity extends AppCompatActivity {
                 recordDetailQty.setEnabled(true);
                 recordDetailQty.setFocusableInTouchMode(true);
                 recordDetailQty.requestFocus();
-                recordDetailQty.setText(String.valueOf(product.getQtyMin()));
 
+                if(record.getAttentionTypeId() == 1) {
+                    recordDetailQty.setText(String.valueOf(product.getQtyMin()));
+                }
             }
         });
 
@@ -292,14 +296,16 @@ public class AddRecordDetailActivity extends AppCompatActivity {
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                recordDetails = realm.where(RecordDetail.class)
+               /* recordDetails = realm.where(RecordDetail.class)
                         .equalTo("recordUuid", recordUuid).findAll();
                 mAdapter.setData(recordDetails);
                 mAdapter.notifyDataSetChanged();
 
-                if(recordDetails.size() > 0){
+                if(recordDetails.size() > 0){*/
 
                     Intent intent = new Intent();
+                    intent.putExtra(Constants.UUID, record.getUuid());
+
                     if (getParent() == null) {
                         setResult(Activity.RESULT_CANCELED, intent);
                     } else {
@@ -307,10 +313,11 @@ public class AddRecordDetailActivity extends AppCompatActivity {
                     }
 
                     finish();
+                    /*
                 }else{
                     Toast.makeText(getApplicationContext(),
                             "Debe Ingresar al menos 1 muestra medica", Toast.LENGTH_SHORT).show();
-                }
+                }*/
             }
         });
 

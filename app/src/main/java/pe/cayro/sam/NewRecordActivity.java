@@ -41,6 +41,7 @@ import pe.cayro.sam.model.Doctor;
 import pe.cayro.sam.model.Institution;
 import pe.cayro.sam.model.Patient;
 import pe.cayro.sam.model.Record;
+import pe.cayro.sam.model.RecordDetail;
 import pe.cayro.sam.model.Tracking;
 import pe.cayro.sam.model.Ubigeo;
 import pe.cayro.sam.model.User;
@@ -256,12 +257,29 @@ public class NewRecordActivity extends AppCompatActivity {
         recordCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                realm.beginTransaction();
+                RealmResults<RecordDetail> recordDetailsTemp = realm.where(RecordDetail.class).
+                        equalTo("recordUuid", record.getUuid()).findAll();
+
+                recordDetailsTemp.clear();
+
+                Record recordTemp = realm.where(Record.class).
+                        equalTo(Constants.UUID, record.getUuid()).findFirst();
+
+                if(recordTemp != null){
+                    recordTemp.removeFromRealm();
+                }
+
+                realm.commitTransaction();
+
                 Intent intent = new Intent();
                 if (getParent() == null) {
                     setResult(Activity.RESULT_OK, intent);
                 } else {
                     getParent().setResult(Activity.RESULT_OK, intent);
                 }
+                realm.close();
 
                 finish();
             }
@@ -524,6 +542,8 @@ public class NewRecordActivity extends AppCompatActivity {
                 //record.setSerial(recordSerial.getText().toString());
             }
 
+            Log.d(TAG, record.getUuid());
+
             realm.copyToRealmOrUpdate(record);
 
             realm.commitTransaction();
@@ -575,6 +595,14 @@ public class NewRecordActivity extends AppCompatActivity {
                 }
                 finish();
             }
+
+            if(resultCode == Activity.RESULT_CANCELED){
+
+                String uuid = data.getStringExtra(Constants.UUID);
+                record = realm.where(Record.class).equalTo(Constants.UUID, uuid).findFirst();
+
+            }
+
         }
 
         if(requestCode == ADD_AGENT_REQUEST){
