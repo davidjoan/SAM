@@ -118,17 +118,20 @@ public class FragmentRecords extends Fragment {
             @Override
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
 
-                new AlertDialog.Builder(((AppCompatActivity) getActivity()).getSupportActionBar().getThemedContext())
+                new AlertDialog.Builder(((AppCompatActivity) getActivity()).
+                        getSupportActionBar().getThemedContext())
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setTitle("Eliminar Registro")
                         .setMessage("Desea eliminar este registro?")
                         .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                RecordListAdapter.ViewHolder temp = (RecordListAdapter.ViewHolder) viewHolder;
+                                RecordListAdapter.ViewHolder temp =
+                                        (RecordListAdapter.ViewHolder) viewHolder;
 
                                 realm.beginTransaction();
-                                RealmResults<RecordDetail> recordDetailsTemp = realm.where(RecordDetail.class).
+                                RealmResults<RecordDetail> recordDetailsTemp = realm.
+                                        where(RecordDetail.class).
                                         equalTo("recordUuid", temp.uuid).findAll();
 
                                 recordDetailsTemp.clear();

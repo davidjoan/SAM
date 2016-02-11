@@ -78,15 +78,6 @@ public class AlertActivity extends AppCompatActivity {
                                 +" "+
                                 recordDetail.getRecord().getDoctor().getSurname());
 
-        /*
-        *
-        * [
-        *  {"id": 1 ,"name" : "Inicio de Tratamiento"},
-        *  {"id": 2 ,"name" : "Fin de Tratamiento"},
-        *  {"id": 3 ,"name" : "Uso Propio"}
-        *]
-        * */
-
         if(recordDetail.getRecord().getAttentionTypeId() == 3){
             linearLayoutPatient.setVisibility(View.GONE);
         }else{

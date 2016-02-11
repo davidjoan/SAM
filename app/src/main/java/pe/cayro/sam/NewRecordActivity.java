@@ -11,6 +11,8 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -91,6 +93,7 @@ public class NewRecordActivity extends AppCompatActivity {
     private Doctor doctor;
     private Ubigeo ubigeo;
     private Calendar start;
+    private Calendar sale;
     private Patient patient;
     private Tracking tracking;
     private String trackingUuid;
@@ -101,7 +104,7 @@ public class NewRecordActivity extends AppCompatActivity {
     private DoctorAutocompleterAdapter adapterDoctor;
     private PatientAutocompleterAdapter adapterPatient;
 
-    SharedPreferences settings;
+    private SharedPreferences settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +121,7 @@ public class NewRecordActivity extends AppCompatActivity {
         settings = getSharedPreferences(Constants.PREFERENCES_SAM, 0);
 
         start = Calendar.getInstance();
+        sale = Calendar.getInstance();
         realm = Realm.getDefaultInstance();
 
         tracking = realm.where(Tracking.class).equalTo(Constants.UUID, trackingUuid).findFirst();
@@ -165,8 +169,6 @@ public class NewRecordActivity extends AppCompatActivity {
                 attentionType = realm.where(AttentionType.class).equalTo(Constants.ID,
                         i + 1).findFirst();
 
-                record.setAttentionType(attentionType);
-                record.setAttentionTypeId(attentionType.getId());
 
                 switch (i) {
                     case 0:
@@ -219,8 +221,28 @@ public class NewRecordActivity extends AppCompatActivity {
                 recordDoctor.setText(new StringBuilder().append(doctor.getFirstname()).
                         append(Constants.SPACE).append(doctor.getLastname()).
                         append(Constants.SPACE).append(doctor.getSurname()).toString());
-                record.setDoctor(doctor);
-                record.setDoctorUuid(doctor.getUuid());
+
+            }
+        });
+
+        recordDoctor.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+                if (recordDoctor.getText().length() == 0) {
+                    doctor = null;
+                }
+
             }
         });
 
@@ -229,14 +251,30 @@ public class NewRecordActivity extends AppCompatActivity {
         recordPatient.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 String temp = adapterPatient.getItem(position);
                 patient = realm.where(Patient.class).equalTo(Constants.UUID, temp).findFirst();
                 recordPatient.setText(new StringBuilder().append(patient.getFirstname()).
                         append(Constants.SPACE).append(patient.getLastname()).
                         append(Constants.SPACE).append(patient.getSurname()).toString());
-                record.setPatient(patient);
-                record.setPatientUuid(patient.getUuid());
+            }
+        });
+
+        recordPatient.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(recordPatient.getText().length() == 0){
+                    patient = null;
+                }
             }
         });
 
@@ -249,8 +287,7 @@ public class NewRecordActivity extends AppCompatActivity {
                 ubigeo = realm.where(Ubigeo.class).equalTo(Constants.ID,
                         temp.intValue()).findFirst();
                 recordUbigeo.setText(ubigeo.getName());
-                record.setUbigeo(ubigeo);
-                record.setUbigeoId(ubigeo.getId());
+
             }
         });
 
@@ -357,7 +394,7 @@ public class NewRecordActivity extends AppCompatActivity {
             start.set(year, month, day);
             String formatedDate = sdf.format(start.getTime());
             editTextDate.setText(formatedDate);
-            record.setRecordDate(start.getTime());
+
         }
     }
 
@@ -394,10 +431,10 @@ public class NewRecordActivity extends AppCompatActivity {
         }
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
-            start.set(year, month, day);
-            String formatedDate = sdf.format(start.getTime());
+            sale.set(year, month, day);
+            String formatedDate = sdf.format(sale.getTime());
             editTextSaleDate.setText(formatedDate);
-            record.setSaleDate(start.getTime());
+
         }
     }
 
@@ -419,7 +456,7 @@ public class NewRecordActivity extends AppCompatActivity {
             recordCode.setError("El codigo no puede estar vacio");
         }
 
-        switch (record.getAttentionTypeId()){
+        switch (attentionType.getId()){
             case 1:
                 if(recordDoctor.getText().length() == 0){
                     errors++;
@@ -515,8 +552,26 @@ public class NewRecordActivity extends AppCompatActivity {
             record.setUserId(tracking.getUserId());
             record.setUser(user);
 
+            record.setRecordDate(start.getTime());
+            record.setSaleDate(sale.getTime());
+
+            if(ubigeo != null) {
+                record.setUbigeo(ubigeo);
+                record.setUbigeoId(ubigeo.getId());
+            }
             record.setCreatedAt(new Date());
             record.setUpdatedAt(new Date());
+
+            if(patient != null){
+                record.setPatient(patient);
+                record.setPatientUuid(patient.getUuid());
+            }
+
+            record.setDoctor(doctor);
+            record.setDoctorUuid(doctor.getUuid());
+            record.setAttentionType(attentionType);
+            record.setAttentionTypeId(attentionType.getId());
+
 
             int agentId = settings.getInt(Constants.DEFAULT_AGENT_ID, 0);
 

@@ -44,11 +44,10 @@ public class NewDoctorActivity extends AppCompatActivity {
     protected AppCompatAutoCompleteTextView doctorSpecialty;
 
     private Realm realm;
+    private String uuid;
     private Doctor doctor;
     private Specialty specialty;
     private SpecialtyAutocompleterAdapter adapterSpecialty;
-
-    private String uuid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +94,6 @@ public class NewDoctorActivity extends AppCompatActivity {
                 specialty = realm.where(Specialty.class).equalTo(Constants.ID,
                         temp.intValue()).findFirst();
                 doctorSpecialty.setText(specialty.getName());
-
-
             }
         });
 
@@ -133,6 +130,16 @@ public class NewDoctorActivity extends AppCompatActivity {
                 if (specialty == null) {
                     countErrors++;
                     doctorSpecialty.setError("La Especialidad es incorrecta.");
+                }
+
+                Doctor tempDoctor = realm.where(Doctor.class)
+                        .equalTo(Constants.CODE, doctorCode.getText().toString()).findFirst();
+
+                if(tempDoctor != null){
+                    if(!doctor.getUuid().equalsIgnoreCase(tempDoctor.getUuid())){
+                        countErrors++;
+                        doctorCode.setError("Ya existe un médico con este CMP");
+                    }
                 }
 
                 if (countErrors == 0) {

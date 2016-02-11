@@ -102,7 +102,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 }
 
                 RealmResults<Record> resultsQuery = realm.where(Record.class).equalTo("code",
-                        Integer.valueOf(attentionCodeEditText.getText().toString()).intValue()).findAll();
+                        Integer.valueOf(attentionCodeEditText.getText().toString()).intValue()).
+                        findAll();
 
                 if(resultsQuery.size() > 0){
                     errors++;
@@ -114,7 +115,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     realm.beginTransaction();
                     Tracking tracking = new Tracking();
                     tracking.setUuid(UUID.randomUUID().toString());
-                    tracking.setCode(Integer.valueOf(attentionCodeEditText.getText().toString()).intValue());
+                    tracking.setCode(Integer.valueOf(attentionCodeEditText.
+                            getText().toString()).intValue());
                     tracking.setType(Constants.LOGIN);
                     tracking.setInstitutionId(institution.getId());
                     tracking.setCreatedAt(new Date());

@@ -68,10 +68,8 @@ public class UbigeoAutocompleterAdapter extends ArrayAdapter<Integer> implements
 
                 Realm  realm = Realm.getDefaultInstance();
 
-                RealmResults<Ubigeo> realmResults = realm.where(Ubigeo.class).beginGroup().
-                        contains(Constants.NAME, constraint.toString().toUpperCase()).or().
-                        contains(Constants.PROVINCE, constraint.toString().toUpperCase()).
-                        endGroup().
+                RealmResults<Ubigeo> realmResults = realm.where(Ubigeo.class).
+                        contains(Constants.NAME, constraint.toString().toUpperCase()).
                         findAll();
 
                 for(Ubigeo ubigeo : realmResults){

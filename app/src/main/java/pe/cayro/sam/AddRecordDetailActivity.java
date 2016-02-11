@@ -170,7 +170,8 @@ public class AddRecordDetailActivity extends AppCompatActivity {
 
                     Float value =  Float.valueOf(recordDetailQty.getText().toString());
 
-                    recordDetailQtyCalculated.setText(String.valueOf(oneDecimal.format(value.floatValue()/product.getBonus())));
+                    recordDetailQtyCalculated.setText(String.valueOf(oneDecimal.
+                            format(value.floatValue()/product.getBonus())));
                 }else{
                     recordDetailQtyCalculated.setText("");
                 }

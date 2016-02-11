@@ -131,7 +131,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(final MenuItem menuItem) {
-
                         // Highlight the selected item, update the title, and close the drawer
                         mDrawer.closeDrawers();
                         menuItem.setChecked(true);
@@ -216,9 +215,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-
-
-
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -249,14 +245,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
      * Exit the app if user select yes.
      */
     private void changeSnack(final boolean status) {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getSupportActionBar().getThemedContext());
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getSupportActionBar().
+                getThemedContext());
         alertDialog.setPositiveButton(Constants.SI, new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
                 mGoogleApiClient.connect();
-
                 mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
                 realm.beginTransaction();
@@ -271,7 +266,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 tracking.setCreatedAt(new Date());
                 tracking.setUserId(user.getId());
 
-
                 if (mLastLocation != null) {
                     tracking.setLatitude(mLastLocation.getLatitude());
                     tracking.setLongitude(mLastLocation.getLongitude());
@@ -285,9 +279,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putBoolean(Constants.SNACK, status);
                 editor.commit();
-
                 invalidateOptionsMenu();
-
 
             }
         }).setNegativeButton(Constants.NO, null);
