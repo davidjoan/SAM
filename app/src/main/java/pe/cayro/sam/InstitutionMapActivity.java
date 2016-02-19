@@ -48,7 +48,6 @@ public class InstitutionMapActivity extends AppCompatActivity implements OnMapRe
             toolbar.setSubtitle(tracking.getType());
         }
 
-
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

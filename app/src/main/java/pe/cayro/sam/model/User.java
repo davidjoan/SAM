@@ -13,6 +13,7 @@ public class User extends RealmObject {
     private String code;
     private String name;
     private String imei;
+    private String role;
     private boolean active;
 
     public int getId() {
@@ -45,6 +46,14 @@ public class User extends RealmObject {
 
     public void setImei(String imei) {
         this.imei = imei;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public boolean isActive() {

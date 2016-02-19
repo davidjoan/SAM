@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
@@ -123,16 +124,14 @@ public class WelcomeActivity extends AppCompatActivity {
             TelephonyManager telephonyManager = (TelephonyManager) context.
                     getSystemService(Context.TELEPHONY_SERVICE);
 
-
             this.publishProgress(Constants.OBTAINING_IMEI);
 
-            /*
-            TODO: 17/07/15
-            Replace for implement in production enable the following lines of code
+            //
+            //Replace for implement in production enable the following lines of code
+            //String imei = Constants.IMEI_TEST;
+            //
             Log.i(TAG, telephonyManager.getDeviceId());
             String imei = telephonyManager.getDeviceId();
-            */
-            String imei = Constants.IMEI_TEST;
 
             Realm realm = Realm.getDefaultInstance();
 
@@ -150,26 +149,28 @@ public class WelcomeActivity extends AppCompatActivity {
                 realm.clear(Ubigeo.class);
 
                 this.publishProgress(Constants.LOADING_USERS);
-                User user = RestClient.get().getUserByImei(imei);
+                List<User> users = RestClient.get().getUserByImei(imei);
+                User user = users.get(0);
                 realm.copyToRealmOrUpdate(user);
 
                 this.publishProgress(Constants.LOADING_INSTITUTIONS);
-                List<Institution> institutions = RestClient.get().getListInstitutions();
+                List<Institution> institutions = RestClient.get().getListInstitutions(imei,
+                        user.getId());
                 realm.copyToRealmOrUpdate(institutions);
 
                 this.publishProgress(Constants.LOADING_ATTENTION_TYPES);
-                List<AttentionType> attentionTypes = RestClient.get().getAttentionTypes();
+                List<AttentionType> attentionTypes = RestClient.get().getAttentionTypes(imei);
                 realm.copyToRealmOrUpdate(attentionTypes);
 
                 this.publishProgress(Constants.LOADING_SPECIALTIES);
-                List<Specialty> specialties = RestClient.get().getListSpecialties();
+                List<Specialty> specialties = RestClient.get().getListSpecialties(imei);
                 realm.copyToRealmOrUpdate(specialties);
 
                 this.publishProgress(Constants.LOADING_DOCTORS);
-                List<Doctor> doctors = RestClient.get().getListDoctors();
+                List<Doctor> doctors = RestClient.get().getListDoctors(imei);
 
                 this.publishProgress(Constants.LOADING_UBIGEOS);
-                List<Ubigeo> ubigeos = RestClient.get().getUbigeos();
+                List<Ubigeo> ubigeos = RestClient.get().getUbigeos(imei);
                 realm.copyToRealmOrUpdate(ubigeos);
 
                 List<Doctor> doctorsTemp = new ArrayList<Doctor>();
@@ -183,11 +184,11 @@ public class WelcomeActivity extends AppCompatActivity {
                 realm.copyToRealmOrUpdate(doctorsTemp);
 
                 this.publishProgress(Constants.LOADING_PRODUCTS);
-                List<Product> products = RestClient.get().getListProducts();
+                List<Product> products = RestClient.get().getListProducts(imei);
                 realm.copyToRealmOrUpdate(products);
 
                 this.publishProgress(Constants.LOADING_AGENTS);
-                List<Agent> agents = RestClient.get().getAgents();
+                List<Agent> agents = RestClient.get().getAgents(imei);
                 realm.copyToRealmOrUpdate(agents);
                 realm.commitTransaction();
 

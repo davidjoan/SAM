@@ -7,11 +7,11 @@ public class Constants {
 
     public static final String PREFERENCES_SAM = "preferences_sam";
 
-    public static final String URL = "http://private-950cc-sam38.apiary-mock.com/";
-    public static final String CMP_PHOTO_SERVER = "http://200.48.13.46/cmp/fotos/";
+    public static final String URL = "http://app.bagoperu.com.pe:82/wsSAM/";
+    public static final String CMP_PHOTO_SERVER = URL+"cmp/fotos/";
+    public static final String USER_PHOTO_SERVER = URL+"Users/foto/";
     public static final String DATEPICKER_TAG = "datepicker";
     public static final String DOT_JPG = ".jpg";
-
 
     public static final String API_AGENT = "/agents";
     public static final String API_UBIGEO = "/ubigeos";
@@ -19,7 +19,7 @@ public class Constants {
     public static final String API_PRODUCT = "/products";
     public static final String API_SPECIALTY = "/specialties";
     public static final String API_INSTITUTION = "/institutions";
-    public static final String API_ATTENTION_TYPE = "/attention_types";
+    public static final String API_ATTENTION_TYPE = "/attentionTypes";
 
     public static final String CMP_FIELD = "cmp: ";
     public static final String DNI_FIELD = "Dni: ";
@@ -46,12 +46,14 @@ public class Constants {
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
 
+    public static final String ID_KEY ="idKey";
+
     public static final String DOCTORS = "Médicos";
     public static final String CYCLE_LOADED = "cycle_loaded";
     public static final String SPECIALTY_ID = "specialty_id";
     public static final String TRACKING_UUID = "tracking_uuid";
     public static final String TRACKING_CODE = "tracking_code";
-    public static final String IMEI_TEST = "98876876876876876";
+    public static final String IMEI_TEST = "100";
     public static final String INSTITUTION_NAME = "institution_name";
 
     public static final String ELLIPSIS = "...";
@@ -113,4 +115,5 @@ public class Constants {
     public static final String QTY_MAX_B = "qty_max_b";
     public static final String STOCK_MIN= "stock_min";
     public static final String STOCK_MAX = "stock_max";
+    public static final String ID_USUARIO = "idUsuario";
 }

@@ -23,25 +23,24 @@ import util.Constants;
 
 public class AddAgentActivity extends AppCompatActivity {
 
+    @Bind(R.id.agent_add)
+    protected Button agentAdd;
+    @Bind(R.id.agent_cancel)
+    protected Button agentCancel;
     @Bind(R.id.toolbar)
     protected Toolbar toolbar;
     @Bind(R.id.agent_agent_autocompleter)
-    AutoCompleteTextView agentAgent;
+    protected AutoCompleteTextView agentAgent;
     @Bind(R.id.agent_institution_autocompleter)
-    AutoCompleteTextView agentInstitution;
-    @Bind(R.id.agent_add)
-    Button agentAdd;
-    @Bind(R.id.agent_cancel)
-    Button agentCancel;
-
-    private AgentAutocompleterAdapter adapterAgent;
-    private InstitutionAutocompleterAdapter adapterInstitution;
+    protected AutoCompleteTextView agentInstitution;
 
     private Realm realm;
     private Agent agent;
     private Institution institution;
+    private AgentAutocompleterAdapter adapterAgent;
+    private InstitutionAutocompleterAdapter adapterInstitution;
 
-    SharedPreferences settings;
+    private SharedPreferences settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -16,7 +16,6 @@ public class Institution extends RealmObject {
     private String address;
     private float latitude;
     private float longitude;
-    private boolean active;
     private RealmList<Doctor> doctors;
 
     public int getId() {
@@ -65,14 +64,6 @@ public class Institution extends RealmObject {
 
     public void setLongitude(float longitude) {
         this.longitude = longitude;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
     }
 
     public RealmList<Doctor> getDoctors() {

@@ -11,6 +11,10 @@ import util.Constants;
  */
 public class Product extends RealmObject {
 
+    /*
+    * {"id":1,"code":1286,"name":"MM- INCORIL 60MG X 30 CP MM","qty_min":0,"qty_max":0,"bonus":2,
+    * "qty_max_a":10,"qty_max_b":5,"stock_min":0,"stock_max":0}
+    * */
     @PrimaryKey
     private int id;
     private String code;

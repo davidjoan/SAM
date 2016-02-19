@@ -20,11 +20,13 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -55,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private Realm realm;
     private TextView userName;
     private TextView userCode;
+    private TextView userRole;
+    private ImageView avatar;
     private FragmentManager fragmentManager;
     private ActionBarDrawerToggle drawerToggle;
 
@@ -96,6 +100,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         userName.setText(user.getName());
         userCode = (TextView) header.findViewById(R.id.NavUserCode);
         userCode.setText(user.getCode());
+
+        avatar = (ImageView) header.findViewById(R.id.avatar);
+
+        Picasso.with(this).
+                load(new StringBuilder().append(Constants.USER_PHOTO_SERVER).
+                        append(user.getCode()).
+                        append(Constants.DOT_JPG).toString()).
+                error(R.drawable.avatar).
+                into(avatar);
+
+        userRole = (TextView) header.findViewById(R.id.NavUserRole);
+        userRole.setText(user.getRole());
 
         SharedPreferences settings = getSharedPreferences(Constants.PREFERENCES_SAM, 0);
         String session = settings.getString(Constants.SESSION, Constants.EMPTY);
