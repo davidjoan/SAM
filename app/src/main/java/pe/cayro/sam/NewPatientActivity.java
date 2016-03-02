@@ -89,7 +89,7 @@ public class NewPatientActivity extends AppCompatActivity {
         }else{
             patient = new Patient();
             patient.setUuid(UUID.randomUUID().toString());
-
+            patient.setSent(false);
         }
 
         user =realm.where(User.class).findFirst();
@@ -166,10 +166,12 @@ public class NewPatientActivity extends AppCompatActivity {
 
                         patient.setPhone(patientPhone.getText().toString());
                         patient.setEmail(patientEmail.getText().toString());
-                        patient.setCreatedAt(new Date());
-                        patient.setActive(false);
+
+                        patient.setActive(Boolean.TRUE);
+                        patient.setSent(Boolean.FALSE);
                         patient.setUser(user);
                         patient.setUserId(user.getId());
+                        patient.setCreatedAt(new Date());
 
                         if(ubigeo != null){
                             patient.setUbigeoId(ubigeo.getId());

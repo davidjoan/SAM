@@ -28,8 +28,8 @@ public class Record extends RealmObject {
     private String serial;
     private int institutionOriginId;
     private boolean sent;
+    private boolean active;
     private Date createdAt;
-    private Date updatedAt;
 
     private User user;
     private Patient patient;
@@ -218,14 +218,6 @@ public class Record extends RealmObject {
         this.createdAt = createdAt;
     }
 
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
     public RealmList<RecordDetail> getRecordDetails() {
         return recordDetails;
     }
@@ -240,6 +232,14 @@ public class Record extends RealmObject {
 
     public void setSent(boolean sent) {
         this.sent = sent;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public int getUbigeoId() {

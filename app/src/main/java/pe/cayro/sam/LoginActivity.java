@@ -122,6 +122,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     tracking.setCreatedAt(new Date());
                     tracking.setUserId(user.getId());
                     tracking.setInstitution(institution);
+                    tracking.setSent(false);
 
                     if(mLastLocation != null){
                         tracking.setLatitude(mLastLocation.getLatitude());

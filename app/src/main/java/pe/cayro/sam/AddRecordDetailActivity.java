@@ -117,6 +117,11 @@ public class AddRecordDetailActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
 
+                if(recordDetailProduct.getText().length() == 0){
+                    recordDetailQty.setText("");
+                    recordDetailQtyCalculated.setText("");
+                }
+
             }
         });
 
@@ -362,6 +367,8 @@ public class AddRecordDetailActivity extends AppCompatActivity {
                     recordDetail.setUuid(UUID.randomUUID().toString());
                     recordDetail.setQty(Integer.valueOf(recordDetailQty.getText().toString()).intValue());
                     recordDetail.setQtyCalculated(Float.valueOf(recordDetailQtyCalculated.getText().toString()).floatValue());
+                    recordDetail.setSent(true);
+                    recordDetail.setActive(true);
 
                     realm.copyToRealm(recordDetail);
                     record.getRecordDetails().add(recordDetail);

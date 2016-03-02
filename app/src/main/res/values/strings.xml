@@ -3,13 +3,14 @@
     <string name="title_activity_main">SAM</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Config.</string>
 
     <string name="drawer_open">Abrir</string>
     <string name="drawer_close">Cerrar</string>
     <string name="title_activity_welcome">SAM</string>
     <string name="text_logo">SAM</string>
     <string name="loading_app">Iniciando Aplicación</string>
+    <string name="updating_app">Actualizando  Aplicación</string>
     <string name="login_success">Datos Cargados Correctamente</string>
     <string name="title_activity_maps">Mapa</string>
     <string name="title_activity_login">Inicio de Sesión</string>
@@ -105,4 +106,7 @@
     <string name="title_activity_show_record">Comprobante Registrado</string>
     <string name="patient_agent_field">Representante</string>
     <string name="patient_institution_field">Institución</string>
+    <string name="title_activity_syncronization">Sincronización</string>
+    <string name="send_date">Enviar Datos</string>
+    <string name="receive_data">Recibir Datos</string>
 </resources>

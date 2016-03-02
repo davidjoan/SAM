@@ -14,12 +14,15 @@ public class Constants {
     public static final String DOT_JPG = ".jpg";
 
     public static final String API_AGENT = "/agents";
+    public static final String API_PATIENT = "/patients";
     public static final String API_UBIGEO = "/ubigeos";
     public static final String API_DOCTOR = "/doctors";
     public static final String API_PRODUCT = "/products";
     public static final String API_SPECIALTY = "/specialties";
     public static final String API_INSTITUTION = "/institutions";
     public static final String API_ATTENTION_TYPE = "/attentionTypes";
+
+
 
     public static final String CMP_FIELD = "cmp: ";
     public static final String DNI_FIELD = "Dni: ";
@@ -86,6 +89,7 @@ public class Constants {
     public static final String LOADING_AGENTS = "Cargando Representantes";
     public static final String LOADING_SPECIALTIES = "Cargando Especialidades";
     public static final String LOADING_INSTITUTIONS = "Cargando Instituciones";
+    public static final String LOADING_PATIENTS = "Cargando Pacientes";
 
     public static final String LOADING_ATTENTION_TYPES = "Cargando Tipo Atenciones";
 
@@ -116,4 +120,13 @@ public class Constants {
     public static final String STOCK_MIN= "stock_min";
     public static final String STOCK_MAX = "stock_max";
     public static final String ID_USUARIO = "idUsuario";
+
+    public static final String CREATED_AT = "created_at";
+    public static final String USER_ID = "user_id";
+    public static final String ONE = "1";
+    public static final String ZERO = "0";
+    public static final String SENT = "sent";
+    public static final String UBIGEO_ID = "ubigeo_id";
+
+    public static final String ID_RESULT = "idResult";
 }

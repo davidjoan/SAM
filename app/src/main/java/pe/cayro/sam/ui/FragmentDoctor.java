@@ -240,8 +240,6 @@ public class FragmentDoctor extends Fragment {
                     Toast.makeText(getActivity(), "El médico no puede modificarse",
                             Toast.LENGTH_SHORT).show();
                 }
-
-
             }
         }
     }

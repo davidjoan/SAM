@@ -1,5 +1,7 @@
 package pe.cayro.sam.model;
 
+import java.util.Date;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -16,6 +18,9 @@ public class RecordDetail extends RealmObject {
     private float qtyCalculated;
     private Record record;
     private Product product;
+    private boolean sent;
+    private boolean active;
+    private Date createdAt;
 
     public String getUuid() {
         return uuid;
@@ -71,5 +76,29 @@ public class RecordDetail extends RealmObject {
 
     public void setQtyCalculated(float qtyCalculated) {
         this.qtyCalculated = qtyCalculated;
+    }
+
+    public boolean isSent() {
+        return sent;
+    }
+
+    public void setSent(boolean sent) {
+        this.sent = sent;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 }

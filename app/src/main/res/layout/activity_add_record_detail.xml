@@ -78,7 +78,7 @@
         </android.support.design.widget.TextInputLayout>
 
         <ImageButton
-            android:src="@drawable/fa_alert"
+            android:src="@drawable/fa_danger"
             android:layout_height="50dp"
             android:visibility="gone"
             android:layout_width="50dp"

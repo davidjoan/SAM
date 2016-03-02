@@ -1,11 +1,15 @@
 package pe.cayro.sam;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -37,6 +41,7 @@ import butterknife.ButterKnife;
 import io.realm.Realm;
 import pe.cayro.sam.model.Tracking;
 import pe.cayro.sam.model.User;
+import pe.cayro.sam.service.SamAlarmReceiver;
 import pe.cayro.sam.ui.FragmentInstitution;
 import pe.cayro.sam.ui.FragmentReport;
 import pe.cayro.sam.ui.FragmentTracking;
@@ -131,6 +136,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             intent.putExtra(Constants.UUID, tempTracking.getUuid());
             MainActivity.this.startActivity(intent);
         }
+
+
+
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
@@ -239,20 +247,27 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         int id = item.getItemId();
 
-        if (id == R.id.action_map) {
-            Intent intent = new Intent(MainActivity.this, MapsActivity.class);
-            startActivity(intent);
+        switch (id){
+            case R.id.action_map:
+                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.action_close_break:
+                changeSnack(false);
+                break;
+            case R.id.action_open_break:
+                changeSnack(true);
+                break;
+            case R.id.action_send_data:
+                registerAlarm(getApplicationContext());
+                break;
+            case R.id.action_receive_data:
+                Intent intentReceiveData = new Intent(MainActivity.this, UpdateDataActivity.class);
+                startActivity(intentReceiveData);
+                finish();
+                break;
         }
 
-        if (id == R.id.action_close_break) {
-            changeSnack(false);
-
-        }
-
-        if (id == R.id.action_open_break) {
-            changeSnack(true);
-
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -281,6 +296,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
                 tracking.setCreatedAt(new Date());
                 tracking.setUserId(user.getId());
+                tracking.setSent(Boolean.FALSE);
 
                 if (mLastLocation != null) {
                     tracking.setLatitude(mLastLocation.getLatitude());
@@ -369,7 +385,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             Log.i(TAG, Constants.LATITUDE + String.valueOf(mLastLocation.getLatitude()));
             Log.i(TAG, Constants.LONGITUDE + String.valueOf(mLastLocation.getLongitude()));
         } else {
-            Log.i(TAG,Constants.GPS_DISABLED);
+            Log.i(TAG, Constants.GPS_DISABLED);
         }
     }
 
@@ -382,5 +398,22 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     public void onConnectionFailed(ConnectionResult result) {
         Log.i(TAG, Constants.CONNECTION_FAILED + result.getErrorCode());
+    }
+
+    public static void registerAlarm(Context context) {
+        Intent i = new Intent(context, SamAlarmReceiver.class);
+
+        PendingIntent sender = PendingIntent.getBroadcast(context,1, i, 0);
+
+        long firstTime = SystemClock.elapsedRealtime();
+        firstTime += 3 * 1000;//start 3 seconds after first register.
+        long range = 10 * 60 * 1000;//execute every 10 minutes.
+
+        AlarmManager am = (AlarmManager) context
+                .getSystemService(ALARM_SERVICE);
+
+        am.cancel(sender);
+        am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstTime,
+                range, sender);
     }
 }

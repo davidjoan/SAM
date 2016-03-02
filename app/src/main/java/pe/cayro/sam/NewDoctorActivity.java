@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Date;
 import java.util.UUID;
 
 import butterknife.Bind;
@@ -76,7 +77,8 @@ public class NewDoctorActivity extends AppCompatActivity {
         }else{
             doctor = new Doctor();
             doctor.setUuid(UUID.randomUUID().toString());
-            doctor.setActive(false);
+            doctor.setSent(false);
+            doctor.setCreatedAt(new Date());
         }
 
         setSupportActionBar(toolbar);
@@ -153,9 +155,11 @@ public class NewDoctorActivity extends AppCompatActivity {
                         doctor.setLastname(doctorLastname.getText().toString());
                         doctor.setSurname(doctorSurname.getText().toString());
                         doctor.setScore("X");
-
+                        doctor.setCreatedAt(new Date());
                         doctor.setSpecialty(specialty);
                         doctor.setSpecialtyId(specialty.getId());
+                        doctor.setSent(Boolean.FALSE);
+                        doctor.setActive(Boolean.TRUE);
 
                         realm.copyToRealmOrUpdate(doctor);
                         realm.commitTransaction();

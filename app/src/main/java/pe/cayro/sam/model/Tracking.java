@@ -1,9 +1,12 @@
 package pe.cayro.sam.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import util.Constants;
 
 /**
  * Created by David on 11/01/16.
@@ -12,10 +15,14 @@ public class Tracking extends RealmObject {
 
     @PrimaryKey
     private String uuid;
+    @SerializedName(Constants.INSTITUTION_ID)
     private int institutionId;
+    @SerializedName(Constants.USER_ID)
     private int userId;
     private int code;
     private String type;
+    private boolean sent;
+    @SerializedName(Constants.CREATED_AT)
     private Date createdAt;
     private double latitude;
     private double longitude;
@@ -60,6 +67,14 @@ public class Tracking extends RealmObject {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public boolean isSent() {
+        return sent;
+    }
+
+    public void setSent(boolean sent) {
+        this.sent = sent;
     }
 
     public Date getCreatedAt() {

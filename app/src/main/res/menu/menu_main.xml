@@ -5,4 +5,14 @@
     <item android:id="@+id/action_map" android:title="@string/map"
         android:icon="@android:drawable/ic_dialog_map"
         android:orderInCategory="100" app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_send_data"
+        android:title="@string/send_date"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_receive_data"
+        android:title="@string/receive_data"
+        app:showAsAction="never"/>
 </menu>

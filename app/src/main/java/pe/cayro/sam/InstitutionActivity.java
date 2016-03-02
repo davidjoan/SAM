@@ -270,6 +270,7 @@ public class InstitutionActivity extends AppCompatActivity implements GoogleApiC
                 tracking.setCreatedAt(new Date());
                 tracking.setUserId(user.getId());
                 tracking.setInstitution(institution);
+                tracking.setSent(Boolean.FALSE);
 
                 if(mLastLocation != null){
                     tracking.setLatitude(mLastLocation.getLatitude());
@@ -317,6 +318,7 @@ public class InstitutionActivity extends AppCompatActivity implements GoogleApiC
                 tracking.setCreatedAt(new Date());
                 tracking.setUserId(user.getId());
                 tracking.setInstitution(institution);
+                tracking.setSent(Boolean.FALSE);
 
                 if(mLastLocation != null){
                     tracking.setLatitude(mLastLocation.getLatitude());

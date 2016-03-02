@@ -93,7 +93,9 @@ public class FragmentRecords extends Fragment {
         tracking = realm.where(Tracking.class).equalTo(Constants.UUID, trackingUuid).findFirst();
 
         result = realm.where(Record.class).
-                equalTo("institutionId", tracking.getInstitutionId()).findAll();
+                equalTo("institutionId", tracking.getInstitutionId()).
+                equalTo("active", Boolean.TRUE).
+                findAll();
 
         result.sort("recordDate", Sort.DESCENDING);
 
@@ -138,7 +140,10 @@ public class FragmentRecords extends Fragment {
 
                                 Record record = realm.where(Record.class).
                                         equalTo(Constants.UUID, temp.uuid).findFirst();
-                                record.removeFromRealm();
+                                //record.removeFromRealm();
+                                record.setActive(Boolean.FALSE);
+                                record.setSent(Boolean.FALSE);
+
                                 realm.commitTransaction();
                                 refreshRecordUi();
                             }
@@ -196,7 +201,9 @@ public class FragmentRecords extends Fragment {
                 public boolean onQueryTextSubmit(String data) {
                     if (!TextUtils.isEmpty(data)) {
                         result = realm.where(Record.class).
-                                equalTo("institutionId",tracking.getInstitutionId()).beginGroup()
+                                equalTo("institutionId", tracking.getInstitutionId()).
+                                equalTo("active", Boolean.TRUE).
+                                beginGroup()
                                 .contains("doctor.firstname", data.toUpperCase())
                                 .or()
                                 .contains("doctor.lastname", data.toUpperCase())
@@ -267,7 +274,6 @@ public class FragmentRecords extends Fragment {
 
             viewHolder.doctor.setText(
                     new StringBuilder().
-                            //append(Constants.DOCTOR_ABR).
                             append(item.getDoctor().getFirstname()).
                             append(Constants.SPACE).
                             append(item.getDoctor().getLastname()).
@@ -317,6 +323,12 @@ public class FragmentRecords extends Fragment {
             viewHolder.institution.setText(Constants.INSTITUTION_LABEL+
                     item.getInstitutionOrigin().getName());
 
+            if(item.isSent()){
+                viewHolder.sent.setImageResource(R.drawable.sync_on);
+            }else{
+                viewHolder.sent.setImageResource(R.drawable.sync_off);
+            }
+
             viewHolder.uuid = item.getUuid();
             viewHolder.itemView.setTag(item);
         }
@@ -330,6 +342,7 @@ public class FragmentRecords extends Fragment {
                 implements RecyclerView.OnClickListener {
 
             public ImageView image;
+            public ImageView sent;
             public TextView doctor;
             public TextView code;
             public TextView mm;
@@ -348,6 +361,7 @@ public class FragmentRecords extends Fragment {
                 attentionType = (TextView) itemView.findViewById(R.id.record_attention_type);
                 date = (TextView) itemView.findViewById(R.id.record_date);
                 image = (ImageView) itemView.findViewById(R.id.record_image);
+                sent = (ImageView) itemView.findViewById(R.id.record_sent);
                 institution = (TextView) itemView.findViewById(R.id.record_institution);
                 itemView.setOnClickListener(this);
             }
@@ -379,7 +393,9 @@ public class FragmentRecords extends Fragment {
     public void refreshRecordUi(){
 
         result = realm.where(Record.class).
-                equalTo("institutionId", tracking.getInstitutionId()).findAll();
+                equalTo("institutionId", tracking.getInstitutionId()).
+                equalTo("active", Boolean.TRUE).
+                findAll();
         result.sort("recordDate", Sort.DESCENDING);
         mAdapter.setData(result);
         mAdapter.notifyDataSetChanged();

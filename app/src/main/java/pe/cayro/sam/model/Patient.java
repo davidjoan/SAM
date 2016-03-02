@@ -1,18 +1,20 @@
 package pe.cayro.sam.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import util.Constants;
 
-/**
- * Created by David on 12/01/16.
- */
 public class Patient extends RealmObject {
 
     @PrimaryKey
     private String uuid;
+    @SerializedName(Constants.USER_ID)
     private int userId;
+    @SerializedName(Constants.UBIGEO_ID)
     private int ubigeoId;
     private String code;
     private String firstname;
@@ -21,8 +23,11 @@ public class Patient extends RealmObject {
     private String address;
     private String phone;
     private String email;
-    private Date createdAt;
     private boolean active;
+    private boolean sent;
+
+    @SerializedName(Constants.CREATED_AT)
+    private Date createdAt;
 
 
     private Ubigeo ubigeo;
@@ -138,5 +143,13 @@ public class Patient extends RealmObject {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public boolean isSent() {
+        return sent;
+    }
+
+    public void setSent(boolean sent) {
+        this.sent = sent;
     }
 }

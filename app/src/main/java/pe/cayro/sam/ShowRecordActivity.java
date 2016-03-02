@@ -112,7 +112,7 @@ public class ShowRecordActivity extends AppCompatActivity {
 
         code.setText(String.valueOf(record.getCode()));
 
-        SimpleDateFormat formatter = new SimpleDateFormat(Constants.FORMAT_DATETIME_SLASH);
+        SimpleDateFormat formatter = new SimpleDateFormat(Constants.FORMAT_DATE_SLASH);
         String dateFormat = formatter.format(record.getRecordDate());
         date.setText(dateFormat);
 

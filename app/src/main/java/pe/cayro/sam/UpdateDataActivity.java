@@ -35,8 +35,8 @@ import pe.cayro.sam.model.User;
 import pe.cayro.sam.service.SamAlarmReceiver;
 import util.Constants;
 
-public class WelcomeActivity extends AppCompatActivity {
-    private static String TAG = WelcomeActivity.class.getSimpleName();
+public class UpdateDataActivity extends AppCompatActivity {
+    private static String TAG = UpdateDataActivity.class.getSimpleName();
     private static final int SPLASH_DURATION = 1500;
 
     @Bind(R.id.logo_sam)
@@ -54,7 +54,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
         progress = new ProgressDialog(this);
 
-        Snackbar.make(logo, R.string.loading_app, Snackbar.LENGTH_LONG)
+        Snackbar.make(logo, R.string.updating_app, Snackbar.LENGTH_LONG)
                 .setAction(Constants.ACTION, null)
                 .show();
 
@@ -63,21 +63,13 @@ public class WelcomeActivity extends AppCompatActivity {
             @Override
             public void run() {
 
-                SharedPreferences settings = getSharedPreferences(Constants.PREFERENCES_SAM, 0);
-                String cycleLoaded = settings.getString(Constants.CYCLE_LOADED, "");
+                progress.setCancelable(false);
+                progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                progress.setMax(10);
+                progress.setMessage(Constants.SINCRONIZATION);
+                progress.show();
+                new LoginAsyncTask(getApplicationContext()).execute(Constants.EMPTY);
 
-                if (cycleLoaded.equals(Constants.YES)) {
-                    Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
-                    WelcomeActivity.this.startActivity(intent);
-                    finish();
-                } else {
-                    progress.setCancelable(false);
-                    progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                    progress.setMax(10);
-                    progress.setMessage(Constants.SINCRONIZATION);
-                    progress.show();
-                    new LoginAsyncTask(getApplicationContext()).execute(Constants.EMPTY);
-                }
             }
         }, SPLASH_DURATION);
     }
@@ -131,11 +123,8 @@ public class WelcomeActivity extends AppCompatActivity {
 
             this.publishProgress(Constants.OBTAINING_IMEI);
 
-            //
-            //Replace for implement in production enable the following lines of code
-            //String imei = Constants.IMEI_TEST;
-            //
             Log.i(TAG, telephonyManager.getDeviceId());
+
             String imei = telephonyManager.getDeviceId();
 
             Realm realm = Realm.getDefaultInstance();
@@ -143,15 +132,6 @@ public class WelcomeActivity extends AppCompatActivity {
             try{
 
                 realm.beginTransaction();
-                realm.clear(Institution.class);
-                realm.clear(AttentionType.class);
-                realm.clear(User.class);
-                realm.clear(Specialty.class);
-                realm.clear(Product.class);
-                realm.clear(Doctor.class);
-                realm.clear(Agent.class);
-                realm.clear(Ubigeo.class);
-                realm.clear(Patient.class);
 
                 this.publishProgress(Constants.LOADING_USERS);
                 List<User> users = RestClient.get().getUserByImei(imei);
@@ -237,16 +217,14 @@ public class WelcomeActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     if (!mIsBackButtonPressed) {
-                        Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
-                        WelcomeActivity.this.startActivity(intent);
+                        Intent intent = new Intent(UpdateDataActivity.this, MainActivity.class);
+                        UpdateDataActivity.this.startActivity(intent);
                         finish();
                     }
                 }
             }, SPLASH_DURATION);
         }
     }
-
-
 
     public static void registerAlarm(Context context) {
         Intent i = new Intent(context, SamAlarmReceiver.class);
@@ -264,6 +242,4 @@ public class WelcomeActivity extends AppCompatActivity {
         am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstTime,
                 range, sender);
     }
-
-
 }

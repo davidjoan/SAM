@@ -2,6 +2,8 @@ package pe.cayro.sam.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import util.Constants;
@@ -21,6 +23,10 @@ public class Doctor extends RealmObject {
     private int specialtyId;
     private String score;
     private boolean active;
+    private boolean sent;
+
+    @SerializedName(Constants.CREATED_AT)
+    private Date createdAt;
 
     private Specialty specialty;
 
@@ -94,5 +100,21 @@ public class Doctor extends RealmObject {
 
     public void setSpecialty(Specialty specialty) {
         this.specialty = specialty;
+    }
+
+    public boolean isSent() {
+        return sent;
+    }
+
+    public void setSent(boolean sent) {
+        this.sent = sent;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 }

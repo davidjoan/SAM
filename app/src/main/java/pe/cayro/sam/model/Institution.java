@@ -1,6 +1,5 @@
 package pe.cayro.sam.model;
 
-import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -16,7 +15,6 @@ public class Institution extends RealmObject {
     private String address;
     private float latitude;
     private float longitude;
-    private RealmList<Doctor> doctors;
 
     public int getId() {
         return id;
@@ -64,13 +62,5 @@ public class Institution extends RealmObject {
 
     public void setLongitude(float longitude) {
         this.longitude = longitude;
-    }
-
-    public RealmList<Doctor> getDoctors() {
-        return doctors;
-    }
-
-    public void setDoctors(RealmList<Doctor> doctors) {
-        this.doctors = doctors;
     }
 }

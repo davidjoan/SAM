@@ -54,6 +54,7 @@ public class RestClient {
                 .setLogLevel(RestAdapter.LogLevel.FULL);
 
         RestAdapter restAdapter = builder.build();
+
         REST_CLIENT = restAdapter.create(Api.class);
     }
 }

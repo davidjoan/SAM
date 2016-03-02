@@ -551,7 +551,8 @@ public class NewRecordActivity extends AppCompatActivity {
             record.setInstitutionOrigin(tracking.getInstitution());
             record.setUserId(tracking.getUserId());
             record.setUser(user);
-
+            record.setSent(Boolean.FALSE);
+            record.setActive(Boolean.TRUE);
             record.setRecordDate(start.getTime());
             record.setSaleDate(sale.getTime());
 
@@ -560,7 +561,7 @@ public class NewRecordActivity extends AppCompatActivity {
                 record.setUbigeoId(ubigeo.getId());
             }
             record.setCreatedAt(new Date());
-            record.setUpdatedAt(new Date());
+           // record.setUpdatedAt(new Date());
 
             if(patient != null){
                 record.setPatient(patient);
