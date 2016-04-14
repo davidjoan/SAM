@@ -56,7 +56,7 @@ public class Constants {
     public static final String SPECIALTY_ID = "specialty_id";
     public static final String TRACKING_UUID = "tracking_uuid";
     public static final String TRACKING_CODE = "tracking_code";
-    public static final String IMEI_TEST = "100";
+    public static final String IMEI_TEST = "000000000000000";
     public static final String INSTITUTION_NAME = "institution_name";
 
     public static final String ELLIPSIS = "...";
@@ -129,4 +129,5 @@ public class Constants {
     public static final String UBIGEO_ID = "ubigeo_id";
 
     public static final String ID_RESULT = "idResult";
+    public static final String DNI_DEFAULT = "00000000";
 }

@@ -24,6 +24,7 @@ public class DoctorSerializer implements JsonSerializer<Doctor> {
 
         final JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("uuid", src.getUuid());
+        jsonObject.addProperty("user_id", src.getUserId());
         jsonObject.addProperty("code", src.getCode());
         jsonObject.addProperty("firstname", src.getFirstname());
         jsonObject.addProperty("lastname", src.getLastname());
@@ -35,7 +36,6 @@ public class DoctorSerializer implements JsonSerializer<Doctor> {
         if(src.getCreatedAt() != null){
             jsonObject.addProperty("created_at", sdf.format(src.getCreatedAt()));
         }
-
 
         return jsonObject;
     }

@@ -274,6 +274,8 @@ public class NewRecordActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
                 if(recordPatient.getText().length() == 0){
                     patient = null;
+                    record.setPatient(null);
+                    record.setPatientUuid(null);
                 }
             }
         });
@@ -453,7 +455,12 @@ public class NewRecordActivity extends AppCompatActivity {
         int errors = 0;
         if(recordCode.getText().length() == 0){
             errors++;
-            recordCode.setError("El codigo no puede estar vacio");
+            recordCode.setError("El Código no puede estar vacio");
+        }
+
+        if(recordCode.getText().length() > 9){
+            errors++;
+            recordCode.setError("El Código no puede ser demasiado largo.");
         }
 
         switch (attentionType.getId()){
@@ -563,8 +570,8 @@ public class NewRecordActivity extends AppCompatActivity {
             record.setCreatedAt(new Date());
            // record.setUpdatedAt(new Date());
 
+            record.setPatient(patient);
             if(patient != null){
-                record.setPatient(patient);
                 record.setPatientUuid(patient.getUuid());
             }
 

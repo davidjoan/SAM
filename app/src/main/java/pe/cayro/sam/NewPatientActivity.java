@@ -138,17 +138,23 @@ public class NewPatientActivity extends AppCompatActivity {
                     patientCode.setError("El DNI debe tener 8 digitos");
                 }
 
-                Patient tempPatient = realm.where(Patient.class)
-                        .equalTo(Constants.CODE, patientCode.getText().toString()).findFirst();
+                if(!patientCode.getText().toString().equals(Constants.DNI_DEFAULT)){
 
-                if(tempPatient != null){
+                    Patient tempPatient = realm.where(Patient.class)
+                            .equalTo(Constants.CODE, patientCode.getText().toString()).findFirst();
 
-                    if(!patient.getUuid().equalsIgnoreCase(tempPatient.getUuid())){
-                        countErrors++;
-                        patientCode.setError("Ya existe un paciente con este DNI");
+                    if(tempPatient != null){
+
+                        if (!patient.getUuid().equals(tempPatient.getUuid())){
+                            countErrors++;
+                            patientCode.setError("Ya existe un paciente con este DNI");
+                        }
+
                     }
 
                 }
+
+
 
                 if(countErrors == 0){
 

@@ -15,6 +15,8 @@ public class Doctor extends RealmObject {
 
     @PrimaryKey
     private String uuid;
+    @SerializedName(Constants.USER_ID)
+    private int userId;
     private String code;
     private String firstname;
     private String lastname;
@@ -36,6 +38,14 @@ public class Doctor extends RealmObject {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getCode() {

@@ -284,13 +284,18 @@ public class FragmentRecords extends Fragment {
                 viewHolder.patient.setText(R.string.record_whitout_patient);
 
             }else{
-                viewHolder.patient.setText(
-                        new StringBuilder().append(Constants.PATIENT_ABR).
-                                append(item.getPatient().getFirstname()).
-                                append(Constants.SPACE).append(item.getPatient()
-                                .getLastname()).
-                                append(Constants.SPACE).append(item.getPatient()
-                                .getSurname()).toString());
+
+                if(item.getPatient() == null){
+                    viewHolder.patient.setText(R.string.record_whitout_patient);
+                }else{
+                    viewHolder.patient.setText(
+                            new StringBuilder().append(Constants.PATIENT_ABR).
+                                    append(item.getPatient().getFirstname()).
+                                    append(Constants.SPACE).append(item.getPatient()
+                                    .getLastname()).
+                                    append(Constants.SPACE).append(item.getPatient()
+                                    .getSurname()).toString());
+                }
             }
 
             viewHolder.attentionType.setText(item.getAttentionType().getName());

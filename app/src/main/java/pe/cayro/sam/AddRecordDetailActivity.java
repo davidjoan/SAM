@@ -92,14 +92,12 @@ public class AddRecordDetailActivity extends AppCompatActivity {
 
         realm = Realm.getDefaultInstance();
 
-        record = realm.where(Record.class).equalTo(Constants.UUID,recordUuid).findFirst();
+        record = realm.where(Record.class).equalTo(Constants.UUID, recordUuid).findFirst();
 
-        recordDetails = realm.where(RecordDetail.class).equalTo("recordUuid",recordUuid).findAll();
+        recordDetails = realm.where(RecordDetail.class).equalTo("recordUuid", recordUuid).findAll();
 
         if(record.getAttentionTypeId() == 2){
-
             recordDetailQtyCalculated.setVisibility(View.VISIBLE);
-
         }else{
             recordDetailQtyCalculated.setVisibility(View.GONE);
         }
@@ -370,9 +368,9 @@ public class AddRecordDetailActivity extends AppCompatActivity {
                     recordDetail.setSent(true);
                     recordDetail.setActive(true);
 
-                    realm.copyToRealm(recordDetail);
+                    realm.copyToRealmOrUpdate(recordDetail);
                     record.getRecordDetails().add(recordDetail);
-                    realm.copyToRealm(record);
+                    realm.copyToRealmOrUpdate(record);
                     realm.commitTransaction();
 
                     recordDetailProduct.setText("");

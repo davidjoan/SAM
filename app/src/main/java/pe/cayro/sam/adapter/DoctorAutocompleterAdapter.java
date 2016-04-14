@@ -1,7 +1,6 @@
 package pe.cayro.sam.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +40,7 @@ public class DoctorAutocompleterAdapter extends ArrayAdapter<String> implements 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         String uuid = getItem(position);
-        Log.d(TAG, uuid);
+        //Log.d(TAG, uuid);
 
         /* TODO: Check if exist another way to load a information of doctor using Realm. */
         Realm realm = Realm.getDefaultInstance();
@@ -91,28 +90,24 @@ public class DoctorAutocompleterAdapter extends ArrayAdapter<String> implements 
 
                 Realm  realm = Realm.getDefaultInstance();
 
-                RealmResults<Doctor> realmResults = realm.where(Doctor.class).beginGroup().
-                        contains(Constants.FIRSTNAME, constraint.toString().toUpperCase()).or().
-                        contains(Constants.LASTNAME, constraint.toString().toUpperCase()).or().
-                        contains(Constants.SURNAME, constraint.toString().toUpperCase()).or().
-                        contains(Constants.CODE, constraint.toString().toUpperCase()).
-                        endGroup().findAll();
+                if(constraint != null) {
+                    RealmResults<Doctor> realmResults = realm.where(Doctor.class).beginGroup().
+                            contains(Constants.FIRSTNAME, constraint.toString().toUpperCase()).or().
+                            contains(Constants.LASTNAME, constraint.toString().toUpperCase()).or().
+                            contains(Constants.SURNAME, constraint.toString().toUpperCase()).or().
+                            contains(Constants.CODE, constraint.toString().toUpperCase()).
+                            endGroup().
+                            findAll();
 
+                    int counter = 0;
 
-                /*
-                * RealmResults<Record> result = realm.where(Record.class).beginGroup()
-                                .contains("doctor.name", data)
-                                .or()
-                                .contains("patient.name", data)
-                                .or()
-                                .contains("doctor.code", data)
-                                .or()
-                                .contains("patient.code", data)
-                                .endGroup().findAll();
-                * */
-
-                for(Doctor doctor : realmResults){
-                    data.add(doctor.getUuid());
+                    for (Doctor doctor : realmResults) {
+                        counter++;
+                        data.add(doctor.getUuid());
+                        if (counter == 10) {
+                            break;
+                        }
+                    }
                 }
 
                 filterResults.values = data;

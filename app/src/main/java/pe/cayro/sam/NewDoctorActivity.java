@@ -109,6 +109,10 @@ public class NewDoctorActivity extends AppCompatActivity {
                     countErrors++;
                     doctorCode.setError("El Código CMP es requerido.");
                 }
+                if(doctorCode.getText().length() > 7){
+                    countErrors++;
+                    doctorCode.setError("El Código CMP es demasiado largo.");
+                }
                 if (doctorFirstname.getText().length() < 2) {
                     countErrors++;
                     doctorFirstname.setError("El Nombre es requerido.");
