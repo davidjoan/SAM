@@ -1,4 +1,4 @@
-package pe.cayro.sam;
+package pe.cayro.sam.v2;
 
 import org.junit.Test;
 

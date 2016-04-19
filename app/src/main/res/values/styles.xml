@@ -11,5 +11,9 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
+    <style name="SamTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="SamTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 
 </resources>

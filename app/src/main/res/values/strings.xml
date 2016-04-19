@@ -109,4 +109,6 @@
     <string name="title_activity_syncronization">Sincronización</string>
     <string name="send_date">Enviar Datos</string>
     <string name="receive_data">Recibir Datos</string>
+    <string name="title_activity_report_quote">Reporte Cuotas</string>
+    <string name="title_activity_report_detail_quote">Detalle de Avance de Cuota</string>
 </resources>

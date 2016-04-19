@@ -1,4 +1,4 @@
 <menu xmlns:tools="http://schemas.android.com/tools"
-    tools:context="pe.cayro.sam.LoginActivity">
+    tools:context="pe.cayro.sam.v2.LoginActivity">
 
 </menu>
