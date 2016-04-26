@@ -17,6 +17,11 @@
             android:title="@string/queries" />
 
         <item
+            android:id="@+id/nav_fourth_fragment"
+            android:icon="@drawable/fa_sync"
+            android:title="@string/special_movements" />
+
+        <item
             android:id="@+id/nav_five_fragment"
             android:icon="@drawable/fa_logout"
             android:title="@string/logout" />

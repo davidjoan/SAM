@@ -133,10 +133,13 @@ public class WelcomeActivity extends AppCompatActivity {
 
             //
             //Replace for implement in production enable the following lines of code
-            //String imei = Constants.IMEI_TEST;
             //
             Log.i(TAG, telephonyManager.getDeviceId());
+
             String imei = telephonyManager.getDeviceId();
+
+
+            //imei = Constants.IMEI_TEST;
 
             Realm realm = Realm.getDefaultInstance();
 

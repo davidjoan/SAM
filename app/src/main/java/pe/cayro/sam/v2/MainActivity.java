@@ -44,6 +44,7 @@ import pe.cayro.sam.v2.model.User;
 import pe.cayro.sam.v2.service.SamAlarmReceiver;
 import pe.cayro.sam.v2.ui.FragmentInstitution;
 import pe.cayro.sam.v2.ui.FragmentReport;
+import pe.cayro.sam.v2.ui.FragmentSpecialMovement;
 import pe.cayro.sam.v2.ui.FragmentTracking;
 import pe.cayro.sam.v2.util.Constants;
 
@@ -185,6 +186,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     break;
                 case R.id.nav_third_fragment:
                     fragment = FragmentReport.newInstance();
+                    break;
+                case R.id.nav_fourth_fragment:
+                    fragment = FragmentSpecialMovement.newInstance();
                     break;
                 case R.id.nav_five_fragment:
                     fragment = FragmentInstitution.newInstance();

@@ -11,16 +11,16 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name="pe.cayro.sam.v2.SamApplication"
+        android:name=".SamApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/SamTheme">
         <activity
-            android:name="pe.cayro.sam.v2.WelcomeActivity"
+            android:name=".WelcomeActivity"
             android:label="@string/title_activity_welcome">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,10 +29,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="pe.cayro.sam.v2.UpdateDataActivity"
+            android:name=".UpdateDataActivity"
             android:label="@string/title_activity_welcome" />
         <activity
-            android:name="pe.cayro.sam.v2.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/title_activity_main" />
 
         <meta-data
@@ -40,123 +40,141 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name="pe.cayro.sam.v2.MapsActivity"
+            android:name=".MapsActivity"
             android:label="@string/title_activity_maps">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pe.cayro.sam.v2.MainActivity" />
         </activity>
-        <activity android:name="pe.cayro.sam.v2.InstitutionMapActivity">
+        <activity android:name=".InstitutionMapActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pe.cayro.sam.v2.MainActivity" />
         </activity>
         <activity
-            android:name="pe.cayro.sam.v2.LoginActivity"
+            android:name=".LoginActivity"
             android:label="@string/title_activity_login"
-            android:parentActivityName="pe.cayro.sam.v2.MainActivity">
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pe.cayro.sam.v2.MainActivity" />
         </activity>
         <activity
-            android:name="pe.cayro.sam.v2.InstitutionActivity"
+            android:name=".InstitutionActivity"
             android:label="@string/title_activity_institution"
-            android:parentActivityName="pe.cayro.sam.v2.LoginActivity">
+            android:parentActivityName=".LoginActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pe.cayro.sam.v2.LoginActivity" />
         </activity>
         <activity
-            android:name="pe.cayro.sam.v2.NewRecordActivity"
+            android:name=".NewRecordActivity"
             android:label="@string/title_activity_new_record"
-            android:parentActivityName="pe.cayro.sam.v2.InstitutionActivity">
+            android:parentActivityName=".InstitutionActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pe.cayro.sam.v2.InstitutionActivity" />
         </activity>
         <activity
-            android:name="pe.cayro.sam.v2.NewPatientActivity"
+            android:name=".NewPatientActivity"
             android:label="@string/title_activity_new_patient"
-            android:parentActivityName="pe.cayro.sam.v2.InstitutionActivity">
+            android:parentActivityName=".InstitutionActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pe.cayro.sam.v2.InstitutionActivity" />
         </activity>
         <activity
-            android:name="pe.cayro.sam.v2.NewDoctorActivity"
+            android:name=".NewDoctorActivity"
             android:label="@string/title_activity_new_doctor"
-            android:parentActivityName="pe.cayro.sam.v2.InstitutionActivity">
+            android:parentActivityName=".InstitutionActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pe.cayro.sam.v2.InstitutionActivity" />
         </activity>
         <activity
-            android:name="pe.cayro.sam.v2.AddRecordDetailActivity"
+            android:name=".AddRecordDetailActivity"
             android:label="@string/title_activity_add_record_detail"
-            android:parentActivityName="pe.cayro.sam.v2.NewRecordActivity"
+            android:parentActivityName=".NewRecordActivity"
             android:windowSoftInputMode="adjustNothing">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pe.cayro.sam.v2.NewRecordActivity" />
         </activity>
         <activity
-            android:name="pe.cayro.sam.v2.AddAgentActivity"
+            android:name=".AddAgentActivity"
             android:label="@string/title_activity_add_agent"
-            android:parentActivityName="pe.cayro.sam.v2.NewRecordActivity">
+            android:parentActivityName=".NewRecordActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pe.cayro.sam.v2.NewRecordActivity" />
         </activity>
         <activity
-            android:name="pe.cayro.sam.v2.AlertActivity"
+            android:name=".AlertActivity"
             android:label="@string/title_activity_alert"
-            android:parentActivityName="pe.cayro.sam.v2.AddRecordDetailActivity">
+            android:parentActivityName=".AddRecordDetailActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pe.cayro.sam.v2.AddRecordDetailActivity" />
         </activity>
         <activity
-            android:name="pe.cayro.sam.v2.ShowRecordActivity"
+            android:name=".ShowRecordActivity"
             android:label="@string/title_activity_show_record"
-            android:parentActivityName="pe.cayro.sam.v2.InstitutionActivity">
+            android:parentActivityName=".InstitutionActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pe.cayro.sam.v2.InstitutionActivity" />
         </activity>
 
         <receiver
-            android:name="pe.cayro.sam.v2.service.SamAlarmReceiver"
+            android:name=".service.SamAlarmReceiver"
             android:enabled="true"
             android:exported="false" />
 
         <service
-            android:name="pe.cayro.sam.v2.service.SamSyncService"
+            android:name=".service.SamSyncService"
             android:exported="false" />
 
-        <receiver android:name="pe.cayro.sam.v2.service.SamBootReceiver">
+        <receiver android:name=".service.SamBootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
         <activity
-            android:name="pe.cayro.sam.v2.ui.reports.ReportQuoteActivity"
+            android:name=".ui.reports.ReportQuoteActivity"
             android:label="@string/title_activity_report_quote"
-            android:parentActivityName="pe.cayro.sam.v2.MainActivity"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/SamTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".ui.reports.ReportDetailQuoteActivity"
+            android:label="@string/title_activity_report_detail_quote"
+            android:parentActivityName=".ui.reports.ReportQuoteActivity"
+            android:theme="@style/SamTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="pe.cayro.sam.v2.ui.reports.ReportQuoteActivity" />
+        </activity>
+        <activity
+            android:name=".ui.reports.ReportUserActivity"
+            android:label="@string/title_activity_report_user"
+            android:parentActivityName=".MainActivity"
             android:theme="@style/SamTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pe.cayro.sam.v2.MainActivity" />
         </activity>
         <activity
-            android:name="pe.cayro.sam.v2.ui.reports.ReportDetailQuoteActivity"
-            android:label="@string/title_activity_report_detail_quote"
-            android:parentActivityName="pe.cayro.sam.v2.ui.reports.ReportQuoteActivity"
+            android:name=".ui.reports.ReportStockActivity"
+            android:label="@string/title_activity_report_stock"
+            android:parentActivityName=".MainActivity"
             android:theme="@style/SamTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="pe.cayro.sam.v2.ui.reports.ReportQuoteActivity" />
+                android:value=".MainActivity" />
         </activity>
     </application>
 

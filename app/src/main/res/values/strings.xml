@@ -111,4 +111,7 @@
     <string name="receive_data">Recibir Datos</string>
     <string name="title_activity_report_quote">Reporte Cuotas</string>
     <string name="title_activity_report_detail_quote">Detalle de Avance de Cuota</string>
+    <string name="title_activity_report_user">Usuarios</string>
+    <string name="title_activity_report_stock">Stock</string>
+    <string name="special_movements">Movimientos Especiales</string>
 </resources>

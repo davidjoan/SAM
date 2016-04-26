@@ -14,8 +14,10 @@ import pe.cayro.sam.v2.model.Result;
 import pe.cayro.sam.v2.model.Specialty;
 import pe.cayro.sam.v2.model.Ubigeo;
 import pe.cayro.sam.v2.model.User;
-import pe.cayro.sam.v2.model.report.InstitutionReport;
-import pe.cayro.sam.v2.model.report.MedicalSample;
+import pe.cayro.sam.v2.model.report.InstitutionShare;
+import pe.cayro.sam.v2.model.report.MedicalSampleShare;
+import pe.cayro.sam.v2.model.report.Stock;
+import pe.cayro.sam.v2.model.report.UsersDependent;
 import pe.cayro.sam.v2.util.Constants;
 import retrofit.Callback;
 import retrofit.http.Body;
@@ -71,13 +73,21 @@ public interface Api {
 
     @GET("/institutionsShare")
     void getShareInstitution(
-            @Query(Constants.ID_USUARIO) int idUser, Callback<List<InstitutionReport>> result);
+            @Query(Constants.ID_USUARIO) int idUser, Callback<List<InstitutionShare>> result);
 
     @GET("/medicalSampleShare")
     void getShareMedicalSample(
             @Query(Constants.ID_USUARIO) int idUser,
             @Query(Constants.ID_INSTITUTION) int idInstitution,
-            Callback<List<MedicalSample>> result);
+            Callback<List<MedicalSampleShare>> result);
 
+    @GET("/UsersDependent")
+    void getUserDependent(
+            @Query(Constants.ID_USUARIO) int idUser,
+            Callback<List<UsersDependent>> result);
 
+    @GET("/Stock")
+    void getStockDependent(
+            @Query(Constants.ID_USUARIO) int idUser,
+            Callback<List<Stock>> result);
 }

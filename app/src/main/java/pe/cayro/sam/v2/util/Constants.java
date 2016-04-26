@@ -135,4 +135,6 @@ public class Constants {
     public static final String DAY = "day";
     public static final String WEEK = "week";
     public static final String MONTH = "month";
+    public static final String REPORT_ID = "report_id";
+    public static final String USERNAME = "username";
 }

@@ -1,8 +1,6 @@
 package pe.cayro.sam.v2.ui.reports;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,11 +23,9 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import io.realm.Realm;
 import pe.cayro.sam.v2.R;
 import pe.cayro.sam.v2.api.RestClient;
-import pe.cayro.sam.v2.model.User;
-import pe.cayro.sam.v2.model.report.MedicalSample;
+import pe.cayro.sam.v2.model.report.MedicalSampleShare;
 import pe.cayro.sam.v2.util.Constants;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -37,14 +33,14 @@ import retrofit.client.Response;
 
 public class ReportDetailQuoteActivity extends AppCompatActivity {
 
-    User user;
-    Realm realm;
+    String username;
+    int userId;
     @Bind(R.id.report_recycler_view)
     protected RecyclerView mRecyclerView;
     @Bind(R.id.report_quote_detail_title)
     protected TextView title;
 
-    private List<MedicalSample> reportList;
+    private List<MedicalSampleShare> reportList;
     private ReportQuotedDetailListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
@@ -57,11 +53,10 @@ public class ReportDetailQuoteActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        realm = Realm.getDefaultInstance();
+        username  = getIntent().getStringExtra(Constants.NAME);
+        userId  = getIntent().getIntExtra(Constants.USER_ID, 0);
 
         ButterKnife.bind(this);
-
-        user = realm.where(User.class).findFirst();
 
         reportList = new ArrayList<>();
 
@@ -70,20 +65,6 @@ public class ReportDetailQuoteActivity extends AppCompatActivity {
         mAdapter = new ReportQuotedDetailListAdapter(reportList, R.layout.quote_detail_item);
         mRecyclerView.setAdapter(mAdapter);
 
-
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Actualizando Información de Detalle de Cuotas", Snackbar.LENGTH_LONG)
-                        .show();
-                getData();
-
-            }
-        });
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         institutionId = getIntent().getIntExtra(Constants.ID, 0);
         float day = getIntent().getFloatExtra(Constants.DAY,0);
@@ -127,9 +108,9 @@ public class ReportDetailQuoteActivity extends AppCompatActivity {
     }
 
     public void getData(){
-        RestClient.get().getShareMedicalSample(user.getId(),institutionId, new Callback<List<MedicalSample>>() {
+        RestClient.get().getShareMedicalSample(userId,institutionId, new Callback<List<MedicalSampleShare>>() {
             @Override
-            public void success(List<MedicalSample> medicalSampleList, Response response) {
+            public void success(List<MedicalSampleShare> medicalSampleList, Response response) {
                 mAdapter.setData(medicalSampleList);
                 mAdapter.notifyDataSetChanged();
             }
@@ -145,15 +126,15 @@ public class ReportDetailQuoteActivity extends AppCompatActivity {
     public class ReportQuotedDetailListAdapter extends RecyclerView.
             Adapter<ReportQuotedDetailListAdapter.ViewHolder> {
 
-        private List<MedicalSample> items;
+        private List<MedicalSampleShare> items;
         private int itemLayout;
 
-        public ReportQuotedDetailListAdapter(List<MedicalSample> items, int itemLayout) {
+        public ReportQuotedDetailListAdapter(List<MedicalSampleShare> items, int itemLayout) {
             this.items = items;
             this.itemLayout = itemLayout;
         }
 
-        public void setData(List<MedicalSample> items) {
+        public void setData(List<MedicalSampleShare> items) {
             this.items = items;
         }
 
@@ -166,7 +147,7 @@ public class ReportDetailQuoteActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, int position) {
-            MedicalSample item = items.get(position);
+            MedicalSampleShare item = items.get(position);
             viewHolder.name.setText(item.getName());
 
             viewHolder.day.setText("Día: "+ String.valueOf(item.getCantday())+"/"+String.valueOf(item.getShareday())+" "+String.valueOf( item.getPorcday())+"%");

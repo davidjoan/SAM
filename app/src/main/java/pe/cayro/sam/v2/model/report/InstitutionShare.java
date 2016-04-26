@@ -3,13 +3,12 @@ package pe.cayro.sam.v2.model.report;
 /**
  * Created by David on 4/17/16.
  */
-public class InstitutionReport{
+public class InstitutionShare {
 
     private int id;
     private String code;
     private String name;
     private String address;
-
     private float porcday;
     private float porcweek;
     private float porcmonth;

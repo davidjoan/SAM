@@ -3,7 +3,7 @@ package pe.cayro.sam.v2.model.report;
 /**
  * Created by David on 4/17/16.
  */
-public class MedicalSample{
+public class MedicalSampleShare {
 
     private int id;
     private String name;

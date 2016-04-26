@@ -25,9 +25,9 @@ import pe.cayro.sam.v2.util.Constants;
 /**
  * Created by David on 20/01/16.
  */
-public class FragmentReport extends Fragment {
+public class FragmentSpecialMovement extends Fragment {
 
-    private static String TAG = FragmentTracking.class.getSimpleName();
+    private static String TAG = FragmentSpecialMovement.class.getSimpleName();
 
 
     @Bind(R.id.report_recycler_view)
@@ -37,10 +37,10 @@ public class FragmentReport extends Fragment {
     private ReportListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    public static FragmentReport newInstance() {
+    public static FragmentSpecialMovement newInstance() {
         Bundle args = new Bundle();
 
-        FragmentReport fragment = new FragmentReport();
+        FragmentSpecialMovement fragment = new FragmentSpecialMovement();
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,12 +57,9 @@ public class FragmentReport extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.reports);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.special_movements);
 
         reportList = new ArrayList<Report>();
-
-        reportList.add(new Report(1,"Reporte Cuotas"));
-        reportList.add(new Report(2,"Reporte Stock"));
 
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
